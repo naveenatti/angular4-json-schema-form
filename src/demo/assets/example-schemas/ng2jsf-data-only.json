@@ -1,0 +1,143 @@
+{
+  "schema": {
+      "type": "object",
+      "properties": {
+          "name": {
+              "notitle": true,
+              "placeholder": "Full Name",
+              "type": "string",
+              "fieldHtmlClass": "error-red",
+              "validationMessage": "Required",
+              "feedbackOnRender": true
+          },
+          "addressLine1": {
+              "notitle": true,
+              "fieldHtmlClass": "error-red",
+              "placeholder": "Address Line 1",
+              "type": "string",
+              "validationMessage": "Required",
+              "feedbackOnRender": true
+          },
+          "addressLine2": {
+              "notitle": true,
+              "placeholder": "Address Line 2",
+              "type": "string"
+          },
+          "city": {
+              "notitle": true,
+              "fieldHtmlClass": "error-red",
+              "placeholder": "City",
+              "type": "string",
+              "validationMessage": "Required",
+              "feedbackOnRender": true
+          },
+        
+          "zip": {
+              "notitle": true,
+              "fieldHtmlClass": "error-red",
+              "placeholder": "Zip/Postal Code",
+              "type": "string",
+              "pattern": "^[0-9]{5}(-[0-9]{4})?$",
+              "patternValidation": "Please enter valid zip code.",
+              "validationMessage": "Required",
+              "feedbackOnRender": true
+          },
+         
+          "phone": {
+              "notitle": true,
+              "fieldHtmlClass": "error-red",
+              "placeholder": "Phone Number",
+              "type": "string",
+              "validationMessage": "Required",
+              "feedbackOnRender": true
+          }
+      },
+      "required": [
+          "name",
+          "addressLine1",
+          "city",
+          "zip",
+          "state",
+          "phone"
+      ]
+  },
+  "form": [{
+          "type": "section",
+          "htmlClass": "col-xs-12 no-padding address-component",
+          "items": [{
+                  "type": "div",
+                  "htmlClass": "col-xs-12 col-sm-4 col-md-3",
+                  "items": [
+                      "name"
+                  ]
+              },
+              {
+                  "type": "div",
+                  "htmlClass": "col-xs-12 col-sm-4 col-md-3",
+                  "items": [
+                      "addressLine1"
+                  ]
+              },
+              {
+                  "type": "div",
+                  "htmlClass": "col-xs-12 col-sm-4 col-md-3",
+                  "items": [
+                      "addressLine2"
+                  ]
+              },
+              {
+                  "type": "div",
+                  "htmlClass": "col-xs-12 col-sm-4 col-md-3",
+                  "items": [
+                      "city"
+                  ]
+              },
+              {
+                  "type": "div",
+                  "htmlClass": "col-xs-12 col-sm-4 col-md-3",
+                  "items": [
+                      "zip"
+                  ]
+              },
+              {
+                  "type": "div",
+                  "htmlClass": "col-xs-12 col-sm-4 col-md-3",
+                  "items": [{
+                      "key": "phone",
+                      "condition": "!model.name"
+                  }]
+              }
+          ]
+      },
+      {
+          "type": "div",
+          "htmlClass": "col-xs-12 no-padding no-margin",
+          "items": [{
+                  "type": "div",
+                  "htmlClass": "col-xs-6 ",
+                  "items": []
+              },
+              {
+                  "type": "div",
+                  "htmlClass": "col-xs-6 no-margin",
+                  "items": [
+                      {
+                      "type": "submit",
+                      "style": "btn blue-button right no-margin",
+                      "title": "Verify Address"
+                  },
+                  {
+                      "type": "button",
+                      "style": "btn blue-button right no-margin",
+                      "value": "Verify",
+                      "title": "Verify"
+                  }
+              ]
+              }
+          ]
+
+      }
+  ],
+  "data":{ },
+  "model":{}
+}

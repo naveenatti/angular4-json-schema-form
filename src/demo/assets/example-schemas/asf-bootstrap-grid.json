@@ -1,0 +1,68 @@
+{
+  "schema": {
+    "type": "object",
+    "title": "Comment",
+    "properties": {
+      "name": {
+        "title": "Name",
+        "type": "string",
+        "validationMessage": "Required",
+        "feedbackOnRender":true
+      },
+      "email": {
+        "title": "Email",
+        "type": "string",
+        "pattern": "^\\S+@\\S+$",
+        "validationMessage": "Required",
+        "patternValidation":"Please enter valid email.",
+        "feedbackOnRender":true
+      },
+      "comment": {
+        "title": "Comment",
+        "type": "string",
+        "maxLength": 20
+      }
+    },
+    "required": [
+      "name",
+      "email",
+      "comment"
+    ]
+  },
+  "form": [
+    {
+      "type": "help",
+      "helpvalue": "<div class=\"alert alert-info\">Grid it up with bootstrap</div>"
+    },
+    {
+      "type": "section",
+      "htmlClass": "row",
+      "items": [
+        {
+          "type": "section",
+          "htmlClass": "col-xs-6",
+          "items": [
+            "name"
+          ]
+        },
+        {
+          "type": "section",
+          "htmlClass": "col-xs-6",
+          "items": [
+            "email"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "comment",
+      "type": "textarea",
+      "placeholder": "Make a comment"
+    },
+    {
+      "type": "submit",
+      "style": "btn-info",
+      "title": "OK"
+    }
+  ]
+}
