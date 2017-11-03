@@ -22,7 +22,7 @@ This example playground features over 70 different JSON Schemas for you to try (
 
 ### To install from GitHub
 
-To install [the library and the example playground from GitHub](https://github.com/naveenatti/angular4-json-schema-form), clone `https://github.com/dschnelldavis/angular2-json-schema-form.git` with your favorite git program. Or, assuming you have [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) and [Node/NPM](https://nodejs.org/en/download/) installed, enter the following in your terminal:
+To install [the library and the example playground from GitHub](https://github.com/naveenatti/angular4-json-schema-form), clone `https://github.com/naveenatti/angular4-json-schema-form.git` with your favorite git program. Or, assuming you have [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) and [Node/NPM](https://nodejs.org/en/download/) installed, enter the following in your terminal:
 
 ```shell
 git clone https://github.com/naveenatti/angular4-json-schema-form.git angular4-json-schema-form

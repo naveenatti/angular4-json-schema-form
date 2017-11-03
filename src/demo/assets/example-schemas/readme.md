@@ -3,7 +3,7 @@ Sources:
 * asf-...json files are Angular Schema Form compatibility examples,
   [available here](http://schemaform.io/examples/bootstrap-example.html)
 
-* ng2jsf-...json files are new examples created for angular2-json-schema-form
+* ng2jsf-...json files are new examples created for angular4-json-schema-form-updated
 
 * jsf-...json files are JSONForm compatibility examples,
   [available here](http://ulion.github.io/jsonform/playground/)

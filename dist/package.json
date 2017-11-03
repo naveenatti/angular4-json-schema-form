@@ -1,9 +1,9 @@
 {
-  "name": "angular2-json-schema-form",
-  "version": "0.4.0-alpha.18",
+  "name": "angular4-json-schema-form-updated",
+  "version": "1.1.2",
   "author": {
-    "name": "David Schnell-Davis",
-    "email": "dschnelldavis@gmail.com"
+    "name": "Naveen Atti",
+    "email": "naveenatti9@gmail.com"
   },
   "description": "Angular JSON Schema Form builder",
   "keywords": [
@@ -22,15 +22,15 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dschnelldavis/angular2-json-schema-form"
+    "url": "git+https://github.com/naveenatti/angular4-json-schema-form "
   },
   "bugs": {
-    "url": "https://github.com/dschnelldavis/angular2-json-schema-form/issues"
+    "url": "https://github.com/naveenatti/angular4-json-schema-form/issues"
   },
-  "main": "./bundles/angular2-json-schema-form.umd.js",
-  "module": "./angular2-json-schema-form.es5.js",
-  "es2015": "./angular2-json-schema-form.js",
-  "typings": "./angular2-json-schema-form.d.ts",
+  "main": "./bundles/angular4-json-schema-form-updated.umd.js",
+  "module": "./angular4-json-schema-form-updated.es5.js",
+  "es2015": "./angular4-json-schema-form-updated.js",
+  "typings": "./angular4-json-schema-form-updated.d.ts",
   "dependencies": {
     "@angular/cdk": "^2.0.0-beta.10",
     "ajv": "5.x",
