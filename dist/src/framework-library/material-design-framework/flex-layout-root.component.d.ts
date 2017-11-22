@@ -1,12 +1,15 @@
-export declare class FlexLayoutRootComponent {
-    options: any;
-    formID: number;
+import { OnInit } from '@angular/core';
+import { JsonSchemaFormService } from '../../json-schema-form.service';
+export declare class FlexLayoutRootComponent implements OnInit {
+    private jsf;
     dataIndex: number[];
     layoutIndex: number[];
     layout: any[];
-    isOrderable: boolean;
     isFlexItem: boolean;
-    isDraggable(node: any): boolean;
+    constructor(jsf: JsonSchemaFormService);
+    ngOnInit(): void;
     getFlexAttribute(node: any, attribute: string): any;
-    trackByItem(layoutItem: any): any;
+    trackByItem(layoutNode: any): any;
+    removeItem(item: any): void;
+    isConditionallyShown(layoutNode: any): boolean;
 }

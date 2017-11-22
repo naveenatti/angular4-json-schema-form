@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
 
 import { JsonSchemaFormService } from '../json-schema-form.service';
@@ -34,7 +34,7 @@ export class ButtonComponent implements OnInit {
   @Input() layoutNode: any;
   @Input() layoutIndex: number[];
   @Input() dataIndex: number[];
-
+  @Output() onButtonClick=new EventEmitter<any>(); 
   constructor(
     private jsf: JsonSchemaFormService
   ) { }
@@ -48,6 +48,11 @@ export class ButtonComponent implements OnInit {
     if (typeof this.options.onClick === 'function') {
       this.options.onClick(event);
     } else {
+      let eventObj={
+          event : event,
+          eventId : this.options.eventId
+      }
+      this.jsf.setBtnClick(eventObj);
       this.jsf.updateValue(this, event.target.value);
     }
   }

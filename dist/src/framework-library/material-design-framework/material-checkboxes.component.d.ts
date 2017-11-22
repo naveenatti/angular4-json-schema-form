@@ -1,6 +1,6 @@
 import { OnInit } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
-import { JsonSchemaFormService, CheckboxItem } from '../../json-schema-form.service';
+import { JsonSchemaFormService, TitleMapItem } from '../../json-schema-form.service';
 export declare class MaterialCheckboxesComponent implements OnInit {
     private jsf;
     formControl: AbstractControl;
@@ -11,8 +11,7 @@ export declare class MaterialCheckboxesComponent implements OnInit {
     options: any;
     horizontalList: boolean;
     formArray: AbstractControl;
-    checkboxList: CheckboxItem[];
-    formID: number;
+    checkboxList: TitleMapItem[];
     layoutNode: any;
     layoutIndex: number[];
     dataIndex: number[];
@@ -20,6 +19,6 @@ export declare class MaterialCheckboxesComponent implements OnInit {
     ngOnInit(): void;
     readonly allChecked: boolean;
     readonly someChecked: boolean;
-    updateValue(event: any): void;
+    updateValue(): void;
     updateAllValues(event: any): void;
 }

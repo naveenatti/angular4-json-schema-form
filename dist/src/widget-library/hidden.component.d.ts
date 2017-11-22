@@ -8,7 +8,6 @@ export declare class HiddenComponent implements OnInit {
     controlValue: any;
     controlDisabled: boolean;
     boundControl: boolean;
-    formID: number;
     layoutNode: any;
     layoutIndex: number[];
     dataIndex: number[];

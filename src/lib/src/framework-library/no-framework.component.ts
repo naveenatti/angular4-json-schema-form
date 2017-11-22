@@ -1,28 +1,15 @@
-import { ChangeDetectorRef, Component, Input, OnChanges, OnInit } from '@angular/core';
-
-import { JsonSchemaFormService } from '../json-schema-form.service';
+import { Component, Input } from '@angular/core';
 
 @Component({
-  selector: 'none-framework',
+  selector: 'no-framework',
   template: `
     <select-widget-widget
-      [formID]="formID"
-      [layoutNode]="layoutNode"
       [dataIndex]="dataIndex"
-      [layoutIndex]="layoutIndex"></select-widget-widget>`,
+      [layoutIndex]="layoutIndex"
+      [layoutNode]="layoutNode"></select-widget-widget>`,
 })
-export class NoFrameworkComponent implements OnInit, OnChanges {
-  @Input() formID: number;
+export class NoFrameworkComponent {
   @Input() layoutNode: any;
   @Input() layoutIndex: number[];
   @Input() dataIndex: number[];
-
-  constructor(
-    private changeDetector: ChangeDetectorRef,
-    private jsf: JsonSchemaFormService
-  ) { }
-
-  ngOnInit() { }
-
-  ngOnChanges() { }
 }

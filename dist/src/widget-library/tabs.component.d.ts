@@ -6,7 +6,6 @@ export declare class TabsComponent implements OnInit {
     itemCount: number;
     selectedItem: number;
     showAddTab: boolean;
-    formID: number;
     layoutNode: any;
     layoutIndex: number[];
     dataIndex: number[];
@@ -14,5 +13,5 @@ export declare class TabsComponent implements OnInit {
     ngOnInit(): void;
     select(index: any): void;
     updateControl(): void;
-    setTitle(item?: any, index?: number): string;
+    setTitle(item: any, index: number): string;
 }

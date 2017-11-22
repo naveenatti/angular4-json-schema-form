@@ -4,16 +4,16 @@
 $demo-app-primary: mat-palette($mat-blue);
 $demo-app-accent:  mat-palette($mat-amber, A200, A100, A400);
 $demo-app-warn:    mat-palette($mat-red);
-$demo-app-theme: mat-light-theme($demo-app-primary, $demo-app-accent, $demo-app-warn);
+$demo-app-theme:   mat-light-theme($demo-app-primary, $demo-app-accent, $demo-app-warn);
 @include angular-material-theme($demo-app-theme);
 
 $font-family: 'Roboto', 'Noto', 'Helvetica Neue', sans-serif;
 $row-height: 56px;
 
-md-toolbar {
+mat-toolbar {
   &.mat-medium {
     min-height: $row-height;
-    md-toolbar-row { height: $row-height; }
+    mat-toolbar-row { height: $row-height; }
   }
 }
 
@@ -63,3 +63,9 @@ body {
 .defualt-cursor:hover { cursor: default; }
 
 .check-row { margin-top: 8px; }
+
+.cdk-overlay-container .cdk-overlay-pane .mat-menu-panel { max-width: 560px; }
+
+.debug { border: 1px solid red !important; }
+
+.mat-input-container.mat-form-field { width: 100%; }

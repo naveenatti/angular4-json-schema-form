@@ -9,9 +9,8 @@ export declare class MaterialButtonGroupComponent implements OnInit {
     controlDisabled: boolean;
     boundControl: boolean;
     options: any;
-    flexDirection: string;
     radiosList: any[];
-    formID: number;
+    vertical: boolean;
     layoutNode: any;
     layoutIndex: number[];
     dataIndex: number[];

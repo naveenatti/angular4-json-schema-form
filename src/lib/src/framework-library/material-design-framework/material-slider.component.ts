@@ -2,37 +2,45 @@ import { Component, Input, OnInit } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
 
 import { JsonSchemaFormService } from '../../json-schema-form.service';
-import { getControl, inArray, isDefined } from '../../shared';
 
 @Component({
   selector: 'material-slider-widget',
   template: `
-      <md-slider #inputControl
-        [(ngModel)]="controlValue"
-        [attr.aria-describedby]="'control' + layoutNode?._id + 'Status'"
-        [disabled]="controlDisabled"
-        [id]="'control' + layoutNode?._id"
-        [max]="options?.maximum"
-        [min]="options?.minimum"
-        [step]="options?.multipleOf || options?.step || 'any'"
-        [style.width]="'100%'"
-        [thumb-label]="true"
-        [value]="controlValue"
-        (change)="updateValue($event)"></md-slider>`,
-    styles: [`md-input-container { margin-top: 6px; }`],
+    <mat-slider thumbLabel *ngIf="boundControl"
+      [formControl]="formControl"
+      [attr.aria-describedby]="'control' + layoutNode?._id + 'Status'"
+      [id]="'control' + layoutNode?._id"
+      [max]="options?.maximum"
+      [min]="options?.minimum"
+      [step]="options?.multipleOf || options?.step || 'any'"
+      [style.width]="'100%'"
+      (blur)="options.showErrors = true"></mat-slider>
+    <mat-slider thumbLabel *ngIf="!boundControl"
+      [attr.aria-describedby]="'control' + layoutNode?._id + 'Status'"
+      [disabled]="controlDisabled || options?.readonly"
+      [id]="'control' + layoutNode?._id"
+      [max]="options?.maximum"
+      [min]="options?.minimum"
+      [step]="options?.multipleOf || options?.step || 'any'"
+      [style.width]="'100%'"
+      [value]="controlValue"
+      (blur)="options.showErrors = true"
+      (change)="updateValue($event)"></mat-slider>
+    <mat-error *ngIf="options?.showErrors && options?.errorMessage"
+      [innerHTML]="options?.errorMessage"></mat-error>`,
+    styles: [` mat-error { font-size: 75%; } `],
 })
 export class MaterialSliderComponent implements OnInit {
   formControl: AbstractControl;
   controlName: string;
   controlValue: any;
-  controlDisabled: boolean = false;
-  boundControl: boolean = false;
+  controlDisabled = false;
+  boundControl = false;
   options: any;
-  allowNegative: boolean = true;
-  allowDecimal: boolean = true;
-  allowExponents: boolean = false;
-  lastValidNumber: string = '';
-  @Input() formID: number;
+  allowNegative = true;
+  allowDecimal = true;
+  allowExponents = false;
+  lastValidNumber = '';
   @Input() layoutNode: any;
   @Input() layoutIndex: number[];
   @Input() dataIndex: number[];
@@ -43,10 +51,11 @@ export class MaterialSliderComponent implements OnInit {
 
   ngOnInit() {
     this.options = this.layoutNode.options || {};
-    this.jsf.initializeControl(this);
+    this.jsf.initializeControl(this, !this.options.readonly);
   }
 
   updateValue(event) {
+    this.options.showErrors = true;
     this.jsf.updateValue(this, event.value);
   }
 }

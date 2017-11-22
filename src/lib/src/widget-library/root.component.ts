@@ -1,39 +1,41 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Host } from '@angular/core';
+
+import { JsonSchemaFormService } from '../json-schema-form.service';
+import { isDefined, JsonPointer } from '../shared';
 
 @Component({
   selector: 'root-widget',
   template: `
     <div *ngFor="let layoutItem of layout; let i = index"
-      [orderable]="isDraggable(layoutItem)"
-      [formID]="formID"
-      [dataIndex]="layoutItem?.arrayItem ? (dataIndex || []).concat(i) : (dataIndex || [])"
-      [layoutIndex]="(layoutIndex || []).concat(i)"
-      [layoutNode]="layoutItem"
       [class.form-flex-item]="isFlexItem"
+      [style.align-self]="(layoutItem.options || {})['align-self']"
+      [style.flex-basis]="getFlexAttribute(layoutItem, 'flex-basis')"
       [style.flex-grow]="getFlexAttribute(layoutItem, 'flex-grow')"
       [style.flex-shrink]="getFlexAttribute(layoutItem, 'flex-shrink')"
-      [style.flex-basis]="getFlexAttribute(layoutItem, 'flex-basis')"
-      [style.align-self]="(layoutItem.options || {})['align-self']"
       [style.order]="(layoutItem.options || {}).order">
-
-      <select-framework-widget
-        [formID]="formID"
+      <div
         [dataIndex]="layoutItem?.arrayItem ? (dataIndex || []).concat(i) : (dataIndex || [])"
         [layoutIndex]="(layoutIndex || []).concat(i)"
-        [layoutNode]="layoutItem"></select-framework-widget>
-
+        [layoutNode]="layoutItem"
+        [orderable]="isDraggable(layoutItem)">
+        <select-framework-widget *ngIf="isConditionallyShown(layoutItem)"
+          [dataIndex]="layoutItem?.arrayItem ? (dataIndex || []).concat(i) : (dataIndex || [])"
+          [layoutIndex]="(layoutIndex || []).concat(i)"
+          [layoutNode]="layoutItem"></select-framework-widget>
+      </div>
     </div>`,
   styles: [`
-    [draggable=true] { cursor: move; }
+    [draggable=true] {
+      transition: all 150ms cubic-bezier(.4, 0, .2, 1);
+    }
     [draggable=true]:hover {
+      cursor: move;
       box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
       position: relative; z-index: 10;
-      margin-top: -4px;
-      margin-left: -4px;
-      margin-right: 2px;
-      margin-bottom: 2px;
-      border-top: 1px solid #eee;
-      border-left: 1px solid #eee;
+      margin-top: -1px;
+      margin-left: -1px;
+      margin-right: 1px;
+      margin-bottom: 1px;
     }
     [draggable=true].drag-target-top {
       box-shadow: 0 -2px 0 #000;
@@ -47,17 +49,19 @@ import { Component, Input } from '@angular/core';
 })
 export class RootComponent {
   options: any;
-  @Input() formID: number;
   @Input() dataIndex: number[];
   @Input() layoutIndex: number[];
   @Input() layout: any[];
   @Input() isOrderable: boolean;
-  @Input() isFlexItem: boolean = false;
+  @Input() isFlexItem = false;
+
+  constructor(
+    private jsf: JsonSchemaFormService
+  ) { }
 
   isDraggable(node: any): boolean {
-    return this.isOrderable !== false && node.type !== '$ref' &&
-      node.arrayItem && (node.options || {}).arrayItemType === 'list';
-      // && (this.layout[this.layout.length - 1].tupleItems || this.layout.length > 2);
+    return node.arrayItem && node.type !== '$ref' &&
+      node.arrayItemType === 'list' && this.isOrderable !== false;
   }
 
   // Set attributes for flexbox child
@@ -70,5 +74,26 @@ export class RootComponent {
 
   trackByItem(layoutItem: any) {
     return layoutItem && layoutItem._id;
+  }
+
+  isConditionallyShown(layoutNode: any): boolean {
+    const arrayIndex = this.dataIndex && this.dataIndex[this.dataIndex.length - 1];
+    let result = true;
+    if (isDefined((layoutNode.options || {}).condition)) {
+      if (typeof layoutNode.options.condition === 'string') {
+        let pointer = layoutNode.options.condition
+        if (isDefined(arrayIndex)) {
+          pointer = pointer.replace('[arrayIndex]', `[${arrayIndex}]`);
+        }
+        pointer = JsonPointer.parseObjectPath(pointer);
+        result = !!JsonPointer.get(this.jsf.data, pointer);
+        if (!result && pointer[0] === 'model') {
+          result = !!JsonPointer.get({ model: this.jsf.data }, pointer);
+        }
+      } else if (typeof layoutNode.options.condition === 'function') {
+        result = layoutNode.options.condition(this.jsf.data);
+      }
+    }
+    return result;
   }
 }

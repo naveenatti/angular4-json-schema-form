@@ -6,7 +6,6 @@ import { FormGroup } from '@angular/forms';
   template: ``,
 })
 export class NoneComponent {
-  @Input() formID: number;
   @Input() layoutNode: any;
   @Input() layoutIndex: number[];
   @Input() dataIndex: number[];

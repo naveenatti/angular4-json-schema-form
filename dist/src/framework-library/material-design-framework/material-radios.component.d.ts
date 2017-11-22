@@ -11,7 +11,6 @@ export declare class MaterialRadiosComponent implements OnInit {
     options: any;
     flexDirection: string;
     radiosList: any[];
-    formID: number;
     layoutNode: any;
     layoutIndex: number[];
     dataIndex: number[];

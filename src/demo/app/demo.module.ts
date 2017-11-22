@@ -3,8 +3,11 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
-import { MaterialModule } from '@angular/material';
+import { HttpClientModule } from '@angular/common/http';
+import {
+  MatButtonModule, MatCardModule, MatCheckboxModule, MatIconModule,
+  MatMenuModule, MatSelectModule, MatToolbarModule
+} from '@angular/material';
 import { RouterModule } from '@angular/router';
 
 import { JsonSchemaFormModule } from '../../lib/src/json-schema-form.module';
@@ -18,15 +21,13 @@ import { DemoRootComponent } from './demo-root.component';
 import { routes } from './demo.routes';
 
 @NgModule({
-  declarations: [
-    AceEditorDirective, DemoComponent, DemoRootComponent
-  ],
+  declarations: [ AceEditorDirective, DemoComponent, DemoRootComponent ],
   imports: [
-    BrowserModule, BrowserAnimationsModule, FlexLayoutModule,
-    FormsModule, HttpModule, MaterialModule,
+    BrowserModule, BrowserAnimationsModule, FlexLayoutModule, FormsModule,
+    HttpClientModule, MatButtonModule, MatCardModule, MatCheckboxModule,
+    MatIconModule, MatMenuModule, MatSelectModule, MatToolbarModule,
     RouterModule.forRoot(routes), JsonSchemaFormModule
   ],
-  providers: [ ],
   bootstrap: [ DemoRootComponent ]
 })
 export class DemoModule { }

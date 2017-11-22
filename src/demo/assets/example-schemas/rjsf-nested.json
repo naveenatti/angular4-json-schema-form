@@ -1,33 +1,33 @@
 {
-  "JSONSchema": {
+  "schema": {
     "title": "A list of tasks",
     "type": "object",
-    "required": ["title"],
+    "required": [ "title" ],
     "properties": {
       "title": {
-        "type": "string",
-        "title": "Task list title"
+        "title": "Task list title",
+        "type": "string"
       },
       "tasks": {
-        "type": "array",
         "title": "Tasks",
+        "type": "array",
         "items": {
           "type": "object",
-          "required": ["title"],
+          "required": [ "title" ],
           "properties": {
             "title": {
-              "type": "string",
               "title": "Title",
+              "type": "string",
               "description": "A sample title"
             },
             "details": {
-              "type": "string",
               "title": "Task details",
+              "type": "string",
               "description": "Enter the task details"
             },
             "done": {
-              "type": "boolean",
               "title": "Done?",
+              "type": "boolean",
               "default": false
             }
           }
@@ -35,18 +35,12 @@
       }
     }
   },
-  "UISchema": {
-    "tasks": {
-      "items": {
-        "details": {
-          "ui:widget": "textarea"
-        }
-      }
-    }
+  "uiSchema": {
+    "tasks": { "items": { "details": { "ui:widget": "textarea" } } }
   },
   "formData": {
     "title": "My current tasks",
-    "tasks": [{
+    "tasks": [ {
       "title": "My first task",
       "details": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
       "done": true
@@ -54,6 +48,6 @@
       "title": "My second task",
       "details": "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur",
       "done": false
-    }]
+    } ]
   }
 }

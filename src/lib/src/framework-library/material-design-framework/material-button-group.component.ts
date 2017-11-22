@@ -7,40 +7,43 @@ import { buildTitleMap } from '../../shared';
 @Component({
   selector: 'material-button-group-widget',
   template: `
-    <div *ngIf="options?.title">
-      <label
-        [attr.for]="'control' + layoutNode?._id"
-        [class]="options?.labelHtmlClass"
-        [style.display]="options?.notitle ? 'none' : ''"
-        [innerHTML]="options?.title"></label>
-    </div>
-    <md-button-toggle-group
-      [attr.aria-describedby]="'control' + layoutNode?._id + 'Status'"
-      [attr.readonly]="options?.readonly ? 'readonly' : null"
-      [attr.required]="options?.required"
-      [disabled]="controlDisabled"
-      [name]="controlName"
-      [value]="controlValue">
-      <div *ngFor="let radioItem of radiosList">
-        <md-button-toggle
+    <div>
+      <div *ngIf="options?.title">
+        <label
+          [attr.for]="'control' + layoutNode?._id"
+          [class]="options?.labelHtmlClass || ''"
+          [style.display]="options?.notitle ? 'none' : ''"
+          [innerHTML]="options?.title"></label>
+      </div>
+      <mat-button-toggle-group
+        [attr.aria-describedby]="'control' + layoutNode?._id + 'Status'"
+        [attr.readonly]="options?.readonly ? 'readonly' : null"
+        [attr.required]="options?.required"
+        [disabled]="controlDisabled || options?.readonly"
+        [name]="controlName"
+        [value]="controlValue"
+        [vertical]="!!options.vertical">
+        <mat-button-toggle *ngFor="let radioItem of radiosList"
           [id]="'control' + layoutNode?._id + '/' + radioItem?.name"
           [value]="radioItem?.value"
           (click)="updateValue(radioItem?.value)">
           <span [innerHTML]="radioItem?.name"></span>
-        </md-button-toggle>
-      </div>
-    </md-button-toggle-group>`,
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+      <mat-error *ngIf="options?.showErrors && options?.errorMessage"
+        [innerHTML]="options?.errorMessage"></mat-error>
+    </div>`,
+    styles: [` mat-error { font-size: 75%; } `],
 })
 export class MaterialButtonGroupComponent implements OnInit {
   formControl: AbstractControl;
   controlName: string;
   controlValue: any;
-  controlDisabled: boolean = false;
-  boundControl: boolean = false;
+  controlDisabled = false;
+  boundControl = false;
   options: any;
-  flexDirection: string = 'column';
   radiosList: any[] = [];
-  @Input() formID: number;
+  vertical = false;
   @Input() layoutNode: any;
   @Input() layoutIndex: number[];
   @Input() dataIndex: number[];
@@ -51,9 +54,6 @@ export class MaterialButtonGroupComponent implements OnInit {
 
   ngOnInit() {
     this.options = this.layoutNode.options || {};
-    if (this.layoutNode.type === 'radios-inline') {
-      this.flexDirection = 'row';
-    }
     this.radiosList = buildTitleMap(
       this.options.titleMap || this.options.enumNames,
       this.options.enum, true
@@ -62,6 +62,7 @@ export class MaterialButtonGroupComponent implements OnInit {
   }
 
   updateValue(value) {
+    this.options.showErrors = true;
     this.jsf.updateValue(this, value);
   }
 }

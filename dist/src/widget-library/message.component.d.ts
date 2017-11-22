@@ -4,7 +4,6 @@ export declare class MessageComponent implements OnInit {
     private jsf;
     options: any;
     message: string;
-    formID: number;
     layoutNode: any;
     layoutIndex: number[];
     dataIndex: number[];

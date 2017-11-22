@@ -1,4 +1,4 @@
-import { Component, DoCheck, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
 import { JsonSchemaFormService } from '../json-schema-form.service';
@@ -7,20 +7,19 @@ import { JsonSchemaFormService } from '../json-schema-form.service';
   selector: 'add-reference-widget',
   template: `
     <button *ngIf="showAddButton"
-      [class]="options?.fieldHtmlClass"
+      [class]="options?.fieldHtmlClass || ''"
       [disabled]="options?.readonly"
       (click)="addItem($event)">
       <span *ngIf="options?.icon" [class]="options?.icon"></span>
-      <span *ngIf="options?.title" [innerHTML]="setTitle()"></span>
+      <span *ngIf="options?.title" [innerHTML]="buttonText"></span>
     </button>`,
+    changeDetection: ChangeDetectionStrategy.Default,
 })
-export class AddReferenceComponent implements OnInit, DoCheck {
+export class AddReferenceComponent implements OnInit {
   options: any;
   itemCount: number;
-  showAddButton: boolean = true;
   previousLayoutIndex: number[];
   previousDataIndex: number[];
-  @Input() formID: number;
   @Input() layoutNode: any;
   @Input() layoutIndex: number[];
   @Input() dataIndex: number[];
@@ -31,37 +30,25 @@ export class AddReferenceComponent implements OnInit, DoCheck {
 
   ngOnInit() {
     this.options = this.layoutNode.options || {};
-    this.updateControl();
   }
 
-  ngDoCheck() {
-    if (this.previousLayoutIndex !== this.layoutIndex ||
-      this.previousDataIndex !== this.dataIndex
-    ) {
-      this.updateControl();
-    }
+  get showAddButton(): boolean {
+    return !this.layoutNode.arrayItem ||
+      this.layoutIndex[this.layoutIndex.length - 1] < this.options.maxItems;
   }
 
   addItem(event) {
     event.preventDefault();
-    this.itemCount = this.layoutIndex[this.layoutIndex.length - 1] + 1;
     this.jsf.addItem(this);
-    this.updateControl();
   }
 
-  updateControl() {
-    this.itemCount = this.layoutIndex[this.layoutIndex.length - 1];
-    this.previousLayoutIndex = this.layoutIndex;
-    this.previousDataIndex = this.dataIndex;
-    this.showAddButton = this.layoutNode.arrayItem &&
-      this.itemCount < (this.options.maxItems || 1000000);
-  }
-
-  setTitle(): string {
+  get buttonText(): string {
     const parent: any = {
       dataIndex: this.dataIndex.slice(0, -1),
+      layoutIndex: this.layoutIndex.slice(0, -1),
       layoutNode: this.jsf.getParentNode(this)
     };
-    return this.jsf.setTitle(parent, this.layoutNode, this.itemCount);
+    return parent.layoutNode.add ||
+      this.jsf.setTitle(parent, this.layoutNode, this.itemCount);
   }
 }

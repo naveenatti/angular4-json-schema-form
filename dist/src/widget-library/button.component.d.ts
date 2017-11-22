@@ -1,4 +1,4 @@
-import { OnInit } from '@angular/core';
+import { OnInit, EventEmitter } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
 import { JsonSchemaFormService } from '../json-schema-form.service';
 export declare class ButtonComponent implements OnInit {
@@ -13,6 +13,7 @@ export declare class ButtonComponent implements OnInit {
     layoutNode: any;
     layoutIndex: number[];
     dataIndex: number[];
+    onButtonClick: EventEmitter<any>;
     constructor(jsf: JsonSchemaFormService);
     ngOnInit(): void;
     updateValue(event: any): void;

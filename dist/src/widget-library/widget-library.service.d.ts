@@ -5,7 +5,7 @@ export declare class WidgetLibraryService {
     frameworkWidgets: any;
     activeWidgets: any;
     constructor();
-    setActiveWidgets(): void;
+    setActiveWidgets(): boolean;
     setDefaultWidget(type: string): boolean;
     hasWidget(type: string, widgetSet?: string): boolean;
     hasDefaultWidget(type: string): boolean;

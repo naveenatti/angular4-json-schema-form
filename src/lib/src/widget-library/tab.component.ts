@@ -5,18 +5,15 @@ import { JsonSchemaFormService } from '../json-schema-form.service';
 @Component({
   selector: 'tab-widget',
   template: `
-    <div
-      [class]="options?.htmlClass">
+    <div [class]="options?.htmlClass || ''">
       <root-widget
-        [formID]="formID"
-        [layout]="layoutNode.items"
         [dataIndex]="dataIndex"
-        [layoutIndex]="layoutIndex"></root-widget>
+        [layoutIndex]="layoutIndex"
+        [layout]="layoutNode.items"></root-widget>
     </div>`,
 })
 export class TabComponent implements OnInit {
   options: any;
-  @Input() formID: number;
   @Input() layoutNode: any;
   @Input() layoutIndex: number[];
   @Input() dataIndex: number[];

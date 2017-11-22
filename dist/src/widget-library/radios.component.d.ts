@@ -11,7 +11,6 @@ export declare class RadiosComponent implements OnInit {
     options: any;
     layoutOrientation: string;
     radiosList: any[];
-    formID: number;
     layoutNode: any;
     layoutIndex: number[];
     dataIndex: number[];

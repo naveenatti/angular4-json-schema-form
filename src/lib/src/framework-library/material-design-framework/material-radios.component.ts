@@ -7,45 +7,61 @@ import { buildTitleMap } from '../../shared';
 @Component({
   selector: 'material-radios-widget',
   template: `
-    <div *ngIf="options?.title">
-      <label
-        [attr.for]="'control' + layoutNode?._id"
-        [class]="options?.labelHtmlClass"
-        [style.display]="options?.notitle ? 'none' : ''"
-        [innerHTML]="options?.title"></label>
-    </div>
-    <md-radio-group
-      [attr.aria-describedby]="'control' + layoutNode?._id + 'Status'"
-      [attr.readonly]="options?.readonly ? 'readonly' : null"
-      [attr.required]="options?.required"
-      [style.flex-direction]="flexDirection"
-      [disabled]="controlDisabled"
-      [name]="controlName"
-      [value]="controlValue">
-      <div *ngFor="let radioItem of radiosList">
-        <md-radio-button
+    <div>
+      <div *ngIf="options?.title">
+        <label
+          [attr.for]="'control' + layoutNode?._id"
+          [class]="options?.labelHtmlClass || ''"
+          [style.display]="options?.notitle ? 'none' : ''"
+          [innerHTML]="options?.title"></label>
+      </div>
+      <mat-radio-group *ngIf="boundControl"
+        [formControl]="formControl"
+        [attr.aria-describedby]="'control' + layoutNode?._id + 'Status'"
+        [attr.readonly]="options?.readonly ? 'readonly' : null"
+        [attr.required]="options?.required"
+        [style.flex-direction]="flexDirection"
+        [name]="controlName"
+        (blur)="options.showErrors = true">
+        <mat-radio-button *ngFor="let radioItem of radiosList"
+          [id]="'control' + layoutNode?._id + '/' + radioItem?.name"
+          [value]="radioItem?.value">
+          <span [innerHTML]="radioItem?.name"></span>
+        </mat-radio-button>
+      </mat-radio-group>
+      <mat-radio-group *ngIf="!boundControl"
+        [attr.aria-describedby]="'control' + layoutNode?._id + 'Status'"
+        [attr.readonly]="options?.readonly ? 'readonly' : null"
+        [attr.required]="options?.required"
+        [style.flex-direction]="flexDirection"
+        [disabled]="controlDisabled || options?.readonly"
+        [name]="controlName"
+        [value]="controlValue">
+        <mat-radio-button *ngFor="let radioItem of radiosList"
           [id]="'control' + layoutNode?._id + '/' + radioItem?.name"
           [value]="radioItem?.value"
           (click)="updateValue(radioItem?.value)">
           <span [innerHTML]="radioItem?.name"></span>
-        </md-radio-button>
-      </div>
-    </md-radio-group>`,
+        </mat-radio-button>
+      </mat-radio-group>
+      <mat-error *ngIf="options?.showErrors && options?.errorMessage"
+        [innerHTML]="options?.errorMessage"></mat-error>
+    </div>`,
   styles: [`
-    md-radio-group { display: inline-flex; }
-    md-radio-button { margin: 0 5px; }
+    mat-radio-group { display: inline-flex; }
+    mat-radio-button { margin: 2px; }
+    mat-error { font-size: 75%; }
   `]
 })
 export class MaterialRadiosComponent implements OnInit {
   formControl: AbstractControl;
   controlName: string;
   controlValue: any;
-  controlDisabled: boolean = false;
-  boundControl: boolean = false;
+  controlDisabled = false;
+  boundControl = false;
   options: any;
-  flexDirection: string = 'column';
+  flexDirection = 'column';
   radiosList: any[] = [];
-  @Input() formID: number;
   @Input() layoutNode: any;
   @Input() layoutIndex: number[];
   @Input() dataIndex: number[];
@@ -63,10 +79,11 @@ export class MaterialRadiosComponent implements OnInit {
       this.options.titleMap || this.options.enumNames,
       this.options.enum, true
     );
-    this.jsf.initializeControl(this);
+    this.jsf.initializeControl(this, !this.options.readonly);
   }
 
   updateValue(value) {
+    this.options.showErrors = true;
     this.jsf.updateValue(this, value);
   }
 }

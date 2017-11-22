@@ -5,13 +5,11 @@ export declare class SectionComponent implements OnInit {
     options: any;
     expanded: boolean;
     containerType: string;
-    formID: number;
     layoutNode: any;
     layoutIndex: number[];
     dataIndex: number[];
     constructor(jsf: JsonSchemaFormService);
     ngOnInit(): void;
-    legendDisplay(): string;
-    expand(): void;
+    toggleExpanded(): void;
     getFlexAttribute(attribute: string): any;
 }

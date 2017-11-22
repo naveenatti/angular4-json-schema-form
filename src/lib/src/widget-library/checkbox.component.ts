@@ -8,13 +8,23 @@ import { JsonSchemaFormService } from '../json-schema-form.service';
   template: `
     <label
       [attr.for]="'control' + layoutNode?._id"
-      [class]="options?.itemLabelHtmlClass">
-      <input
+      [class]="options?.itemLabelHtmlClass || ''">
+      <input *ngIf="boundControl"
+        [formControl]="formControl"
+        [attr.aria-describedby]="'control' + layoutNode?._id + 'Status'"
+        [class]="(options?.fieldHtmlClass || '') + (isChecked ?
+          (' ' + (options?.activeClass || '') + ' ' + (options?.style?.selected || '')) :
+          (' ' + (options?.style?.unselected || '')))"
+        [id]="'control' + layoutNode?._id"
+        [name]="controlName"
+        [readonly]="options?.readonly ? 'readonly' : null"
+        type="checkbox">
+      <input *ngIf="!boundControl"
         [attr.aria-describedby]="'control' + layoutNode?._id + 'Status'"
         [checked]="isChecked ? 'checked' : null"
-        [class]="options?.fieldHtmlClass + (isChecked ?
-          (' ' + options?.activeClass + ' ' + options?.style?.selected) :
-          (' ' + options?.style?.unselected))"
+        [class]="(options?.fieldHtmlClass || '') + (isChecked ?
+          (' ' + (options?.activeClass || '') + ' ' + (options?.style?.selected || '')) :
+          (' ' + (options?.style?.unselected || '')))"
         [disabled]="controlDisabled"
         [id]="'control' + layoutNode?._id"
         [name]="controlName"
@@ -31,12 +41,11 @@ export class CheckboxComponent implements OnInit {
   formControl: AbstractControl;
   controlName: string;
   controlValue: any;
-  controlDisabled: boolean = false;
-  boundControl: boolean = false;
+  controlDisabled = false;
+  boundControl = false;
   options: any;
   trueValue: any = true;
   falseValue: any = false;
-  @Input() formID: number;
   @Input() layoutNode: any;
   @Input() layoutIndex: number[];
   @Input() dataIndex: number[];
@@ -59,6 +68,6 @@ export class CheckboxComponent implements OnInit {
   }
 
   get isChecked() {
-    return this.jsf.getControlValue(this) === this.trueValue;
+    return this.jsf.getFormControlValue(this) === this.trueValue;
   }
 }

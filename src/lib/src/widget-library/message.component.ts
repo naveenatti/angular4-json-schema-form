@@ -1,6 +1,4 @@
-import {
-  ChangeDetectorRef, Component, Input, OnChanges, OnInit
-} from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
 import { JsonSchemaFormService } from '../json-schema-form.service';
@@ -9,13 +7,12 @@ import { JsonSchemaFormService } from '../json-schema-form.service';
   selector: 'message-widget',
   template: `
     <span *ngIf="message"
-      [class]="options?.labelHtmlClass"
+      [class]="options?.labelHtmlClass || ''"
       [innerHTML]="message"></span>`,
 })
 export class MessageComponent implements OnInit {
   options: any;
   message: string = null;
-  @Input() formID: number;
   @Input() layoutNode: any;
   @Input() layoutIndex: number[];
   @Input() dataIndex: number[];

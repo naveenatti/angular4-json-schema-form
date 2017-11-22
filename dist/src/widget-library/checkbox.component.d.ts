@@ -11,7 +11,6 @@ export declare class CheckboxComponent implements OnInit {
     options: any;
     trueValue: any;
     falseValue: any;
-    formID: number;
     layoutNode: any;
     layoutIndex: number[];
     dataIndex: number[];

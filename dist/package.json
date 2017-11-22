@@ -1,6 +1,6 @@
 {
   "name": "angular4-json-schema-form-updated",
-  "version": "1.1.2",
+  "version": "1.1.1",
   "author": {
     "name": "Naveen Atti",
     "email": "naveenatti9@gmail.com"
@@ -8,12 +8,13 @@
   "description": "Angular JSON Schema Form builder",
   "keywords": [
     "Angular",
-    "ng2",
-    "Angular2",
-    "Angular 2",
-    "ng4",
+    "ng",
     "Angular4",
     "Angular 4",
+    "ng4",
+    "Angular5",
+    "Angular 5",
+    "ng5",
     "JSON Schema",
     "form",
     "forms",
@@ -32,16 +33,17 @@
   "es2015": "./angular4-json-schema-form-updated.js",
   "typings": "./angular4-json-schema-form-updated.d.ts",
   "dependencies": {
-    "@angular/cdk": "^2.0.0-beta.10",
-    "ajv": "5.x",
-    "hammerjs": "2.x",
+    "ajv": "^5.3.0",
     "lodash": "4.x"
   },
   "peerDependencies": {
-    "@angular/common": ">=2.0.0 <5.0.0",
-    "@angular/core": ">=2.0.0 <5.0.0",
-    "@angular/forms": ">=2.0.0 <5.0.0",
-    "@angular/platform-browser": ">=2.0.0 <5.0.0",
-    "rxjs": "5.x"
+    "@angular/cdk": ">=2.0.0",
+    "@angular/common": ">=4.0.0",
+    "@angular/core": ">=4.0.0",
+    "@angular/flex-layout": ">=2.0.0",
+    "@angular/forms": ">=4.0.0",
+    "@angular/material": ">=2.0.0",
+    "@angular/platform-browser": ">=4.0.0",
+    "rxjs": ">=5.0.0"
   }
 }

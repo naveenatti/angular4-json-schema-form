@@ -13,7 +13,6 @@ export declare class MaterialSliderComponent implements OnInit {
     allowDecimal: boolean;
     allowExponents: boolean;
     lastValidNumber: string;
-    formID: number;
     layoutNode: any;
     layoutIndex: number[];
     dataIndex: number[];

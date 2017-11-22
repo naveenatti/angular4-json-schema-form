@@ -1,6 +1,7 @@
 import { OnInit } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
 import { JsonSchemaFormService } from '../json-schema-form.service';
+import { isArray } from '../shared';
 export declare class SelectComponent implements OnInit {
     private jsf;
     formControl: AbstractControl;
@@ -10,7 +11,7 @@ export declare class SelectComponent implements OnInit {
     boundControl: boolean;
     options: any;
     selectList: any[];
-    formID: number;
+    isArray: typeof isArray;
     layoutNode: any;
     layoutIndex: number[];
     dataIndex: number[];

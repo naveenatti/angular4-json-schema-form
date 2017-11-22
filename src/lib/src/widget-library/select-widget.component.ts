@@ -11,7 +11,6 @@ import { JsonSchemaFormService } from '../json-schema-form.service';
 })
 export class SelectWidgetComponent implements OnChanges, OnInit {
   newComponent: ComponentRef<any> = null;
-  @Input() formID: number;
   @Input() layoutNode: any;
   @Input() layoutIndex: number[];
   @Input() dataIndex: number[];
@@ -32,13 +31,13 @@ export class SelectWidgetComponent implements OnChanges, OnInit {
   }
 
   updateComponent() {
-    if (!this.newComponent && this.layoutNode.widget) {
+    if (!this.newComponent && (this.layoutNode || {}).widget) {
       this.newComponent = this.widgetContainer.createComponent(
         this.componentFactory.resolveComponentFactory(this.layoutNode.widget)
       );
     }
     if (this.newComponent) {
-      for (let input of ['formID', 'layoutNode', 'layoutIndex', 'dataIndex']) {
+      for (let input of ['layoutNode', 'layoutIndex', 'dataIndex']) {
         this.newComponent.instance[input] = this[input];
       }
     }

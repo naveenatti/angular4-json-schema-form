@@ -5,12 +5,11 @@ export declare class MaterialInputComponent implements OnInit {
     private jsf;
     formControl: AbstractControl;
     controlName: string;
-    controlValue: any;
+    controlValue: string;
     controlDisabled: boolean;
     boundControl: boolean;
     options: any;
     autoCompleteList: string[];
-    formID: number;
     layoutNode: any;
     layoutIndex: number[];
     dataIndex: number[];

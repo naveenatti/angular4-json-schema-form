@@ -1,10 +1,10 @@
 <div class="demo-page-header">
-  <md-toolbar class="mat-elevation-z4 mat-medium" color="primary">
+  <mat-toolbar class="mat-elevation-z4 mat-medium" color="primary">
     Angular JSON Schema Form — Demonstration Playground
-  </md-toolbar>
+  </mat-toolbar>
   <div class="header-content">
     An Angular <a href="http://json-schema.org/">JSON Schema</a> Form builder
-    for Angular 2 and above, similar to, and mostly API compatible with,
+    for Angular 4 and 5, similar to, and mostly API compatible with,
     <span class="avoidwrap">
       <!-- JSON Schema Form's Angular Schema Form -->
       <!-- https://github.com/json-schema-form -->
@@ -22,96 +22,92 @@
     Choose an example, or create your own, and check out the generated form.<br><br>
 
     <span class="menu-label">Current example:</span>
-    <button md-raised-button
+    <button mat-raised-button
       color="primary"
-      [mdMenuTriggerFor]="exampleMenu">
-      <md-icon>menu</md-icon> {{selectedSetName}} {{selectedExampleName}}
+      [matMenuTriggerFor]="exampleMenu">
+      <mat-icon>menu</mat-icon> {{selectedSetName}} {{selectedExampleName}}
     </button>
-    <md-menu #exampleMenu="mdMenu" class="example-menu">
-      <button md-menu-item class="mat-medium"
-        *ngFor="let example of examples.ng2jsf.schemas"
-        (click)="loadSelectedExample('ng2jsf', '', example.file, example.name)">
+    <mat-menu #exampleMenu="matMenu" class="example-menu">
+      <button mat-menu-item class="mat-medium"
+        *ngFor="let example of examples['ng-jsf'].schemas"
+        (click)="loadSelectedExample('ng-jsf', '', example.file, example.name)">
         {{example.name}}
       </button>
-      <button md-menu-item class="mat-medium"
-        [mdMenuTriggerFor]="asfMenu">
-        <md-icon>menu</md-icon>
+      <button mat-menu-item class="mat-medium" [matMenuTriggerFor]="asfMenu">
         <span>Angular Schema Form (AngularJS) examples</span>
       </button>
-      <md-menu #asfMenu="mdMenu" class="example-menu">
-        <button md-menu-item class="mat-medium"
+      <mat-menu #asfMenu="matMenu" class="example-menu">
+        <button mat-menu-item class="mat-medium"
           *ngFor="let example of examples.asf.schemas"
           (click)="loadSelectedExample('asf', 'Angular Schema Form:', example.file, example.name)">
           {{example.name}}
         </button>
-      </md-menu>
-      <button md-menu-item class="mat-medium"
-        [mdMenuTriggerFor]="rjsfMenu">
-        <md-icon>menu</md-icon>
+      </mat-menu>
+      <button mat-menu-item class="mat-medium" [matMenuTriggerFor]="rjsfMenu">
         <span>React JSON Schema Form examples</span>
       </button>
-      <md-menu #rjsfMenu="mdMenu" class="example-menu">
-        <button md-menu-item class="mat-medium"
+      <mat-menu #rjsfMenu="matMenu" class="example-menu">
+        <button mat-menu-item class="mat-medium"
           *ngFor="let example of examples.rjsf.schemas"
           (click)="loadSelectedExample('rjsf', 'React JSON Schema Form:', example.file, example.name)">
           {{example.name}}
         </button>
-      </md-menu>
-      <button md-menu-item class="mat-medium"
-        [mdMenuTriggerFor]="jsfMenu">
-        <md-icon>menu</md-icon>
+      </mat-menu>
+      <button mat-menu-item class="mat-medium" [matMenuTriggerFor]="jsfMenu">
         <span>JSONForm (jQuery) examples</span>
       </button>
-      <md-menu #jsfMenu="mdMenu" class="example-menu">
-        <button md-menu-item class="mat-medium"
+      <mat-menu #jsfMenu="matMenu" class="example-menu">
+        <button mat-menu-item class="mat-medium"
           *ngFor="let example of examples.jsf.schemas"
           (click)="loadSelectedExample('jsf', 'JSONForm:', example.file, example.name)">
           {{example.name}}
         </button>
-      </md-menu>
-    </md-menu>
+      </mat-menu>
+    </mat-menu>
   </div>
 </div>
-<div fxLayout="row" fxLayoutAlign="space-around start" fxLayoutWrap
+<div fxLayout="row" fxLayoutAlign="space-around start"
   fxLayout.lt-sm="column" fxLayoutAlign.lt-sm="flex-start center">
 
-  <md-card fxFlex="0 0 calc(50% - 12px)">
+  <mat-card fxFlex="0 0 calc(50% - 12px)">
     <h4 class="defualt-cursor" (click)="toggleVisible('options')">
       {{visible.options ? '▼' : '▶'}} Selected Framework and Options
     </h4>
     <div *ngIf="visible.options" fxLayout="column" [@expandSection]="true">
-      <md-select
-        [(ngModel)]="selectedFramework"
-        name="framework"
-        placeholder="Framework">
-        <md-option
-          *ngFor="let framework of frameworkList"
-          [value]="framework">
-          {{frameworks[framework]}}
-        </md-option>
-      </md-select>
+      <mat-form-field>
+        <mat-select
+          [(ngModel)]="selectedFramework"
+          name="framework"
+          placeholder="Framework">
+          <mat-option
+            *ngFor="let framework of frameworkList"
+            [value]="framework">
+            {{frameworks[framework]}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
       <div class="check-row">
-        <md-checkbox color="primary" [(ngModel)]="jsonFormOptions.returnEmptyFields">
+        <mat-checkbox color="primary" [(ngModel)]="jsonFormOptions.returnEmptyFields">
           Return empty fields?
-        </md-checkbox>
+        </mat-checkbox>
         (default = true)
       </div>
       <div class="check-row">
-        <md-checkbox color="primary" [(ngModel)]="jsonFormOptions.addSubmit">
+        <mat-checkbox color="primary" [(ngModel)]="jsonFormOptions.addSubmit">
           Add submit button?
-        </md-checkbox>
+        </mat-checkbox>
         (default = only add if no layout is defined)
       </div>
       <div class="check-row">
-        <!-- <md-checkbox color="primary" [(ngModel)]="jsonFormOptions.formDefaults.feedback">
+        <mat-checkbox color="primary" [(ngModel)]="jsonFormOptions.defautWidgetOptions.feedback">
           Show inline fedback?
-        </md-checkbox> -->
+        </mat-checkbox>
         (default = false)
       </div>
       <div class="check-row">
-        <md-checkbox color="primary" [(ngModel)]="jsonFormOptions.debug">
+        <mat-checkbox color="primary" [(ngModel)]="jsonFormOptions.debug">
           Show debuging information?
-        </md-checkbox>
+        </mat-checkbox>
         (default = false)
       </div>
     </div>
@@ -126,13 +122,12 @@
       [readOnly]="false"
       [autoUpdateContent]="true"
       (textChanged)="generateForm($event)"
-      [style.min-height]="aceHeight + 'px'"
       style="width:100%; overflow: auto; border: 1px solid black;">
       (loading form specification...)
     </div>
-  </md-card>
+  </mat-card>
 
-  <md-card fxFlex="0 0 calc(50% - 12px)">
+  <mat-card fxFlex="0 0 calc(50% - 12px)">
     <h4 class="defualt-cursor" (click)="toggleVisible('form')">
       {{visible.form ? '▼' : '▶'}} Generated Form
     </h4>
@@ -144,13 +139,11 @@
         *ngIf="formActive"
         loadExternalAssets="true"
         [form]="jsonFormObject"
-        [data]="cjson" 
         [options]="jsonFormOptions"
         [framework]="selectedFramework"
         (onChanges)="onChanges($event)"
         (onSubmit)="onSubmit($event)"
         (isValid)="isValid($event)"
-        (btnClick)="newBtnClick()"
         (validationErrors)="validationErrors($event)">
       </json-schema-form>
 
@@ -169,19 +162,21 @@
         </strong>
         <span *ngIf="!formIsValid && !prettyValidationErrors">n/a</span>
         <span *ngIf="prettyValidationErrors">— errors from validationErrors():</span>
-        <pre *ngIf="prettyValidationErrors" class="bg-danger">{{prettyValidationErrors}}</pre>
-      </div>
+        <div *ngIf="prettyValidationErrors"
+          class="data-bad"
+          [innerHTML]="prettyValidationErrors"></div>
+      </div><br>
       <div>
         Live data — from onChanges():
         <pre
           [class.data-good]="!prettyValidationErrors && prettyLiveFormData !== '{}'"
           [class.data-bad]="prettyValidationErrors">{{prettyLiveFormData}}</pre>
-      </div>
+      </div><br>
       <div>
         Submitted data — from onSubmit():
         <pre [class.data-good]="prettySubmittedFormData !== 'null'">{{prettySubmittedFormData}}</pre>
       </div>
     </div>
-  </md-card>
+  </mat-card>
 
 </div>

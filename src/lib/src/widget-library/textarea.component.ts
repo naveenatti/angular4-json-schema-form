@@ -7,13 +7,14 @@ import { JsonSchemaFormService } from '../json-schema-form.service';
   selector: 'textarea-widget',
   template: `
     <div
-      [class]="options?.htmlClass">
+      [class]="options?.htmlClass || ''">
       <label *ngIf="options?.title"
         [attr.for]="'control' + layoutNode?._id"
-        [class]="options?.labelHtmlClass"
+        [class]="options?.labelHtmlClass || ''"
         [style.display]="options?.notitle ? 'none' : ''"
         [innerHTML]="options?.title"></label>
-      <textarea
+      <textarea *ngIf="boundControl"
+        [formControl]="formControl"
         [attr.aria-describedby]="'control' + layoutNode?._id + 'Status'"
         [attr.maxlength]="options?.maxLength"
         [attr.minlength]="options?.minLength"
@@ -21,28 +22,38 @@ import { JsonSchemaFormService } from '../json-schema-form.service';
         [attr.placeholder]="options?.placeholder"
         [attr.readonly]="options?.readonly ? 'readonly' : null"
         [attr.required]="options?.required"
-        [class]="options?.fieldHtmlClass"
+        [class]="options?.fieldHtmlClass || ''"
+        [id]="'control' + layoutNode?._id"
+        [name]="controlName"></textarea>
+      <textarea *ngIf="!boundControl"
+        [attr.aria-describedby]="'control' + layoutNode?._id + 'Status'"
+        [attr.maxlength]="options?.maxLength"
+        [attr.minlength]="options?.minLength"
+        [attr.pattern]="options?.pattern"
+        [attr.placeholder]="options?.placeholder"
+        [attr.readonly]="options?.readonly ? 'readonly' : null"
+        [attr.required]="options?.required"
+        [class]="options?.fieldHtmlClass || ''"
         [disabled]="controlDisabled"
         [id]="'control' + layoutNode?._id"
         [name]="controlName"
         [value]="controlValue"
-        (input)="updateValue($event)"></textarea>
+        (input)="updateValue($event)">{{controlValue}}</textarea>
     </div>`,
 })
 export class TextareaComponent implements OnInit {
   formControl: AbstractControl;
   controlName: string;
   controlValue: any;
-  controlDisabled: boolean = false;
-  boundControl: boolean = false;
+  controlDisabled = false;
+  boundControl = false;
   options: any;
-  @Input() formID: number;
   @Input() layoutNode: any;
   @Input() layoutIndex: number[];
   @Input() dataIndex: number[];
 
   constructor(
-    private jsf: JsonSchemaFormService,
+    private jsf: JsonSchemaFormService
   ) { }
 
   ngOnInit() {

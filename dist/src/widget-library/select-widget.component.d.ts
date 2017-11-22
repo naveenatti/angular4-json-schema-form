@@ -4,7 +4,6 @@ export declare class SelectWidgetComponent implements OnChanges, OnInit {
     private componentFactory;
     private jsf;
     newComponent: ComponentRef<any>;
-    formID: number;
     layoutNode: any;
     layoutIndex: number[];
     dataIndex: number[];

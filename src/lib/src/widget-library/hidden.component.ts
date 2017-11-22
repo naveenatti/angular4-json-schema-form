@@ -6,7 +6,12 @@ import { JsonSchemaFormService } from '../json-schema-form.service';
 @Component({
   selector: 'hidden-widget',
   template: `
-    <input
+    <input *ngIf="boundControl"
+      [formControl]="formControl"
+      [id]="'control' + layoutNode?._id"
+      [name]="controlName"
+      type="hidden">
+    <input *ngIf="!boundControl"
       [disabled]="controlDisabled"
       [name]="controlName"
       [id]="'control' + layoutNode?._id"
@@ -17,9 +22,8 @@ export class HiddenComponent implements OnInit {
   formControl: AbstractControl;
   controlName: string;
   controlValue: any;
-  controlDisabled: boolean = false;
-  boundControl: boolean = false;
-  @Input() formID: number;
+  controlDisabled = false;
+  boundControl = false;
   @Input() layoutNode: any;
   @Input() layoutIndex: number[];
   @Input() dataIndex: number[];

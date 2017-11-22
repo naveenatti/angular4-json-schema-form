@@ -1,41 +1,35 @@
 import { Component, Input, OnInit } from '@angular/core';
 
 import { JsonSchemaFormService } from '../../json-schema-form.service';
-import { JsonPointer } from '../../shared';
 
 @Component({
   selector: 'material-tabs-widget',
   template: `
-    <nav md-tab-nav-bar
-      [attr.aria-label]="options?.label || options?.title"
+    <nav mat-tab-nav-bar
+      [attr.aria-label]="options?.label || options?.title || ''"
       [style.width]="'100%'">
-        <a *ngFor="let item of layoutNode?.items; let i = index"
-          md-tab-link
+        <a mat-tab-link *ngFor="let item of layoutNode?.items; let i = index"
           [active]="selectedItem === i"
           (click)="select(i)">
           <span *ngIf="showAddTab || item.type !== '$ref'"
             [innerHTML]="setTitle(item, i)"></span>
         </a>
     </nav>
-
     <div *ngFor="let layoutItem of layoutNode?.items; let i = index"
-      [class]="options?.htmlClass">
-
+      [class]="options?.htmlClass || ''">
       <select-framework-widget *ngIf="selectedItem === i"
-        [class]="options?.fieldHtmlClass + ' ' + options?.activeClass + ' ' + options?.style?.selected"
+        [class]="(options?.fieldHtmlClass || '') + ' ' + (options?.activeClass || '') + ' ' + (options?.style?.selected || '')"
         [dataIndex]="layoutNode?.dataType === 'array' ? (dataIndex || []).concat(i) : dataIndex"
         [layoutIndex]="(layoutIndex || []).concat(i)"
         [layoutNode]="layoutItem"></select-framework-widget>
-
     </div>`,
-  styles: [`a { cursor: pointer; }`],
+  styles: [` a { cursor: pointer; } `],
 })
 export class MaterialTabsComponent implements OnInit {
   options: any;
   itemCount: number;
-  selectedItem: number = 0;
-  showAddTab: boolean = true;
-  @Input() formID: number;
+  selectedItem = 0;
+  showAddTab = true;
   @Input() layoutNode: any;
   @Input() layoutIndex: number[];
   @Input() dataIndex: number[];
@@ -52,9 +46,7 @@ export class MaterialTabsComponent implements OnInit {
 
   select(index) {
     if (this.layoutNode.items[index].type === '$ref') {
-      this.itemCount = this.layoutNode.items.length;
       this.jsf.addItem({
-        formID: this.formID,
         layoutNode: this.layoutNode.items[index],
         layoutIndex: this.layoutIndex.concat(index),
         dataIndex: this.dataIndex.concat(index)
@@ -65,15 +57,13 @@ export class MaterialTabsComponent implements OnInit {
   }
 
   updateControl() {
+    this.itemCount = this.layoutNode.items.length - 1;
     const lastItem = this.layoutNode.items[this.layoutNode.items.length - 1];
-    if (lastItem.type === '$ref' &&
-      this.itemCount >= (lastItem.options.maxItems || 1000000)
-    ) {
-      this.showAddTab = false;
-    }
+    this.showAddTab = lastItem.type === '$ref' &&
+      this.itemCount < (lastItem.options.maxItems || 1000);
   }
 
-  setTitle(item: any = null, index: number = null): string {
+  setTitle(item: any, index: number): string {
     return this.jsf.setTitle(this, item, index);
   }
 }

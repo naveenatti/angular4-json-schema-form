@@ -6,8 +6,8 @@ import {
 /**
  * Utility function library:
  *
- * addClasses, copy, forEach, forEachCopy, hasOwn,
- * mergeFilteredObject, parseText, toTitleCase
+ * addClasses, copy, forEach, forEachCopy, hasOwn, mergeFilteredObject,
+ * uniqueItems, commonItems, fixTitle, toTitleCase
 */
 
 /**
@@ -41,15 +41,19 @@ export function addClasses(
  * it returns the value.
  *
  * @param {Object|Array|string|number|boolean|null} object - The object to copy
+ * @param {boolean = false} errors - Show errors?
  * @return {Object|Array|string|number|boolean|null} - The copied object
  */
-export function copy(object: any): any {
+export function copy(object: any, errors = false): any {
   if (typeof object !== 'object' || object === null) { return object; }
-  if (isObject(object)) { return Object.assign({}, object); }
-  if (isArray(object)) { return [].concat(object); }
-  if (isMap(object)) { return new Map(object); }
-  if (isSet(object)) { return new Set(object); }
-  console.error('copy error: Object to copy must be a JavaScript object or value.');
+  if (isMap(object))    { return new Map(object); }
+  if (isSet(object))    { return new Set(object); }
+  if (isArray(object))  { return [ ...object ];   }
+  if (isObject(object)) { return { ...object };   }
+  if (errors) {
+    console.error('copy error: Object to copy must be a JavaScript object or value.');
+  }
+  return object;
 }
 
 /**
@@ -70,11 +74,12 @@ export function copy(object: any): any {
  *
  * @param {Object|Array} object - The object or array to iterate over
  * @param {function} fn - the iterator funciton to call on each item
+ * @param {boolean = false} errors - Show errors?
  * @return {void}
  */
 export function forEach(
   object: any, fn: (v: any, k?: string | number, c?: any, rc?: any) => any,
-  recurse: boolean | string = false, rootObject: any = object
+  recurse: boolean | string = false, rootObject: any = object, errors = false
 ): void {
   if (isEmpty(object)) { return; }
   if ((isObject(object) || isArray(object)) && typeof fn === 'function') {
@@ -88,12 +93,16 @@ export function forEach(
         forEach(value, fn, recurse, rootObject);
       }
     }
-  } else if (typeof fn !== 'function') {
-    console.error('forEach error: Iterator must be a function.');
-    console.error(fn);
-  } else {
-    console.error('forEach error: Input object must be an object or array.');
-    console.error(object);
+  }
+  if (errors) {
+    if (typeof fn !== 'function') {
+      console.error('forEach error: Iterator must be a function.');
+      console.error('function', fn);
+    }
+    if (!isObject(object) && !isArray(object)) {
+      console.error('forEach error: Input object must be an object or array.');
+      console.error('object', object);
+    }
   }
 }
 
@@ -107,13 +116,14 @@ export function forEach(
  *
  * Does NOT recursively iterate over items in sub-objects or sub-arrays.
  *
- * @param {Object|Array} object - The object or array to iterate over
+ * @param {Object | Array} object - The object or array to iterate over
  * @param {function} fn - The iterator funciton to call on each item
- * @param {any = null} context - Context in which to call the iterator function
- * @return {Object|Array} - The resulting object or array
+ * @param {boolean = false} errors - Show errors?
+ * @return {Object | Array} - The resulting object or array
  */
 export function forEachCopy(
-  object: any, fn: (v: any, k?: string | number, o?: any, p?: string) => any
+  object: any, fn: (v: any, k?: string | number, o?: any, p?: string) => any,
+  errors = false
 ): any {
   if (!hasValue(object)) { return; }
   if ((isObject(object) || isArray(object)) && typeof fn !== 'function') {
@@ -123,26 +133,36 @@ export function forEachCopy(
     }
     return newObject;
   }
-  if (typeof fn !== 'function') {
-    console.error('forEachCopy error: Iterator must be a function.');
-    console.error(fn);
-  } else {
-    console.error('forEachCopy error: Input object must be an object or array.');
-    console.error(object);
+  if (errors) {
+    if (typeof fn !== 'function') {
+      console.error('forEachCopy error: Iterator must be a function.');
+      console.error('function', fn);
+    }
+    if (!isObject(object) && !isArray(object)) {
+      console.error('forEachCopy error: Input object must be an object or array.');
+      console.error('object', object);
+    }
   }
 }
 
 /**
  * 'hasOwn' utility function
  *
- * Checks whether an object has a particular property.
+ * Checks whether an object or array has a particular property.
  *
  * @param {any} object - the object to check
  * @param {string} property - the property to look for
  * @return {boolean} - true if object has property, false if not
  */
 export function hasOwn(object: any, property: string): boolean {
-  if (!isObject(object) && !isArray(object)) { return false; }
+  if (!object || !['number', 'string', 'symbol'].includes(typeof property) ||
+    (!isObject(object) && !isArray(object) && !isMap(object) && !isSet(object))
+  ) { return false; }
+  if (isMap(object) || isSet(object)) { return object.has(property); }
+  if (typeof property === 'number') {
+    if (isArray(object)) { return object[<number>property]; }
+    property = property + '';
+  }
   return object.hasOwnProperty(property);
 }
 
@@ -180,33 +200,51 @@ export function mergeFilteredObject(
 }
 
 /**
- * 'parseText' function
+ * 'uniqueItems' function
  *
- * @param  {string = ''} text -
- * @param  {any = {}} value -
- * @param  {number = null} index -
+ * Accepts any number of string value inputs,
+ * and returns an array of all input vaues, excluding duplicates.
+ *
+ * @param {...string} ...items -
+ * @return {string[]} -
+ */
+export function uniqueItems(...items): string[] {
+  const returnItems = [];
+  for (const item of items) {
+    if (!returnItems.includes(item)) { returnItems.push(item); }
+  }
+  return returnItems;
+}
+
+/**
+ * 'commonItems' function
+ *
+ * Accepts any number of strings or arrays of string values,
+ * and returns a single array containing only values present in all inputs.
+ *
+ * @param {...string|string[]} ...arrays -
+ * @return {string[]} -
+ */
+export function commonItems(...arrays): string[] {
+  let returnItems = null;
+  for (let array of arrays) {
+    if (isString(array)) { array = [array]; }
+    returnItems = returnItems === null ? [ ...array ] :
+      returnItems.filter(item => array.includes(item));
+    if (!returnItems.length) { return []; }
+  }
+  return returnItems;
+}
+
+/**
+ * 'fixTitle' function
+ *
+ *
+ * @param {string} input -
  * @return {string} -
  */
-export function parseText(
-  text: string = '', value: any = {}, values: any = {},
-  key: number|string = null, tpldata: any = null
-): string {
-  if (!text) { return text; }
-  let idx: number = null; // For JSON Form API compatibility
-  let $index: number = null; // For Angular Schema Form API compatibility
-  if (typeof key === 'number') { idx = $index = key + 1; }
-  try {
-      return text.replace(/{{.+?}}/g, exp => eval(exp.slice(2, -2)));
-  } catch (error) {
-    try {
-      return (tpldata) ?
-        text.replace(/{{.+?}}/g, exp => eval('tpldata.' + exp.slice(2, -2))) :
-        text.replace(/{{.+?}}/g, exp => eval('this.' + exp.slice(2, -2)));
-    } catch (error) { }
-    console.error('parseText error: ');
-    console.error(error);
-    return text;
-  }
+export function fixTitle(name: string): string {
+  return name && toTitleCase(name.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/_/g, ' '));
 }
 
 /**
@@ -230,12 +268,12 @@ export function toTitleCase(input: string, forceWords?: string|string[]): string
   let forceArray: string[] = ['a', 'an', 'and', 'as', 'at', 'but', 'by', 'en',
    'for', 'if', 'in', 'nor', 'of', 'on', 'or', 'per', 'the', 'to', 'v', 'v.',
    'vs', 'vs.', 'via'];
-  if (isString(forceWords)) { forceWords = forceWords.split('|'); }
+  if (isString(forceWords)) { forceWords = (<string>forceWords).split('|'); }
   if (isArray(forceWords)) { forceArray = forceArray.concat(forceWords); }
   const forceArrayLower: string[] = forceArray.map(w => w.toLowerCase());
   const noInitialCase: boolean =
     input === input.toUpperCase() || input === input.toLowerCase();
-  let prevLastChar: string = '';
+  let prevLastChar = '';
   input = input.trim();
   return input.replace(/[A-Za-z0-9\u00C0-\u00FF]+[^\s-]*/g, (word, idx) => {
     if (!noInitialCase && word.slice(1).search(/[A-Z]|\../) !== -1) {

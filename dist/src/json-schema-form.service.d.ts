@@ -1,11 +1,19 @@
 import { AbstractControl, FormArray, FormGroup } from '@angular/forms';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
-export declare type CheckboxItem = {
-    name: string;
-    value: any;
+export interface TitleMapItem {
+    name?: string;
+    value?: any;
     checked?: boolean;
-};
+    group?: string;
+    items?: TitleMapItem[];
+}
+export interface ErrorMessages {
+    [control_name: string]: {
+        message: string | Function | Object;
+        code: string;
+    }[];
+}
 export declare class JsonSchemaFormService {
     JsonFormCompatibility: boolean;
     ReactJsonSchemaFormCompatibility: boolean;
@@ -14,16 +22,19 @@ export declare class JsonSchemaFormService {
     ajvOptions: any;
     ajv: any;
     validateFormData: any;
-    initialValues: any;
+    formValues: any;
+    data: any;
     schema: any;
     layout: any[];
     formGroupTemplate: any;
     formGroup: any;
     framework: any;
-    data: any;
+    formOptions: any;
     validData: any;
     isValid: boolean;
+    ajvErrors: any;
     validationErrors: any;
+    dataErrors: any;
     formValueSubscription: any;
     dataChanges: Subject<any>;
     isValidChanges: Subject<any>;
@@ -32,51 +43,45 @@ export declare class JsonSchemaFormService {
     dataMap: Map<string, any>;
     dataRecursiveRefMap: Map<string, string>;
     schemaRecursiveRefMap: Map<string, string>;
-    layoutRefLibrary: any;
     schemaRefLibrary: any;
+    layoutRefLibrary: any;
     templateRefLibrary: any;
-    globalOptionDefaults: any;
-    globalOptions: any;
+    hasRootReference: boolean;
+    defaultFormOptions: any;
     private subject;
-    constructor();
-    /**
-    * @param  {any} shippingInfo
-    */
     setBtnClick(shippingInfo: any): void;
-    /**
-     */
     getBtnClick(): Observable<any>;
     getData(): any;
     getSchema(): any;
     getLayout(): any[];
     resetAllValues(): void;
-    convertJsonSchemaToDraft6(): void;
-    fixJsonFormOptions(layout: any): any;
-    buildFormGroupTemplate(setValues?: boolean): void;
+    buildRemoteError(errors: ErrorMessages): void;
     validateData(newValue: any, updateSubscriptions?: boolean): void;
+    buildFormGroupTemplate(formValues?: any, setValues?: boolean): void;
     buildFormGroup(): void;
     buildLayout(widgetLibrary: any): void;
     setOptions(newOptions: any): void;
     compileAjvSchema(): void;
-    resolveSchemaRefLinks(): void;
     buildSchemaFromData(data?: any, requireAllFields?: boolean): any;
     buildSchemaFromLayout(layout?: any): any;
     setTpldata(newTpldata?: any): void;
     parseText(text?: string, value?: any, values?: any, key?: number | string): string;
+    parseExpression(expression?: string, value?: any, values?: any, key?: number | string, tpldata?: any): any;
     setTitle(parentCtx?: any, childNode?: any, index?: number): string;
-    initializeControl(ctx: any): boolean;
+    initializeControl(ctx: any, bind?: boolean): boolean;
+    formatErrors(errors: any, validationMessages?: any): string;
     updateValue(ctx: any, value: any): void;
-    updateArrayCheckboxList(ctx: any, checkboxList: CheckboxItem[]): void;
-    getControl(ctx: any): AbstractControl;
-    getControlValue(ctx: any): AbstractControl;
-    getControlGroup(ctx: any): FormArray | FormGroup;
-    getControlName(ctx: any): string;
+    updateArrayCheckboxList(ctx: any, checkboxList: TitleMapItem[]): void;
+    getFormControl(ctx: any): AbstractControl;
+    getFormControlValue(ctx: any): AbstractControl;
+    getFormControlGroup(ctx: any): FormArray | FormGroup;
+    getFormControlName(ctx: any): string;
     getLayoutArray(ctx: any): any[];
-    getParentNode(ctx: any): any[];
+    getParentNode(ctx: any): any;
     getDataPointer(ctx: any): string;
     getLayoutPointer(ctx: any): string;
     isControlBound(ctx: any): boolean;
-    addItem(ctx: any): boolean;
+    addItem(ctx: any, name?: string): boolean;
     moveArrayItem(ctx: any, oldIndex: number, newIndex: number): boolean;
     removeItem(ctx: any): boolean;
 }

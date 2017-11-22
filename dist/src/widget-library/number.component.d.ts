@@ -13,13 +13,10 @@ export declare class NumberComponent implements OnInit {
     allowDecimal: boolean;
     allowExponents: boolean;
     lastValidNumber: string;
-    formID: number;
     layoutNode: any;
     layoutIndex: number[];
     dataIndex: number[];
     constructor(jsf: JsonSchemaFormService);
     ngOnInit(): void;
     updateValue(event: any): void;
-    validateInput(event: any): boolean;
-    validateNumber(event: any): void;
 }

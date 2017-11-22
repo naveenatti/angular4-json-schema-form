@@ -6,43 +6,69 @@ import { JsonSchemaFormService } from '../../json-schema-form.service';
 @Component({
   selector: 'material-input-widget',
   template: `
-    <md-input-container
+    <mat-form-field
+      [class]="options?.htmlClass || ''"
       [floatPlaceholder]="options?.floatPlaceholder || (options?.notitle ? 'never' : 'auto')"
-      [style.margin-top]="'-2px'"
       [style.width]="'100%'">
-      <input mdInput #inputControl
+      <span matPrefix *ngIf="options?.prefix || options?.fieldAddonLeft"
+        [innerHTML]="options?.prefix || options?.fieldAddonLeft"></span>
+      <input matInput *ngIf="boundControl"
+        [formControl]="formControl"
         [attr.aria-describedby]="'control' + layoutNode?._id + 'Status'"
         [attr.list]="'control' + layoutNode?._id + 'Autocomplete'"
         [attr.maxlength]="options?.maxLength"
         [attr.minlength]="options?.minLength"
         [attr.pattern]="options?.pattern"
-        [attr.readonly]="options?.readonly ? 'readonly' : null"
-        [disabled]="controlDisabled"
+        [readonly]="options?.readonly ? 'readonly' : null"
         [id]="'control' + layoutNode?._id"
         [name]="controlName"
         [placeholder]="options?.notitle ? options?.placeholder : options?.title"
         [required]="options?.required"
         [style.width]="'100%'"
         [type]="layoutNode?.type"
+        (blur)="options.showErrors = true">
+      <input matInput *ngIf="!boundControl"
+        [attr.aria-describedby]="'control' + layoutNode?._id + 'Status'"
+        [attr.list]="'control' + layoutNode?._id + 'Autocomplete'"
+        [attr.maxlength]="options?.maxLength"
+        [attr.minlength]="options?.minLength"
+        [attr.pattern]="options?.pattern"
+        [disabled]="controlDisabled"
+        [id]="'control' + layoutNode?._id"
+        [name]="controlName"
+        [placeholder]="options?.notitle ? options?.placeholder : options?.title"
+        [readonly]="options?.readonly ? 'readonly' : null"
+        [required]="options?.required"
+        [style.width]="'100%'"
+        [type]="layoutNode?.type"
         [value]="controlValue"
-        (input)="updateValue($event)">
-      <span *ngIf="options?.fieldAddonLeft"
-        md-prefix>{{options?.fieldAddonLeft}}</span>
-      <span *ngIf="options?.fieldAddonRight"
-        md-suffix>{{options?.fieldAddonRight}}</span>
-      <md-hint *ngIf="options?.description && !options?.placeholder && formControl?.dirty"
-        align="end">{{options?.description}}</md-hint>
-    </md-input-container>`,
+        (input)="updateValue($event)"
+        (blur)="options.showErrors = true">
+      <span matSuffix *ngIf="options?.suffix || options?.fieldAddonRight"
+        [innerHTML]="options?.suffix || options?.fieldAddonRight"></span>
+      <mat-hint *ngIf="options?.description && (!options?.showErrors || !options?.errorMessage)"
+        align="end" [innerHTML]="options?.description"></mat-hint>
+      <mat-autocomplete *ngIf="options?.typeahead?.source">
+        <mat-option *ngFor="let word of options?.typeahead?.source"
+          [value]="word">{{word}}</mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+    <mat-error *ngIf="options?.showErrors && options?.errorMessage"
+      [innerHTML]="options?.errorMessage"></mat-error>`,
+  styles: [`
+    mat-error { font-size: 75%; margin-top: -1rem; margin-bottom: 0.5rem; }
+    ::ng-deep mat-form-field .mat-form-field-wrapper .mat-form-field-flex
+      .mat-form-field-infix { width: initial; }
+  `],
 })
 export class MaterialInputComponent implements OnInit {
   formControl: AbstractControl;
   controlName: string;
-  controlValue: any;
-  controlDisabled: boolean = false;
-  boundControl: boolean = false;
+  controlValue: string;
+  controlDisabled = false;
+  boundControl = false;
   options: any;
   autoCompleteList: string[] = [];
-  @Input() formID: number;
   @Input() layoutNode: any;
   @Input() layoutIndex: number[];
   @Input() dataIndex: number[];
@@ -54,6 +80,9 @@ export class MaterialInputComponent implements OnInit {
   ngOnInit() {
     this.options = this.layoutNode.options || {};
     this.jsf.initializeControl(this);
+    if (!this.options.notitle && !this.options.description && this.options.placeholder) {
+      this.options.description = this.options.placeholder;
+    }
   }
 
   updateValue(event) {

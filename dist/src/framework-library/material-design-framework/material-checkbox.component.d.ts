@@ -11,7 +11,7 @@ export declare class MaterialCheckboxComponent implements OnInit {
     options: any;
     trueValue: any;
     falseValue: any;
-    formID: number;
+    showSlideToggle: boolean;
     layoutNode: any;
     layoutIndex: number[];
     dataIndex: number[];

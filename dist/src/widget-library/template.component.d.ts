@@ -4,7 +4,6 @@ export declare class TemplateComponent implements OnInit, OnChanges {
     private componentFactory;
     private jsf;
     newComponent: ComponentRef<any>;
-    formID: number;
     layoutNode: any;
     layoutIndex: number[];
     dataIndex: number[];
