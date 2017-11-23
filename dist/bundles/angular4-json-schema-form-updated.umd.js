@@ -62672,6 +62672,10 @@ var Bootstrap3FrameworkComponent = (function () {
         }
     };
     Bootstrap3FrameworkComponent.prototype.updateHelpBlock = function (status) {
+        this.options.helpBlock = null;
+        if (!this.changeDetector['destroyed']) {
+            this.changeDetector.detectChanges();
+        }
         this.options.helpBlock = status === 'INVALID' &&
             this.options.enableErrorState && this.formControl.errors &&
             (this.formControl.dirty || this.options.feedbackOnRender) ?
