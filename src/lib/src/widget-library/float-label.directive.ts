@@ -1,4 +1,4 @@
-import { Directive, OnInit, AfterViewInit, TemplateRef, ViewContainerRef, ElementRef } from "@angular/core";
+import { Directive, AfterViewInit, TemplateRef, ViewContainerRef, ElementRef } from "@angular/core";
 
 
     @Directive({
@@ -9,16 +9,12 @@ import { Directive, OnInit, AfterViewInit, TemplateRef, ViewContainerRef, Elemen
         }
         
     })
-    export class FloatLabelDirective implements OnInit,AfterViewInit{
+    export class FloatLabelDirective implements AfterViewInit{
         
         constructor(private elementRef:ElementRef) {
             
         }
-        ngOnInit(): void {
-            
-        }
         ngAfterViewInit(): void {
-            debugger;
             this.toggleClass(false,this.elementRef.nativeElement,true);
         }
         onFocus(event:any){
