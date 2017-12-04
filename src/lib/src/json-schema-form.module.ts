@@ -10,15 +10,16 @@ import { JsonSchemaFormComponent } from './json-schema-form.component';
 import { JsonSchemaFormService } from './json-schema-form.service';
 import { FrameworkLibraryService } from './framework-library/framework-library.service';
 import { WidgetLibraryService } from './widget-library/widget-library.service';
+import { FloatLabelDirective} from './widget-library/float-label.directive';
 
 @NgModule({
   imports: [
     CommonModule, FormsModule, ReactiveFormsModule,
     FrameworkLibraryModule, WidgetLibraryModule
   ],
-  declarations: [ JsonSchemaFormComponent ],
+  declarations: [ JsonSchemaFormComponent,FloatLabelDirective ],
   exports: [
-    JsonSchemaFormComponent, FrameworkLibraryModule, WidgetLibraryModule
+    JsonSchemaFormComponent, FrameworkLibraryModule, WidgetLibraryModule,FloatLabelDirective
   ],
   providers: [
     JsonSchemaFormService, FrameworkLibraryService, WidgetLibraryService
