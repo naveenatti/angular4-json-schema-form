@@ -63622,6 +63622,58 @@ var JsonSchemaFormComponent = (function () {
     return JsonSchemaFormComponent;
 }());
 
+var FloatLabelDirective = (function () {
+    function FloatLabelDirective(elementRef) {
+        this.elementRef = elementRef;
+    }
+    FloatLabelDirective.prototype.ngAfterViewInit = function () {
+        this.toggleClass(false, this.elementRef.nativeElement, true);
+    };
+    FloatLabelDirective.prototype.onFocus = function (event) {
+        this.toggleClass(true, event.currentTarget);
+    };
+    FloatLabelDirective.prototype.onBlur = function (event) {
+        this.toggleClass(false, event.currentTarget);
+    };
+    FloatLabelDirective.prototype.toggleClass = function (isFocused, element, isInitialize) {
+        var parentEleClassList = element.parentElement.classList;
+        var hasValue = this.checkValue(element);
+        if (isInitialize && hasValue || element.nodeName === "SELECT") {
+            parentEleClassList.add("has-float");
+            return;
+        }
+        if (isFocused) {
+            if (!parentEleClassList.contains("has-float")) {
+                parentEleClassList.add("has-float");
+            }
+        }
+        else {
+            if (!hasValue) {
+                parentEleClassList.remove("has-float");
+            }
+        }
+    };
+    FloatLabelDirective.prototype.checkValue = function (element) {
+        if (element) {
+            return element.value.toString().length > 0;
+        }
+        return false;
+    };
+    FloatLabelDirective.decorators = [
+        { type: Directive, args: [{
+                    selector: "input[type='text'],input[type='number'],input[type='email'],input[type='password'],select",
+                    host: {
+                        '(focus)': 'onFocus($event)',
+                        '(blur)': 'onBlur($event)'
+                    }
+                },] },
+    ];
+    FloatLabelDirective.ctorParameters = function () { return [
+        { type: ElementRef, },
+    ]; };
+    return FloatLabelDirective;
+}());
+
 var JsonSchemaFormModule = (function () {
     function JsonSchemaFormModule() {
     }
@@ -63631,9 +63683,9 @@ var JsonSchemaFormModule = (function () {
                         CommonModule, FormsModule, ReactiveFormsModule,
                         FrameworkLibraryModule, WidgetLibraryModule
                     ],
-                    declarations: [JsonSchemaFormComponent],
+                    declarations: [JsonSchemaFormComponent, FloatLabelDirective],
                     exports: [
-                        JsonSchemaFormComponent, FrameworkLibraryModule, WidgetLibraryModule
+                        JsonSchemaFormComponent, FrameworkLibraryModule, WidgetLibraryModule, FloatLabelDirective
                     ],
                     providers: [
                         JsonSchemaFormService, FrameworkLibraryService, WidgetLibraryService
@@ -63644,4 +63696,4 @@ var JsonSchemaFormModule = (function () {
     return JsonSchemaFormModule;
 }());
 
-export { Bootstrap3FrameworkModule as ɵe, Bootstrap4FrameworkModule as ɵf, MATERIAL_FRAMEWORK_COMPONENTS as ɵd, ANGULAR_MATERIAL_MODULES as ɵa, JSON_SCHEMA_FORM_VALUE_ACCESSOR as ɵb, BASIC_WIDGETS as ɵc, _executeValidators, _executeAsyncValidators, _mergeObjects, _mergeErrors, isDefined, hasValue, isEmpty, isString, isNumber, isInteger, isBoolean, isFunction, isObject, isArray, isDate, isMap, isSet, isPromise, isObservable, getType, isType, isPrimitive, toJavaScriptType, toSchemaType, _toPromise, toObservable, inArray, xor, addClasses, copy, forEach, forEachCopy, hasOwn, mergeFilteredObject, uniqueItems, commonItems, fixTitle, toTitleCase, JsonPointer, JsonValidators, buildSchemaFromLayout, buildSchemaFromData, getFromSchema, removeRecursiveReferences, getInputType, checkInlineType, isInputRequired, updateInputOptions, getTitleMapFromOneOf, getControlValidators, resolveSchemaReferences, getSubSchema, combineAllOf, fixRequiredArrayProperties, convertSchemaToDraft6, mergeSchemas, buildFormGroupTemplate, buildFormGroup, formatFormData, getControl, setRequiredFields, buildLayout, buildLayoutFromSchema, mapLayout, getLayoutNode, buildTitleMap, dateToString, stringToDate, findDate, OrderableDirective, AddReferenceComponent, OneOfComponent, ButtonComponent, CheckboxComponent, CheckboxesComponent, FileComponent, HiddenComponent, InputComponent, MessageComponent, NoneComponent, NumberComponent, RadiosComponent, RootComponent, SectionComponent, SelectComponent, SelectFrameworkComponent, SelectWidgetComponent, SubmitComponent, TabComponent, TabsComponent, TemplateComponent, TextareaComponent, WidgetLibraryService, WidgetLibraryModule, FlexLayoutRootComponent, FlexLayoutSectionComponent, MaterialAddReferenceComponent, MaterialOneOfComponent, MaterialButtonComponent, MaterialButtonGroupComponent, MaterialCheckboxComponent, MaterialCheckboxesComponent, MaterialChipListComponent, MaterialDatepickerComponent, MaterialFileComponent, MaterialInputComponent, MaterialNumberComponent, MaterialRadiosComponent, MaterialSelectComponent, MaterialSliderComponent, MaterialStepperComponent, MaterialTabsComponent, MaterialTextareaComponent, MaterialDesignFrameworkComponent, MaterialDesignFrameworkModule, NoFrameworkComponent, Bootstrap3FrameworkComponent, Bootstrap4FrameworkComponent, FrameworkLibraryService, FrameworkLibraryModule, JsonSchemaFormComponent, JsonSchemaFormService, JsonSchemaFormModule };
+export { Bootstrap3FrameworkModule as ɵe, Bootstrap4FrameworkModule as ɵf, MATERIAL_FRAMEWORK_COMPONENTS as ɵd, ANGULAR_MATERIAL_MODULES as ɵa, JSON_SCHEMA_FORM_VALUE_ACCESSOR as ɵb, FloatLabelDirective as ɵg, BASIC_WIDGETS as ɵc, _executeValidators, _executeAsyncValidators, _mergeObjects, _mergeErrors, isDefined, hasValue, isEmpty, isString, isNumber, isInteger, isBoolean, isFunction, isObject, isArray, isDate, isMap, isSet, isPromise, isObservable, getType, isType, isPrimitive, toJavaScriptType, toSchemaType, _toPromise, toObservable, inArray, xor, addClasses, copy, forEach, forEachCopy, hasOwn, mergeFilteredObject, uniqueItems, commonItems, fixTitle, toTitleCase, JsonPointer, JsonValidators, buildSchemaFromLayout, buildSchemaFromData, getFromSchema, removeRecursiveReferences, getInputType, checkInlineType, isInputRequired, updateInputOptions, getTitleMapFromOneOf, getControlValidators, resolveSchemaReferences, getSubSchema, combineAllOf, fixRequiredArrayProperties, convertSchemaToDraft6, mergeSchemas, buildFormGroupTemplate, buildFormGroup, formatFormData, getControl, setRequiredFields, buildLayout, buildLayoutFromSchema, mapLayout, getLayoutNode, buildTitleMap, dateToString, stringToDate, findDate, OrderableDirective, AddReferenceComponent, OneOfComponent, ButtonComponent, CheckboxComponent, CheckboxesComponent, FileComponent, HiddenComponent, InputComponent, MessageComponent, NoneComponent, NumberComponent, RadiosComponent, RootComponent, SectionComponent, SelectComponent, SelectFrameworkComponent, SelectWidgetComponent, SubmitComponent, TabComponent, TabsComponent, TemplateComponent, TextareaComponent, WidgetLibraryService, WidgetLibraryModule, FlexLayoutRootComponent, FlexLayoutSectionComponent, MaterialAddReferenceComponent, MaterialOneOfComponent, MaterialButtonComponent, MaterialButtonGroupComponent, MaterialCheckboxComponent, MaterialCheckboxesComponent, MaterialChipListComponent, MaterialDatepickerComponent, MaterialFileComponent, MaterialInputComponent, MaterialNumberComponent, MaterialRadiosComponent, MaterialSelectComponent, MaterialSliderComponent, MaterialStepperComponent, MaterialTabsComponent, MaterialTextareaComponent, MaterialDesignFrameworkComponent, MaterialDesignFrameworkModule, NoFrameworkComponent, Bootstrap3FrameworkComponent, Bootstrap4FrameworkComponent, FrameworkLibraryService, FrameworkLibraryModule, JsonSchemaFormComponent, JsonSchemaFormService, JsonSchemaFormModule };
