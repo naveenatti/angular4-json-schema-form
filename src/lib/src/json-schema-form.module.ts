@@ -17,9 +17,9 @@ import { FloatLabelDirective} from './widget-library/float-label.directive';
     CommonModule, FormsModule, ReactiveFormsModule,
     FrameworkLibraryModule, WidgetLibraryModule
   ],
-  declarations: [ JsonSchemaFormComponent,FloatLabelDirective ],
+  declarations: [ JsonSchemaFormComponent ],
   exports: [
-    JsonSchemaFormComponent, FrameworkLibraryModule, WidgetLibraryModule,FloatLabelDirective
+    JsonSchemaFormComponent, FrameworkLibraryModule, WidgetLibraryModule
   ],
   providers: [
     JsonSchemaFormService, FrameworkLibraryService, WidgetLibraryService

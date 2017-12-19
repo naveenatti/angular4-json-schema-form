@@ -7,14 +7,14 @@ import { buildTitleMap, isArray } from '../shared';
 @Component({
   selector: 'select-widget',
   template: `
-    <div
-      [class]="options?.htmlClass || ''">
+  <!-- [class]="options?.htmlClass || ''"-->
+    <div [class.floatLabelContainer]='true'>
       <label *ngIf="options?.title"
         [attr.for]="'control' + layoutNode?._id"
         [class]="options?.labelHtmlClass || ''"
         [style.display]="options?.notitle ? 'none' : ''"
         [innerHTML]="options?.title"></label>
-      <select *ngIf="boundControl"
+      <select float-label *ngIf="boundControl"
         [formControl]="formControl"
         [attr.aria-describedby]="'control' + layoutNode?._id + 'Status'"
         [attr.readonly]="options?.readonly ? 'readonly' : null"
@@ -36,7 +36,7 @@ import { buildTitleMap, isArray } from '../shared';
           </optgroup>
         </ng-template>
       </select>
-      <select *ngIf="!boundControl"
+      <select float-label *ngIf="!boundControl"
         [attr.aria-describedby]="'control' + layoutNode?._id + 'Status'"
         [attr.readonly]="options?.readonly ? 'readonly' : null"
         [attr.required]="options?.required"

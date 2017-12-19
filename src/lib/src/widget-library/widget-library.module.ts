@@ -8,11 +8,12 @@ import { WidgetLibraryService } from './widget-library.service';
 import { JsonSchemaFormService } from '../json-schema-form.service';
 
 import { BASIC_WIDGETS } from './index';
+import { FloatLabelDirective } from './float-label.directive';
 
 @NgModule({
   imports:         [ CommonModule, FormsModule, ReactiveFormsModule ],
-  declarations:    [ ...BASIC_WIDGETS, OrderableDirective ],
-  exports:         [ ...BASIC_WIDGETS, OrderableDirective ],
+  declarations:    [ ...BASIC_WIDGETS, OrderableDirective,FloatLabelDirective ],
+  exports:         [ ...BASIC_WIDGETS, OrderableDirective,FloatLabelDirective ],
   entryComponents: [ ...BASIC_WIDGETS ],
   providers:       [ JsonSchemaFormService, WidgetLibraryService ]
 })

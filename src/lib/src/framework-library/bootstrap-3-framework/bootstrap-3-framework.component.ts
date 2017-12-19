@@ -101,6 +101,23 @@ import {
     :host /deep/ .radio-inline + .checkbox-inline { margin-left: 0; margin-right: 10px; }
     :host /deep/ .checkbox-inline:last-child,
     :host /deep/ .radio-inline:last-child { margin-right: 0; }
+    :host /deep/ .floatLabelContainer {position:relative;}
+    :host /deep/ .floatLabelContainer [float-label] + label{ position: absolute;
+      top: 11px;
+      left: 12px;
+      cursor: text;
+      -webkit-transition: all 0.3s;
+      transition: all 0.3s;
+      z-index: 3;
+      line-height: 1;
+      color: transparent;}
+    :host /deep/ .floatLabelContainer.has-float [float-label] + label{font-size: 12px;
+      opacity: 1;
+      top: -6px;
+      left: 9px;
+      font-weight:700;
+      background-color: #fff;
+      color: #0f7bb6;}
   `],
 })
 export class Bootstrap3FrameworkComponent implements OnInit, OnChanges {
