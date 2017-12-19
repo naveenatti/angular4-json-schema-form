@@ -63618,6 +63618,58 @@ var JsonSchemaFormComponent = (function () {
     return JsonSchemaFormComponent;
 }());
 
+var FloatLabelDirective = (function () {
+    function FloatLabelDirective(elementRef) {
+        this.elementRef = elementRef;
+    }
+    FloatLabelDirective.prototype.ngAfterViewInit = function () {
+        this.toggleClass(false, this.elementRef.nativeElement, true);
+    };
+    FloatLabelDirective.prototype.onFocus = function (event) {
+        this.toggleClass(true, event.currentTarget);
+    };
+    FloatLabelDirective.prototype.onBlur = function (event) {
+        this.toggleClass(false, event.currentTarget);
+    };
+    FloatLabelDirective.prototype.toggleClass = function (isFocused, element, isInitialize) {
+        var parentEleClassList = element.parentElement.classList;
+        var hasValue = this.checkValue(element);
+        if (isInitialize && hasValue || element.nodeName === "SELECT") {
+            parentEleClassList.add("has-float");
+            return;
+        }
+        if (isFocused) {
+            if (!parentEleClassList.contains("has-float")) {
+                parentEleClassList.add("has-float");
+            }
+        }
+        else {
+            if (!hasValue) {
+                parentEleClassList.remove("has-float");
+            }
+        }
+    };
+    FloatLabelDirective.prototype.checkValue = function (element) {
+        if (element) {
+            return element.value.toString().length > 0;
+        }
+        return false;
+    };
+    FloatLabelDirective.decorators = [
+        { type: core.Directive, args: [{
+                    selector: "input[type='text'],input[type='number'],input[type='email'],input[type='password'],select",
+                    host: {
+                        '(focus)': 'onFocus($event)',
+                        '(blur)': 'onBlur($event)'
+                    }
+                },] },
+    ];
+    FloatLabelDirective.ctorParameters = function () { return [
+        { type: core.ElementRef, },
+    ]; };
+    return FloatLabelDirective;
+}());
+
 var JsonSchemaFormModule = (function () {
     function JsonSchemaFormModule() {
     }
@@ -63627,9 +63679,9 @@ var JsonSchemaFormModule = (function () {
                         common.CommonModule, forms.FormsModule, forms.ReactiveFormsModule,
                         FrameworkLibraryModule, WidgetLibraryModule
                     ],
-                    declarations: [JsonSchemaFormComponent],
+                    declarations: [JsonSchemaFormComponent, FloatLabelDirective],
                     exports: [
-                        JsonSchemaFormComponent, FrameworkLibraryModule, WidgetLibraryModule
+                        JsonSchemaFormComponent, FrameworkLibraryModule, WidgetLibraryModule, FloatLabelDirective
                     ],
                     providers: [
                         JsonSchemaFormService, FrameworkLibraryService, WidgetLibraryService
@@ -63645,6 +63697,7 @@ exports.ɵf = Bootstrap4FrameworkModule;
 exports.ɵd = MATERIAL_FRAMEWORK_COMPONENTS;
 exports.ɵa = ANGULAR_MATERIAL_MODULES;
 exports.ɵb = JSON_SCHEMA_FORM_VALUE_ACCESSOR;
+exports.ɵg = FloatLabelDirective;
 exports.ɵc = BASIC_WIDGETS;
 exports._executeValidators = _executeValidators;
 exports._executeAsyncValidators = _executeAsyncValidators;
