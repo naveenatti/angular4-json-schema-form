@@ -1,6 +1,6 @@
 import * as Ajv from 'ajv';
 
-import { ApplicationRef, Attribute, ChangeDetectionStrategy, ChangeDetectorRef, Component, ComponentFactoryResolver, ContentChild, ContentChildren, Directive, ElementRef, EmbeddedViewRef, EventEmitter, Host, Inject, Injectable, InjectionToken, Injector, Input, IterableDiffers, KeyValueDiffers, LOCALE_ID, NgModule, NgZone, Optional, Output, PLATFORM_ID, Renderer2, SecurityContext, Self, SimpleChange, SkipSelf, TemplateRef, Version, ViewChild, ViewChildren, ViewContainerRef, ViewEncapsulation, forwardRef, isDevMode } from '@angular/core';
+import { ApplicationRef, Attribute, ChangeDetectionStrategy, ChangeDetectorRef, Component, ComponentFactoryResolver, ContentChild, ContentChildren, Directive, ElementRef, EmbeddedViewRef, EventEmitter, Host, Inject, Injectable, InjectionToken, Injector, Input, IterableDiffers, KeyValueDiffers, LOCALE_ID, NgModule, NgZone, Optional, Output, PLATFORM_ID, Renderer, Renderer2, SecurityContext, Self, SimpleChange, SkipSelf, TemplateRef, Version, ViewChild, ViewChildren, ViewContainerRef, ViewEncapsulation, forwardRef, isDevMode } from '@angular/core';
 import { cloneDeep, filter, isEqual, map, uniqueId } from 'lodash';
 import { CheckboxRequiredValidator, FormArray, FormControl, FormGroup, FormGroupDirective, FormsModule, NG_VALIDATORS, NG_VALUE_ACCESSOR, NgControl, NgForm, ReactiveFormsModule, Validators } from '@angular/forms';
 import * as Ajv from 'ajv';
@@ -6989,13 +6989,14 @@ InputComponent.decorators = [
     { type: Component, args: [{
                 selector: 'input-widget',
                 template: `
-    <div [class]="options?.htmlClass || ''">
+   <!-- [class]="options?.htmlClass || ''"-->
+    <div   [class.floatLabelContainer]="true">
       <label *ngIf="options?.title"
         [attr.for]="'control' + layoutNode?._id"
         [class]="options?.labelHtmlClass || ''"
         [style.display]="options?.notitle ? 'none' : ''"
         [innerHTML]="options?.title"></label>
-      <input *ngIf="boundControl"
+      <input float-label *ngIf="boundControl"
         [formControl]="formControl"
         [attr.aria-describedby]="'control' + layoutNode?._id + 'Status'"
         [attr.list]="'control' + layoutNode?._id + 'Autocomplete'"
@@ -7009,7 +7010,7 @@ InputComponent.decorators = [
         [name]="controlName"
         [readonly]="options?.readonly ? 'readonly' : null"
         [type]="layoutNode?.type">
-      <input *ngIf="!boundControl"
+      <input float-label *ngIf="!boundControl"
         [attr.aria-describedby]="'control' + layoutNode?._id + 'Status'"
         [attr.list]="'control' + layoutNode?._id + 'Autocomplete'"
         [attr.maxlength]="options?.maxLength"
@@ -7110,13 +7111,14 @@ NumberComponent.decorators = [
     { type: Component, args: [{
                 selector: 'number-widget',
                 template: `
-    <div [class]="options?.htmlClass || ''">
+  <!-- [class]="options?.htmlClass || ''"-->
+    <div [class.floatLabelContainer]="true" >
       <label *ngIf="options?.title"
         [attr.for]="'control' + layoutNode?._id"
         [class]="options?.labelHtmlClass || ''"
         [style.display]="options?.notitle ? 'none' : ''"
         [innerHTML]="options?.title"></label>
-      <input *ngIf="boundControl"
+      <input float-label *ngIf="boundControl"
         [formControl]="formControl"
         [attr.aria-describedby]="'control' + layoutNode?._id + 'Status'"
         [attr.max]="options?.maximum"
@@ -7131,7 +7133,7 @@ NumberComponent.decorators = [
         [readonly]="options?.readonly ? 'readonly' : null"
         [title]="lastValidNumber"
         [type]="layoutNode?.type === 'range' ? 'range' : 'number'">
-      <input *ngIf="!boundControl"
+      <input float-label *ngIf="!boundControl"
         [attr.aria-describedby]="'control' + layoutNode?._id + 'Status'"
         [attr.max]="options?.maximum"
         [attr.min]="options?.minimum"
@@ -7494,14 +7496,14 @@ SelectComponent.decorators = [
     { type: Component, args: [{
                 selector: 'select-widget',
                 template: `
-    <div
-      [class]="options?.htmlClass || ''">
+  <!-- [class]="options?.htmlClass || ''"-->
+    <div [class.floatLabelContainer]='true'>
       <label *ngIf="options?.title"
         [attr.for]="'control' + layoutNode?._id"
         [class]="options?.labelHtmlClass || ''"
         [style.display]="options?.notitle ? 'none' : ''"
         [innerHTML]="options?.title"></label>
-      <select *ngIf="boundControl"
+      <select float-label *ngIf="boundControl"
         [formControl]="formControl"
         [attr.aria-describedby]="'control' + layoutNode?._id + 'Status'"
         [attr.readonly]="options?.readonly ? 'readonly' : null"
@@ -7523,7 +7525,7 @@ SelectComponent.decorators = [
           </optgroup>
         </ng-template>
       </select>
-      <select *ngIf="!boundControl"
+      <select float-label *ngIf="!boundControl"
         [attr.aria-describedby]="'control' + layoutNode?._id + 'Status'"
         [attr.readonly]="options?.readonly ? 'readonly' : null"
         [attr.required]="options?.required"
@@ -8083,13 +8085,88 @@ const BASIC_WIDGETS = [
     TemplateComponent, TextareaComponent
 ];
 
+class FloatLabelDirective {
+    constructor(elementRef, renderer) {
+        this.elementRef = elementRef;
+        this.renderer = renderer;
+    }
+    ngAfterViewInit() {
+        this.element = this.elementRef.nativeElement;
+        this.appendLabel(this.element);
+        this.toggleClass(false, this.element, true);
+    }
+    appendLabel(element) {
+        setTimeout(() => {
+            let label = this.renderer.createElement(element, "label");
+            let elementId = "";
+            label.innerText = element.placeholder || "";
+            if (element.nodeName === "SELECT") {
+                label.innerText = "Select " + element.name[0].toUpperCase() + element.name.slice(1) || "Select";
+            }
+            if (!element.id) {
+                elementId = "id_" + Date.now();
+                element.id = elementId;
+            }
+            this.renderer.setElementAttribute(label, "for", !element.id ? elementId : element.id);
+            this.renderer.setElementAttribute(label, "id", "label-class");
+            this.renderer.attachViewAfter(element, [label]);
+        }, 0);
+    }
+    onFocus(event) {
+        this.toggleClass(true, event.currentTarget);
+    }
+    onBlur(event) {
+        this.toggleClass(false, event.currentTarget);
+    }
+    toggleClass(isFocused, element, isInitialize) {
+        let parentEleClassList = element.parentElement.classList;
+        let hasValue = this.checkValue(element);
+        if (isInitialize && hasValue) {
+            parentEleClassList.add("has-float");
+            return;
+        }
+        if (isFocused) {
+            if (!parentEleClassList.contains("has-float")) {
+                parentEleClassList.add("has-float");
+            }
+        }
+        else {
+            if (!hasValue) {
+                parentEleClassList.remove("has-float");
+            }
+        }
+    }
+    checkValue(element) {
+        if (element.nodeName === "SELECT") {
+            return element["0"];
+        }
+        if (element) {
+            return element.value.toString().length > 0;
+        }
+        return false;
+    }
+}
+FloatLabelDirective.decorators = [
+    { type: Directive, args: [{
+                selector: "[float-label]",
+                host: {
+                    '(focus)': 'onFocus($event)',
+                    '(blur)': 'onBlur($event)'
+                }
+            },] },
+];
+FloatLabelDirective.ctorParameters = () => [
+    { type: ElementRef, },
+    { type: Renderer, },
+];
+
 class WidgetLibraryModule {
 }
 WidgetLibraryModule.decorators = [
     { type: NgModule, args: [{
                 imports: [CommonModule, FormsModule, ReactiveFormsModule],
-                declarations: [...BASIC_WIDGETS, OrderableDirective],
-                exports: [...BASIC_WIDGETS, OrderableDirective],
+                declarations: [...BASIC_WIDGETS, OrderableDirective, FloatLabelDirective],
+                exports: [...BASIC_WIDGETS, OrderableDirective, FloatLabelDirective],
                 entryComponents: [...BASIC_WIDGETS],
                 providers: [JsonSchemaFormService, WidgetLibraryService]
             },] },
@@ -63536,6 +63613,23 @@ Bootstrap3FrameworkComponent.decorators = [
     :host /deep/ .radio-inline + .checkbox-inline { margin-left: 0; margin-right: 10px; }
     :host /deep/ .checkbox-inline:last-child,
     :host /deep/ .radio-inline:last-child { margin-right: 0; }
+    :host /deep/ .floatLabelContainer {position:relative;}
+    :host /deep/ .floatLabelContainer [float-label] + label{ position: absolute;
+      top: 11px;
+      left: 12px;
+      cursor: text;
+      -webkit-transition: all 0.3s;
+      transition: all 0.3s;
+      z-index: 3;
+      line-height: 1;
+      color: transparent;}
+    :host /deep/ .floatLabelContainer.has-float [float-label] + label{font-size: 12px;
+      opacity: 1;
+      top: -6px;
+      left: 9px;
+      font-weight:700;
+      background-color: #fff;
+      color: #0f7bb6;}
   `],
             },] },
 ];
@@ -64461,57 +64555,6 @@ JsonSchemaFormComponent.propDecorators = {
     "btnClick": [{ type: Output },],
 };
 
-class FloatLabelDirective {
-    constructor(elementRef) {
-        this.elementRef = elementRef;
-    }
-    ngAfterViewInit() {
-        this.toggleClass(false, this.elementRef.nativeElement, true);
-    }
-    onFocus(event) {
-        this.toggleClass(true, event.currentTarget);
-    }
-    onBlur(event) {
-        this.toggleClass(false, event.currentTarget);
-    }
-    toggleClass(isFocused, element, isInitialize) {
-        let parentEleClassList = element.parentElement.classList;
-        let hasValue = this.checkValue(element);
-        if (isInitialize && hasValue || element.nodeName === "SELECT") {
-            parentEleClassList.add("has-float");
-            return;
-        }
-        if (isFocused) {
-            if (!parentEleClassList.contains("has-float")) {
-                parentEleClassList.add("has-float");
-            }
-        }
-        else {
-            if (!hasValue) {
-                parentEleClassList.remove("has-float");
-            }
-        }
-    }
-    checkValue(element) {
-        if (element) {
-            return element.value.toString().length > 0;
-        }
-        return false;
-    }
-}
-FloatLabelDirective.decorators = [
-    { type: Directive, args: [{
-                selector: "input[type='text'],input[type='number'],input[type='email'],input[type='password'],select",
-                host: {
-                    '(focus)': 'onFocus($event)',
-                    '(blur)': 'onBlur($event)'
-                }
-            },] },
-];
-FloatLabelDirective.ctorParameters = () => [
-    { type: ElementRef, },
-];
-
 class JsonSchemaFormModule {
 }
 JsonSchemaFormModule.decorators = [
@@ -64520,9 +64563,9 @@ JsonSchemaFormModule.decorators = [
                     CommonModule, FormsModule, ReactiveFormsModule,
                     FrameworkLibraryModule, WidgetLibraryModule
                 ],
-                declarations: [JsonSchemaFormComponent, FloatLabelDirective],
+                declarations: [JsonSchemaFormComponent],
                 exports: [
-                    JsonSchemaFormComponent, FrameworkLibraryModule, WidgetLibraryModule, FloatLabelDirective
+                    JsonSchemaFormComponent, FrameworkLibraryModule, WidgetLibraryModule
                 ],
                 providers: [
                     JsonSchemaFormService, FrameworkLibraryService, WidgetLibraryService
@@ -64531,4 +64574,4 @@ JsonSchemaFormModule.decorators = [
 ];
 JsonSchemaFormModule.ctorParameters = () => [];
 
-export { Bootstrap3FrameworkModule as ɵe, Bootstrap4FrameworkModule as ɵf, MATERIAL_FRAMEWORK_COMPONENTS as ɵd, ANGULAR_MATERIAL_MODULES as ɵa, JSON_SCHEMA_FORM_VALUE_ACCESSOR as ɵb, FloatLabelDirective as ɵg, BASIC_WIDGETS as ɵc, _executeValidators, _executeAsyncValidators, _mergeObjects, _mergeErrors, isDefined, hasValue, isEmpty, isString, isNumber, isInteger, isBoolean, isFunction, isObject, isArray, isDate, isMap, isSet, isPromise, isObservable, getType, isType, isPrimitive, toJavaScriptType, toSchemaType, _toPromise, toObservable, inArray, xor, addClasses, copy, forEach, forEachCopy, hasOwn, mergeFilteredObject, uniqueItems, commonItems, fixTitle, toTitleCase, JsonPointer, JsonValidators, buildSchemaFromLayout, buildSchemaFromData, getFromSchema, removeRecursiveReferences, getInputType, checkInlineType, isInputRequired, updateInputOptions, getTitleMapFromOneOf, getControlValidators, resolveSchemaReferences, getSubSchema, combineAllOf, fixRequiredArrayProperties, convertSchemaToDraft6, mergeSchemas, buildFormGroupTemplate, buildFormGroup, formatFormData, getControl, setRequiredFields, buildLayout, buildLayoutFromSchema, mapLayout, getLayoutNode, buildTitleMap, dateToString, stringToDate, findDate, OrderableDirective, AddReferenceComponent, OneOfComponent, ButtonComponent, CheckboxComponent, CheckboxesComponent, FileComponent, HiddenComponent, InputComponent, MessageComponent, NoneComponent, NumberComponent, RadiosComponent, RootComponent, SectionComponent, SelectComponent, SelectFrameworkComponent, SelectWidgetComponent, SubmitComponent, TabComponent, TabsComponent, TemplateComponent, TextareaComponent, WidgetLibraryService, WidgetLibraryModule, FlexLayoutRootComponent, FlexLayoutSectionComponent, MaterialAddReferenceComponent, MaterialOneOfComponent, MaterialButtonComponent, MaterialButtonGroupComponent, MaterialCheckboxComponent, MaterialCheckboxesComponent, MaterialChipListComponent, MaterialDatepickerComponent, MaterialFileComponent, MaterialInputComponent, MaterialNumberComponent, MaterialRadiosComponent, MaterialSelectComponent, MaterialSliderComponent, MaterialStepperComponent, MaterialTabsComponent, MaterialTextareaComponent, MaterialDesignFrameworkComponent, MaterialDesignFrameworkModule, NoFrameworkComponent, Bootstrap3FrameworkComponent, Bootstrap4FrameworkComponent, FrameworkLibraryService, FrameworkLibraryModule, JsonSchemaFormComponent, JsonSchemaFormService, JsonSchemaFormModule };
+export { Bootstrap3FrameworkModule as ɵf, Bootstrap4FrameworkModule as ɵg, MATERIAL_FRAMEWORK_COMPONENTS as ɵe, ANGULAR_MATERIAL_MODULES as ɵa, JSON_SCHEMA_FORM_VALUE_ACCESSOR as ɵb, FloatLabelDirective as ɵd, BASIC_WIDGETS as ɵc, _executeValidators, _executeAsyncValidators, _mergeObjects, _mergeErrors, isDefined, hasValue, isEmpty, isString, isNumber, isInteger, isBoolean, isFunction, isObject, isArray, isDate, isMap, isSet, isPromise, isObservable, getType, isType, isPrimitive, toJavaScriptType, toSchemaType, _toPromise, toObservable, inArray, xor, addClasses, copy, forEach, forEachCopy, hasOwn, mergeFilteredObject, uniqueItems, commonItems, fixTitle, toTitleCase, JsonPointer, JsonValidators, buildSchemaFromLayout, buildSchemaFromData, getFromSchema, removeRecursiveReferences, getInputType, checkInlineType, isInputRequired, updateInputOptions, getTitleMapFromOneOf, getControlValidators, resolveSchemaReferences, getSubSchema, combineAllOf, fixRequiredArrayProperties, convertSchemaToDraft6, mergeSchemas, buildFormGroupTemplate, buildFormGroup, formatFormData, getControl, setRequiredFields, buildLayout, buildLayoutFromSchema, mapLayout, getLayoutNode, buildTitleMap, dateToString, stringToDate, findDate, OrderableDirective, AddReferenceComponent, OneOfComponent, ButtonComponent, CheckboxComponent, CheckboxesComponent, FileComponent, HiddenComponent, InputComponent, MessageComponent, NoneComponent, NumberComponent, RadiosComponent, RootComponent, SectionComponent, SelectComponent, SelectFrameworkComponent, SelectWidgetComponent, SubmitComponent, TabComponent, TabsComponent, TemplateComponent, TextareaComponent, WidgetLibraryService, WidgetLibraryModule, FlexLayoutRootComponent, FlexLayoutSectionComponent, MaterialAddReferenceComponent, MaterialOneOfComponent, MaterialButtonComponent, MaterialButtonGroupComponent, MaterialCheckboxComponent, MaterialCheckboxesComponent, MaterialChipListComponent, MaterialDatepickerComponent, MaterialFileComponent, MaterialInputComponent, MaterialNumberComponent, MaterialRadiosComponent, MaterialSelectComponent, MaterialSliderComponent, MaterialStepperComponent, MaterialTabsComponent, MaterialTextareaComponent, MaterialDesignFrameworkComponent, MaterialDesignFrameworkModule, NoFrameworkComponent, Bootstrap3FrameworkComponent, Bootstrap4FrameworkComponent, FrameworkLibraryService, FrameworkLibraryModule, JsonSchemaFormComponent, JsonSchemaFormService, JsonSchemaFormModule };

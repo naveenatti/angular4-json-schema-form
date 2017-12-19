@@ -1,7 +1,7 @@
 import * as Ajv from 'ajv';
 import * as _ from 'lodash';
 
-import { ApplicationRef, Attribute, ChangeDetectionStrategy, ChangeDetectorRef, Component, ComponentFactoryResolver, ContentChild, ContentChildren, Directive, ElementRef, EmbeddedViewRef, EventEmitter, Host, Inject, Injectable, InjectionToken, Injector, Input, IterableDiffers, KeyValueDiffers, LOCALE_ID, NgModule, NgZone, Optional, Output, PLATFORM_ID, Renderer2, SecurityContext, Self, SimpleChange, SkipSelf, TemplateRef, Version, ViewChild, ViewChildren, ViewContainerRef, ViewEncapsulation, forwardRef, isDevMode } from '@angular/core';
+import { ApplicationRef, Attribute, ChangeDetectionStrategy, ChangeDetectorRef, Component, ComponentFactoryResolver, ContentChild, ContentChildren, Directive, ElementRef, EmbeddedViewRef, EventEmitter, Host, Inject, Injectable, InjectionToken, Injector, Input, IterableDiffers, KeyValueDiffers, LOCALE_ID, NgModule, NgZone, Optional, Output, PLATFORM_ID, Renderer, Renderer2, SecurityContext, Self, SimpleChange, SkipSelf, TemplateRef, Version, ViewChild, ViewChildren, ViewContainerRef, ViewEncapsulation, forwardRef, isDevMode } from '@angular/core';
 import { cloneDeep, filter, isEqual, map, uniqueId } from 'lodash';
 import { CheckboxRequiredValidator, FormArray, FormControl, FormGroup, FormGroupDirective, FormsModule, NG_VALIDATORS, NG_VALUE_ACCESSOR, NgControl, NgForm, ReactiveFormsModule, Validators } from '@angular/forms';
 import * as Ajv from 'ajv';
@@ -7251,7 +7251,7 @@ var InputComponent = (function () {
     InputComponent.decorators = [
         { type: Component, args: [{
                     selector: 'input-widget',
-                    template: "\n    <div [class]=\"options?.htmlClass || ''\">\n      <label *ngIf=\"options?.title\"\n        [attr.for]=\"'control' + layoutNode?._id\"\n        [class]=\"options?.labelHtmlClass || ''\"\n        [style.display]=\"options?.notitle ? 'none' : ''\"\n        [innerHTML]=\"options?.title\"></label>\n      <input *ngIf=\"boundControl\"\n        [formControl]=\"formControl\"\n        [attr.aria-describedby]=\"'control' + layoutNode?._id + 'Status'\"\n        [attr.list]=\"'control' + layoutNode?._id + 'Autocomplete'\"\n        [attr.maxlength]=\"options?.maxLength\"\n        [attr.minlength]=\"options?.minLength\"\n        [attr.pattern]=\"options?.pattern\"\n        [attr.placeholder]=\"options?.placeholder\"\n        [attr.required]=\"options?.required\"\n        [class]=\"options?.fieldHtmlClass || ''\"\n        [id]=\"'control' + layoutNode?._id\"\n        [name]=\"controlName\"\n        [readonly]=\"options?.readonly ? 'readonly' : null\"\n        [type]=\"layoutNode?.type\">\n      <input *ngIf=\"!boundControl\"\n        [attr.aria-describedby]=\"'control' + layoutNode?._id + 'Status'\"\n        [attr.list]=\"'control' + layoutNode?._id + 'Autocomplete'\"\n        [attr.maxlength]=\"options?.maxLength\"\n        [attr.minlength]=\"options?.minLength\"\n        [attr.pattern]=\"options?.pattern\"\n        [attr.placeholder]=\"options?.placeholder\"\n        [attr.required]=\"options?.required\"\n        [class]=\"options?.fieldHtmlClass || ''\"\n        [disabled]=\"controlDisabled\"\n        [id]=\"'control' + layoutNode?._id\"\n        [name]=\"controlName\"\n        [readonly]=\"options?.readonly ? 'readonly' : null\"\n        [type]=\"layoutNode?.type\"\n        [value]=\"controlValue\"\n        (input)=\"updateValue($event)\">\n        <datalist *ngIf=\"options?.typeahead?.source\"\n          [id]=\"'control' + layoutNode?._id + 'Autocomplete'\">\n          <option *ngFor=\"let word of options?.typeahead?.source\" [value]=\"word\">\n        </datalist>\n    </div>",
+                    template: "\n   <!-- [class]=\"options?.htmlClass || ''\"-->\n    <div   [class.floatLabelContainer]=\"true\">\n      <label *ngIf=\"options?.title\"\n        [attr.for]=\"'control' + layoutNode?._id\"\n        [class]=\"options?.labelHtmlClass || ''\"\n        [style.display]=\"options?.notitle ? 'none' : ''\"\n        [innerHTML]=\"options?.title\"></label>\n      <input float-label *ngIf=\"boundControl\"\n        [formControl]=\"formControl\"\n        [attr.aria-describedby]=\"'control' + layoutNode?._id + 'Status'\"\n        [attr.list]=\"'control' + layoutNode?._id + 'Autocomplete'\"\n        [attr.maxlength]=\"options?.maxLength\"\n        [attr.minlength]=\"options?.minLength\"\n        [attr.pattern]=\"options?.pattern\"\n        [attr.placeholder]=\"options?.placeholder\"\n        [attr.required]=\"options?.required\"\n        [class]=\"options?.fieldHtmlClass || ''\"\n        [id]=\"'control' + layoutNode?._id\"\n        [name]=\"controlName\"\n        [readonly]=\"options?.readonly ? 'readonly' : null\"\n        [type]=\"layoutNode?.type\">\n      <input float-label *ngIf=\"!boundControl\"\n        [attr.aria-describedby]=\"'control' + layoutNode?._id + 'Status'\"\n        [attr.list]=\"'control' + layoutNode?._id + 'Autocomplete'\"\n        [attr.maxlength]=\"options?.maxLength\"\n        [attr.minlength]=\"options?.minLength\"\n        [attr.pattern]=\"options?.pattern\"\n        [attr.placeholder]=\"options?.placeholder\"\n        [attr.required]=\"options?.required\"\n        [class]=\"options?.fieldHtmlClass || ''\"\n        [disabled]=\"controlDisabled\"\n        [id]=\"'control' + layoutNode?._id\"\n        [name]=\"controlName\"\n        [readonly]=\"options?.readonly ? 'readonly' : null\"\n        [type]=\"layoutNode?.type\"\n        [value]=\"controlValue\"\n        (input)=\"updateValue($event)\">\n        <datalist *ngIf=\"options?.typeahead?.source\"\n          [id]=\"'control' + layoutNode?._id + 'Autocomplete'\">\n          <option *ngFor=\"let word of options?.typeahead?.source\" [value]=\"word\">\n        </datalist>\n    </div>",
                 },] },
     ];
     InputComponent.ctorParameters = function () { return [
@@ -7333,7 +7333,7 @@ var NumberComponent = (function () {
     NumberComponent.decorators = [
         { type: Component, args: [{
                     selector: 'number-widget',
-                    template: "\n    <div [class]=\"options?.htmlClass || ''\">\n      <label *ngIf=\"options?.title\"\n        [attr.for]=\"'control' + layoutNode?._id\"\n        [class]=\"options?.labelHtmlClass || ''\"\n        [style.display]=\"options?.notitle ? 'none' : ''\"\n        [innerHTML]=\"options?.title\"></label>\n      <input *ngIf=\"boundControl\"\n        [formControl]=\"formControl\"\n        [attr.aria-describedby]=\"'control' + layoutNode?._id + 'Status'\"\n        [attr.max]=\"options?.maximum\"\n        [attr.min]=\"options?.minimum\"\n        [attr.placeholder]=\"options?.placeholder\"\n        [attr.required]=\"options?.required\"\n        [attr.readonly]=\"options?.readonly ? 'readonly' : null\"\n        [attr.step]=\"options?.multipleOf || options?.step || 'any'\"\n        [class]=\"options?.fieldHtmlClass || ''\"\n        [id]=\"'control' + layoutNode?._id\"\n        [name]=\"controlName\"\n        [readonly]=\"options?.readonly ? 'readonly' : null\"\n        [title]=\"lastValidNumber\"\n        [type]=\"layoutNode?.type === 'range' ? 'range' : 'number'\">\n      <input *ngIf=\"!boundControl\"\n        [attr.aria-describedby]=\"'control' + layoutNode?._id + 'Status'\"\n        [attr.max]=\"options?.maximum\"\n        [attr.min]=\"options?.minimum\"\n        [attr.placeholder]=\"options?.placeholder\"\n        [attr.required]=\"options?.required\"\n        [attr.readonly]=\"options?.readonly ? 'readonly' : null\"\n        [attr.step]=\"options?.multipleOf || options?.step || 'any'\"\n        [class]=\"options?.fieldHtmlClass || ''\"\n        [disabled]=\"controlDisabled\"\n        [id]=\"'control' + layoutNode?._id\"\n        [name]=\"controlName\"\n        [readonly]=\"options?.readonly ? 'readonly' : null\"\n        [title]=\"lastValidNumber\"\n        [type]=\"layoutNode?.type === 'range' ? 'range' : 'number'\"\n        [value]=\"controlValue\"\n        (input)=\"updateValue($event)\">\n      <span *ngIf=\"layoutNode?.type === 'range'\" [innerHTML]=\"controlValue\"></span>\n    </div>",
+                    template: "\n  <!-- [class]=\"options?.htmlClass || ''\"-->\n    <div [class.floatLabelContainer]=\"true\" >\n      <label *ngIf=\"options?.title\"\n        [attr.for]=\"'control' + layoutNode?._id\"\n        [class]=\"options?.labelHtmlClass || ''\"\n        [style.display]=\"options?.notitle ? 'none' : ''\"\n        [innerHTML]=\"options?.title\"></label>\n      <input float-label *ngIf=\"boundControl\"\n        [formControl]=\"formControl\"\n        [attr.aria-describedby]=\"'control' + layoutNode?._id + 'Status'\"\n        [attr.max]=\"options?.maximum\"\n        [attr.min]=\"options?.minimum\"\n        [attr.placeholder]=\"options?.placeholder\"\n        [attr.required]=\"options?.required\"\n        [attr.readonly]=\"options?.readonly ? 'readonly' : null\"\n        [attr.step]=\"options?.multipleOf || options?.step || 'any'\"\n        [class]=\"options?.fieldHtmlClass || ''\"\n        [id]=\"'control' + layoutNode?._id\"\n        [name]=\"controlName\"\n        [readonly]=\"options?.readonly ? 'readonly' : null\"\n        [title]=\"lastValidNumber\"\n        [type]=\"layoutNode?.type === 'range' ? 'range' : 'number'\">\n      <input float-label *ngIf=\"!boundControl\"\n        [attr.aria-describedby]=\"'control' + layoutNode?._id + 'Status'\"\n        [attr.max]=\"options?.maximum\"\n        [attr.min]=\"options?.minimum\"\n        [attr.placeholder]=\"options?.placeholder\"\n        [attr.required]=\"options?.required\"\n        [attr.readonly]=\"options?.readonly ? 'readonly' : null\"\n        [attr.step]=\"options?.multipleOf || options?.step || 'any'\"\n        [class]=\"options?.fieldHtmlClass || ''\"\n        [disabled]=\"controlDisabled\"\n        [id]=\"'control' + layoutNode?._id\"\n        [name]=\"controlName\"\n        [readonly]=\"options?.readonly ? 'readonly' : null\"\n        [title]=\"lastValidNumber\"\n        [type]=\"layoutNode?.type === 'range' ? 'range' : 'number'\"\n        [value]=\"controlValue\"\n        (input)=\"updateValue($event)\">\n      <span *ngIf=\"layoutNode?.type === 'range'\" [innerHTML]=\"controlValue\"></span>\n    </div>",
                 },] },
     ];
     NumberComponent.ctorParameters = function () { return [
@@ -7532,7 +7532,7 @@ var SelectComponent = (function () {
     SelectComponent.decorators = [
         { type: Component, args: [{
                     selector: 'select-widget',
-                    template: "\n    <div\n      [class]=\"options?.htmlClass || ''\">\n      <label *ngIf=\"options?.title\"\n        [attr.for]=\"'control' + layoutNode?._id\"\n        [class]=\"options?.labelHtmlClass || ''\"\n        [style.display]=\"options?.notitle ? 'none' : ''\"\n        [innerHTML]=\"options?.title\"></label>\n      <select *ngIf=\"boundControl\"\n        [formControl]=\"formControl\"\n        [attr.aria-describedby]=\"'control' + layoutNode?._id + 'Status'\"\n        [attr.readonly]=\"options?.readonly ? 'readonly' : null\"\n        [attr.required]=\"options?.required\"\n        [class]=\"options?.fieldHtmlClass || ''\"\n        [id]=\"'control' + layoutNode?._id\"\n        [name]=\"controlName\">\n        <ng-template ngFor let-selectItem [ngForOf]=\"selectList\">\n          <option *ngIf=\"!isArray(selectItem?.items)\"\n            [value]=\"selectItem?.value\">\n            <span [innerHTML]=\"selectItem?.name\"></span>\n          </option>\n          <optgroup *ngIf=\"isArray(selectItem?.items)\"\n            [label]=\"selectItem?.group\">\n            <option *ngFor=\"let subItem of selectItem.items\"\n              [value]=\"subItem?.value\">\n              <span [innerHTML]=\"subItem?.name\"></span>\n            </option>\n          </optgroup>\n        </ng-template>\n      </select>\n      <select *ngIf=\"!boundControl\"\n        [attr.aria-describedby]=\"'control' + layoutNode?._id + 'Status'\"\n        [attr.readonly]=\"options?.readonly ? 'readonly' : null\"\n        [attr.required]=\"options?.required\"\n        [class]=\"options?.fieldHtmlClass || ''\"\n        [disabled]=\"controlDisabled\"\n        [id]=\"'control' + layoutNode?._id\"\n        [name]=\"controlName\"\n        (change)=\"updateValue($event)\">\n        <ng-template ngFor let-selectItem [ngForOf]=\"selectList\">\n          <option *ngIf=\"!isArray(selectItem?.items)\"\n            [selected]=\"selectItem?.value === controlValue\"\n            [value]=\"selectItem?.value\">\n            <span [innerHTML]=\"selectItem?.name\"></span>\n          </option>\n          <optgroup *ngIf=\"isArray(selectItem?.items)\"\n            [label]=\"selectItem?.group\">\n            <option *ngFor=\"let subItem of selectItem.items\"\n              [attr.selected]=\"subItem?.value === controlValue\"\n              [value]=\"subItem?.value\">\n              <span [innerHTML]=\"subItem?.name\"></span>\n            </option>\n          </optgroup>\n        </ng-template>\n      </select>\n    </div>",
+                    template: "\n  <!-- [class]=\"options?.htmlClass || ''\"-->\n    <div [class.floatLabelContainer]='true'>\n      <label *ngIf=\"options?.title\"\n        [attr.for]=\"'control' + layoutNode?._id\"\n        [class]=\"options?.labelHtmlClass || ''\"\n        [style.display]=\"options?.notitle ? 'none' : ''\"\n        [innerHTML]=\"options?.title\"></label>\n      <select float-label *ngIf=\"boundControl\"\n        [formControl]=\"formControl\"\n        [attr.aria-describedby]=\"'control' + layoutNode?._id + 'Status'\"\n        [attr.readonly]=\"options?.readonly ? 'readonly' : null\"\n        [attr.required]=\"options?.required\"\n        [class]=\"options?.fieldHtmlClass || ''\"\n        [id]=\"'control' + layoutNode?._id\"\n        [name]=\"controlName\">\n        <ng-template ngFor let-selectItem [ngForOf]=\"selectList\">\n          <option *ngIf=\"!isArray(selectItem?.items)\"\n            [value]=\"selectItem?.value\">\n            <span [innerHTML]=\"selectItem?.name\"></span>\n          </option>\n          <optgroup *ngIf=\"isArray(selectItem?.items)\"\n            [label]=\"selectItem?.group\">\n            <option *ngFor=\"let subItem of selectItem.items\"\n              [value]=\"subItem?.value\">\n              <span [innerHTML]=\"subItem?.name\"></span>\n            </option>\n          </optgroup>\n        </ng-template>\n      </select>\n      <select float-label *ngIf=\"!boundControl\"\n        [attr.aria-describedby]=\"'control' + layoutNode?._id + 'Status'\"\n        [attr.readonly]=\"options?.readonly ? 'readonly' : null\"\n        [attr.required]=\"options?.required\"\n        [class]=\"options?.fieldHtmlClass || ''\"\n        [disabled]=\"controlDisabled\"\n        [id]=\"'control' + layoutNode?._id\"\n        [name]=\"controlName\"\n        (change)=\"updateValue($event)\">\n        <ng-template ngFor let-selectItem [ngForOf]=\"selectList\">\n          <option *ngIf=\"!isArray(selectItem?.items)\"\n            [selected]=\"selectItem?.value === controlValue\"\n            [value]=\"selectItem?.value\">\n            <span [innerHTML]=\"selectItem?.name\"></span>\n          </option>\n          <optgroup *ngIf=\"isArray(selectItem?.items)\"\n            [label]=\"selectItem?.group\">\n            <option *ngFor=\"let subItem of selectItem.items\"\n              [attr.selected]=\"subItem?.value === controlValue\"\n              [value]=\"subItem?.value\">\n              <span [innerHTML]=\"subItem?.name\"></span>\n            </option>\n          </optgroup>\n        </ng-template>\n      </select>\n    </div>",
                 },] },
     ];
     SelectComponent.ctorParameters = function () { return [
@@ -8005,14 +8005,91 @@ var BASIC_WIDGETS = [
     TemplateComponent, TextareaComponent
 ];
 
+var FloatLabelDirective = (function () {
+    function FloatLabelDirective(elementRef, renderer) {
+        this.elementRef = elementRef;
+        this.renderer = renderer;
+    }
+    FloatLabelDirective.prototype.ngAfterViewInit = function () {
+        this.element = this.elementRef.nativeElement;
+        this.appendLabel(this.element);
+        this.toggleClass(false, this.element, true);
+    };
+    FloatLabelDirective.prototype.appendLabel = function (element) {
+        var _this = this;
+        setTimeout(function () {
+            var label = _this.renderer.createElement(element, "label");
+            var elementId = "";
+            label.innerText = element.placeholder || "";
+            if (element.nodeName === "SELECT") {
+                label.innerText = "Select " + element.name[0].toUpperCase() + element.name.slice(1) || "Select";
+            }
+            if (!element.id) {
+                elementId = "id_" + Date.now();
+                element.id = elementId;
+            }
+            _this.renderer.setElementAttribute(label, "for", !element.id ? elementId : element.id);
+            _this.renderer.setElementAttribute(label, "id", "label-class");
+            _this.renderer.attachViewAfter(element, [label]);
+        }, 0);
+    };
+    FloatLabelDirective.prototype.onFocus = function (event) {
+        this.toggleClass(true, event.currentTarget);
+    };
+    FloatLabelDirective.prototype.onBlur = function (event) {
+        this.toggleClass(false, event.currentTarget);
+    };
+    FloatLabelDirective.prototype.toggleClass = function (isFocused, element, isInitialize) {
+        var parentEleClassList = element.parentElement.classList;
+        var hasValue = this.checkValue(element);
+        if (isInitialize && hasValue) {
+            parentEleClassList.add("has-float");
+            return;
+        }
+        if (isFocused) {
+            if (!parentEleClassList.contains("has-float")) {
+                parentEleClassList.add("has-float");
+            }
+        }
+        else {
+            if (!hasValue) {
+                parentEleClassList.remove("has-float");
+            }
+        }
+    };
+    FloatLabelDirective.prototype.checkValue = function (element) {
+        if (element.nodeName === "SELECT") {
+            return element["0"];
+        }
+        if (element) {
+            return element.value.toString().length > 0;
+        }
+        return false;
+    };
+    FloatLabelDirective.decorators = [
+        { type: Directive, args: [{
+                    selector: "[float-label]",
+                    host: {
+                        '(focus)': 'onFocus($event)',
+                        '(blur)': 'onBlur($event)'
+                    }
+                },] },
+    ];
+    FloatLabelDirective.ctorParameters = function () { return [
+        { type: ElementRef, },
+        { type: Renderer, },
+    ]; };
+    return FloatLabelDirective;
+}());
+
 var WidgetLibraryModule = (function () {
     function WidgetLibraryModule() {
     }
     WidgetLibraryModule.decorators = [
         { type: NgModule, args: [{
                     imports: [CommonModule, FormsModule, ReactiveFormsModule],
-                    declarations: BASIC_WIDGETS.concat([OrderableDirective]),
-                    exports: BASIC_WIDGETS.concat([OrderableDirective]),
+                    declarations: BASIC_WIDGETS.concat([OrderableDirective, FloatLabelDirective]),
+                    exports: BASIC_WIDGETS.concat([OrderableDirective, FloatLabelDirective]),
                     entryComponents: BASIC_WIDGETS.slice(),
                     providers: [JsonSchemaFormService, WidgetLibraryService]
                 },] },
@@ -62729,7 +62806,7 @@ var Bootstrap3FrameworkComponent = (function () {
         { type: Component, args: [{
                     selector: 'bootstrap-3-framework',
                     template: "\n  <div\n  [class]=\"options?.htmlClass || ''\"\n  [class.has-feedback]=\"options?.feedback && options?.isInputWidget &&\n    (formControl?.dirty || options?.feedbackOnRender)\"\n  [class.has-error]=\"options?.enableErrorState && formControl?.errors &&\n    (formControl?.dirty || options?.feedbackOnRender)\"\n  [class.has-success]=\"options?.enableSuccessState && !formControl?.errors &&\n    (formControl?.dirty || options?.feedbackOnRender)\">\n\n  <button *ngIf=\"showRemoveButton\"\n    class=\"close pull-right\"\n    type=\"button\"\n    (click)=\"removeItem()\">\n    <span aria-hidden=\"true\">&times;</span>\n    <span class=\"sr-only\">Close</span>\n  </button>\n  <div *ngIf=\"options?.messageLocation === 'top'\">\n      <p *ngIf=\"options?.helpBlock\"\n      class=\"help-block\"\n      [innerHTML]=\"options?.helpBlock\"></p>\n      <p *ngIf=\"options?.customhelpBlock\"\n      class=\"help-block show\"\n      [innerHTML]=\"options?.customhelpBlock\"></p>\n      <p *ngIf=\"options?.customErrorMessage\"\n      class=\"text-danger block\"\n      [innerHTML]=\"options?.customErrorMessage\"></p>\n  </div>\n\n  <label *ngIf=\"options?.title && layoutNode?.type !== 'tab'\"\n    [attr.for]=\"'control' + layoutNode?._id\"\n    [class]=\"options?.labelHtmlClass || ''\"\n    [class.sr-only]=\"options?.notitle\"\n    [innerHTML]=\"options?.title\"></label>\n  <strong *ngIf=\"options?.title && !options?.notitle && options?.required\"\n    class=\"text-danger\">*</strong>\n  <p *ngIf=\"layoutNode?.type === 'submit' && jsf?.globalOptions?.fieldsRequired\">\n    <strong class=\"text-danger\">*</strong> = required fields\n  </p>\n  <div [class.input-group]=\"options?.fieldAddonLeft || options?.fieldAddonRight\">\n    <span *ngIf=\"options?.fieldAddonLeft\"\n      class=\"input-group-addon\"\n      [innerHTML]=\"options?.fieldAddonLeft\"></span>\n\n    <select-widget-widget\n      [layoutNode]=\"widgetLayoutNode\"\n      [dataIndex]=\"dataIndex\"\n      [layoutIndex]=\"layoutIndex\"></select-widget-widget>\n\n    <span *ngIf=\"options?.fieldAddonRight\"\n      class=\"input-group-addon\"\n      [innerHTML]=\"options?.fieldAddonRight\"></span>\n  </div>\n\n  <span *ngIf=\"options?.feedback && options?.isInputWidget &&\n      !options?.fieldAddonRight && !layoutNode.arrayItem &&\n      (formControl?.dirty || options?.feedbackOnRender)\"\n    [class.glyphicon-ok]=\"options?.enableSuccessState && !formControl?.errors\"\n    [class.glyphicon-remove]=\"options?.enableErrorState && formControl?.errors\"\n    aria-hidden=\"true\"\n    class=\"form-control-feedback glyphicon\"></span>\n  <div *ngIf=\"options?.messageLocation !== 'top'\">\n    <p *ngIf=\"options?.helpBlock\"\n      class=\"help-block\"\n      [innerHTML]=\"options?.helpBlock\"></p>\n      <p *ngIf=\"options?.customhelpBlock\"\n      class=\"help-block show\"\n      [innerHTML]=\"options?.customhelpBlock\"></p>\n      <p *ngIf=\"options?.customErrorMessage\"\n      class=\"errorCode block\"\n      [innerHTML]=\"options?.customErrorMessage\"></p>\n  </div>\n</div>\n\n<div *ngIf=\"debug && debugOutput\">debug: <pre>{{debugOutput}}</pre></div>\n  ",
-                    styles: ["\n    :host /deep/ .list-group-item .form-control-feedback { top: 40; }\n    :host /deep/ .checkbox,\n    :host /deep/ .radio { margin-top: 0; margin-bottom: 0; }\n    :host /deep/ .checkbox-inline,\n    :host /deep/ .checkbox-inline + .checkbox-inline,\n    :host /deep/ .checkbox-inline + .radio-inline,\n    :host /deep/ .radio-inline,\n    :host /deep/ .radio-inline + .radio-inline,\n    :host /deep/ .radio-inline + .checkbox-inline { margin-left: 0; margin-right: 10px; }\n    :host /deep/ .checkbox-inline:last-child,\n    :host /deep/ .radio-inline:last-child { margin-right: 0; }\n  "],
+                    styles: ["\n    :host /deep/ .list-group-item .form-control-feedback { top: 40; }\n    :host /deep/ .checkbox,\n    :host /deep/ .radio { margin-top: 0; margin-bottom: 0; }\n    :host /deep/ .checkbox-inline,\n    :host /deep/ .checkbox-inline + .checkbox-inline,\n    :host /deep/ .checkbox-inline + .radio-inline,\n    :host /deep/ .radio-inline,\n    :host /deep/ .radio-inline + .radio-inline,\n    :host /deep/ .radio-inline + .checkbox-inline { margin-left: 0; margin-right: 10px; }\n    :host /deep/ .checkbox-inline:last-child,\n    :host /deep/ .radio-inline:last-child { margin-right: 0; }\n    :host /deep/ .floatLabelContainer {position:relative;}\n    :host /deep/ .floatLabelContainer [float-label] + label{ position: absolute;\n      top: 11px;\n      left: 12px;\n      cursor: text;\n      -webkit-transition: all 0.3s;\n      transition: all 0.3s;\n      z-index: 3;\n      line-height: 1;\n      color: transparent;}\n    :host /deep/ .floatLabelContainer.has-float [float-label] + label{font-size: 12px;\n      opacity: 1;\n      top: -6px;\n      left: 9px;\n      font-weight:700;\n      background-color: #fff;\n      color: #0f7bb6;}\n  "],
                 },] },
     ];
     Bootstrap3FrameworkComponent.ctorParameters = function () { return [
@@ -63622,58 +63699,6 @@ var JsonSchemaFormComponent = (function () {
     return JsonSchemaFormComponent;
 }());
 
-var FloatLabelDirective = (function () {
-    function FloatLabelDirective(elementRef) {
-        this.elementRef = elementRef;
-    }
-    FloatLabelDirective.prototype.ngAfterViewInit = function () {
-        this.toggleClass(false, this.elementRef.nativeElement, true);
-    };
-    FloatLabelDirective.prototype.onFocus = function (event) {
-        this.toggleClass(true, event.currentTarget);
-    };
-    FloatLabelDirective.prototype.onBlur = function (event) {
-        this.toggleClass(false, event.currentTarget);
-    };
-    FloatLabelDirective.prototype.toggleClass = function (isFocused, element, isInitialize) {
-        var parentEleClassList = element.parentElement.classList;
-        var hasValue = this.checkValue(element);
-        if (isInitialize && hasValue || element.nodeName === "SELECT") {
-            parentEleClassList.add("has-float");
-            return;
-        }
-        if (isFocused) {
-            if (!parentEleClassList.contains("has-float")) {
-                parentEleClassList.add("has-float");
-            }
-        }
-        else {
-            if (!hasValue) {
-                parentEleClassList.remove("has-float");
-            }
-        }
-    };
-    FloatLabelDirective.prototype.checkValue = function (element) {
-        if (element) {
-            return element.value.toString().length > 0;
-        }
-        return false;
-    };
-    FloatLabelDirective.decorators = [
-        { type: Directive, args: [{
-                    selector: "input[type='text'],input[type='number'],input[type='email'],input[type='password'],select",
-                    host: {
-                        '(focus)': 'onFocus($event)',
-                        '(blur)': 'onBlur($event)'
-                    }
-                },] },
-    ];
-    FloatLabelDirective.ctorParameters = function () { return [
-        { type: ElementRef, },
-    ]; };
-    return FloatLabelDirective;
-}());
-
 var JsonSchemaFormModule = (function () {
     function JsonSchemaFormModule() {
     }
@@ -63683,9 +63708,9 @@ var JsonSchemaFormModule = (function () {
                         CommonModule, FormsModule, ReactiveFormsModule,
                         FrameworkLibraryModule, WidgetLibraryModule
                     ],
-                    declarations: [JsonSchemaFormComponent, FloatLabelDirective],
+                    declarations: [JsonSchemaFormComponent],
                     exports: [
-                        JsonSchemaFormComponent, FrameworkLibraryModule, WidgetLibraryModule, FloatLabelDirective
+                        JsonSchemaFormComponent, FrameworkLibraryModule, WidgetLibraryModule
                     ],
                     providers: [
                         JsonSchemaFormService, FrameworkLibraryService, WidgetLibraryService
@@ -63696,4 +63721,4 @@ var JsonSchemaFormModule = (function () {
     return JsonSchemaFormModule;
 }());
 
-export { Bootstrap3FrameworkModule as ɵe, Bootstrap4FrameworkModule as ɵf, MATERIAL_FRAMEWORK_COMPONENTS as ɵd, ANGULAR_MATERIAL_MODULES as ɵa, JSON_SCHEMA_FORM_VALUE_ACCESSOR as ɵb, FloatLabelDirective as ɵg, BASIC_WIDGETS as ɵc, _executeValidators, _executeAsyncValidators, _mergeObjects, _mergeErrors, isDefined, hasValue, isEmpty, isString, isNumber, isInteger, isBoolean, isFunction, isObject, isArray, isDate, isMap, isSet, isPromise, isObservable, getType, isType, isPrimitive, toJavaScriptType, toSchemaType, _toPromise, toObservable, inArray, xor, addClasses, copy, forEach, forEachCopy, hasOwn, mergeFilteredObject, uniqueItems, commonItems, fixTitle, toTitleCase, JsonPointer, JsonValidators, buildSchemaFromLayout, buildSchemaFromData, getFromSchema, removeRecursiveReferences, getInputType, checkInlineType, isInputRequired, updateInputOptions, getTitleMapFromOneOf, getControlValidators, resolveSchemaReferences, getSubSchema, combineAllOf, fixRequiredArrayProperties, convertSchemaToDraft6, mergeSchemas, buildFormGroupTemplate, buildFormGroup, formatFormData, getControl, setRequiredFields, buildLayout, buildLayoutFromSchema, mapLayout, getLayoutNode, buildTitleMap, dateToString, stringToDate, findDate, OrderableDirective, AddReferenceComponent, OneOfComponent, ButtonComponent, CheckboxComponent, CheckboxesComponent, FileComponent, HiddenComponent, InputComponent, MessageComponent, NoneComponent, NumberComponent, RadiosComponent, RootComponent, SectionComponent, SelectComponent, SelectFrameworkComponent, SelectWidgetComponent, SubmitComponent, TabComponent, TabsComponent, TemplateComponent, TextareaComponent, WidgetLibraryService, WidgetLibraryModule, FlexLayoutRootComponent, FlexLayoutSectionComponent, MaterialAddReferenceComponent, MaterialOneOfComponent, MaterialButtonComponent, MaterialButtonGroupComponent, MaterialCheckboxComponent, MaterialCheckboxesComponent, MaterialChipListComponent, MaterialDatepickerComponent, MaterialFileComponent, MaterialInputComponent, MaterialNumberComponent, MaterialRadiosComponent, MaterialSelectComponent, MaterialSliderComponent, MaterialStepperComponent, MaterialTabsComponent, MaterialTextareaComponent, MaterialDesignFrameworkComponent, MaterialDesignFrameworkModule, NoFrameworkComponent, Bootstrap3FrameworkComponent, Bootstrap4FrameworkComponent, FrameworkLibraryService, FrameworkLibraryModule, JsonSchemaFormComponent, JsonSchemaFormService, JsonSchemaFormModule };
+export { Bootstrap3FrameworkModule as ɵf, Bootstrap4FrameworkModule as ɵg, MATERIAL_FRAMEWORK_COMPONENTS as ɵe, ANGULAR_MATERIAL_MODULES as ɵa, JSON_SCHEMA_FORM_VALUE_ACCESSOR as ɵb, FloatLabelDirective as ɵd, BASIC_WIDGETS as ɵc, _executeValidators, _executeAsyncValidators, _mergeObjects, _mergeErrors, isDefined, hasValue, isEmpty, isString, isNumber, isInteger, isBoolean, isFunction, isObject, isArray, isDate, isMap, isSet, isPromise, isObservable, getType, isType, isPrimitive, toJavaScriptType, toSchemaType, _toPromise, toObservable, inArray, xor, addClasses, copy, forEach, forEachCopy, hasOwn, mergeFilteredObject, uniqueItems, commonItems, fixTitle, toTitleCase, JsonPointer, JsonValidators, buildSchemaFromLayout, buildSchemaFromData, getFromSchema, removeRecursiveReferences, getInputType, checkInlineType, isInputRequired, updateInputOptions, getTitleMapFromOneOf, getControlValidators, resolveSchemaReferences, getSubSchema, combineAllOf, fixRequiredArrayProperties, convertSchemaToDraft6, mergeSchemas, buildFormGroupTemplate, buildFormGroup, formatFormData, getControl, setRequiredFields, buildLayout, buildLayoutFromSchema, mapLayout, getLayoutNode, buildTitleMap, dateToString, stringToDate, findDate, OrderableDirective, AddReferenceComponent, OneOfComponent, ButtonComponent, CheckboxComponent, CheckboxesComponent, FileComponent, HiddenComponent, InputComponent, MessageComponent, NoneComponent, NumberComponent, RadiosComponent, RootComponent, SectionComponent, SelectComponent, SelectFrameworkComponent, SelectWidgetComponent, SubmitComponent, TabComponent, TabsComponent, TemplateComponent, TextareaComponent, WidgetLibraryService, WidgetLibraryModule, FlexLayoutRootComponent, FlexLayoutSectionComponent, MaterialAddReferenceComponent, MaterialOneOfComponent, MaterialButtonComponent, MaterialButtonGroupComponent, MaterialCheckboxComponent, MaterialCheckboxesComponent, MaterialChipListComponent, MaterialDatepickerComponent, MaterialFileComponent, MaterialInputComponent, MaterialNumberComponent, MaterialRadiosComponent, MaterialSelectComponent, MaterialSliderComponent, MaterialStepperComponent, MaterialTabsComponent, MaterialTextareaComponent, MaterialDesignFrameworkComponent, MaterialDesignFrameworkModule, NoFrameworkComponent, Bootstrap3FrameworkComponent, Bootstrap4FrameworkComponent, FrameworkLibraryService, FrameworkLibraryModule, JsonSchemaFormComponent, JsonSchemaFormService, JsonSchemaFormModule };
