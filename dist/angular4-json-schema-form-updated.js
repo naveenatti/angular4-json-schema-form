@@ -8121,7 +8121,7 @@ class FloatLabelDirective {
     toggleClass(isFocused, element, isInitialize) {
         let parentEleClassList = element.parentElement.classList;
         let hasValue = this.checkValue(element);
-        if (isInitialize && hasValue) {
+        if (isInitialize && hasValue || this.addFloatByDefault(element)) {
             parentEleClassList.add("has-float");
             return;
         }
@@ -8137,11 +8137,14 @@ class FloatLabelDirective {
         }
     }
     checkValue(element) {
-        if (element.nodeName === "SELECT") {
-            return element["0"];
-        }
         if (element) {
             return element.value.toString().length > 0;
+        }
+        return false;
+    }
+    addFloatByDefault(element) {
+        if (element.nodeName === "SELECT" || element.type === "date") {
+            return true;
         }
         return false;
     }

@@ -8042,7 +8042,7 @@ var FloatLabelDirective = (function () {
     FloatLabelDirective.prototype.toggleClass = function (isFocused, element, isInitialize) {
         var parentEleClassList = element.parentElement.classList;
         var hasValue = this.checkValue(element);
-        if (isInitialize && hasValue) {
+        if (isInitialize && hasValue || this.addFloatByDefault(element)) {
             parentEleClassList.add("has-float");
             return;
         }
@@ -8058,11 +8058,14 @@ var FloatLabelDirective = (function () {
         }
     };
     FloatLabelDirective.prototype.checkValue = function (element) {
-        if (element.nodeName === "SELECT") {
-            return element["0"];
-        }
         if (element) {
             return element.value.toString().length > 0;
+        }
+        return false;
+    };
+    FloatLabelDirective.prototype.addFloatByDefault = function (element) {
+        if (element.nodeName === "SELECT" || element.type === "date") {
+            return true;
         }
         return false;
     };
