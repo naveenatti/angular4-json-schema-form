@@ -10,18 +10,24 @@ import { ElementDef } from "@angular/core/src/view";
         }
     })
     export class FloatLabelDirective implements AfterViewInit{
-      
         element: any;
         constructor(private elementRef:ElementRef,private renderer:Renderer) {
-            
         }
+        /**
+         * Initializing a FloatLabelDirective
+         * @returns void
+         */
         ngAfterViewInit(): void {
             this.element = this.elementRef.nativeElement;
             this.appendLabel(this.element);
             this.toggleClass(false, this.element, true);
-            
         }
-        appendLabel(element: any) {
+        /**
+         * Append an label for input elements
+         * @param  {any} element
+         * @returns void
+         */
+        appendLabel(element: any):void {
             setTimeout(() => {
                 let label = this.renderer.createElement(element, "label");
                 let elementId = "";
@@ -38,17 +44,33 @@ import { ElementDef } from "@angular/core/src/view";
                 this.renderer.attachViewAfter(element, [label]);
             },0)
         }
-        onFocus(event:any){
+        /**
+         * Adding a float label if the element has a Focus
+         * @param  {any} event
+         * @returns void
+         */
+        onFocus(event:any):void{
           this.toggleClass(true,event.currentTarget);
         }
-        onBlur(event:any){
+        /**
+         *  Add or Remove a float label if an element is in out of Focus
+         * @param  {any} event
+         * @returns void
+         */
+        onBlur(event:any):void{
             this.toggleClass(false,event.currentTarget);
         }
-    
+        /**
+         * Add a 'has-float' class if the element has an value
+         * @param  {boolean} isFocused
+         * @param  {any} element
+         * @param  {boolean} isInitialize?
+         * @returns void
+         */
         toggleClass(isFocused: boolean, element: any, isInitialize?: boolean): void {
             let parentEleClassList = element.parentElement.classList;
             let hasValue = this.checkValue(element);
-            if (isInitialize && hasValue) {
+            if (isInitialize && hasValue ||  this.addFloatByDefault(element)) {
                 parentEleClassList.add("has-float");
                 return;
             }
@@ -63,13 +85,26 @@ import { ElementDef } from "@angular/core/src/view";
                 }
             }   
         }
-    
+        /**
+         * check the inputs are having a value or not
+         * @param  {any} element
+         * @returns boolean
+         */
         checkValue(element: any): boolean {
-            if (element.nodeName === "SELECT") {
-                return element["0"];
-            }
             if (element) {
                return element.value.toString().length > 0;
+            }
+            return false;
+        }
+        /**
+         * Add a float label defaultly for
+         * select, date, datetime input elements
+         * @param  {any} element
+         * @returns boolean
+         */
+        addFloatByDefault(element:any):boolean{
+            if (element.nodeName === "SELECT" || element.type === "date") {
+                return true;
             }
             return false;
         }
