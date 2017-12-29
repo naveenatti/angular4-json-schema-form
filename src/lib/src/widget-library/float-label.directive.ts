@@ -33,7 +33,7 @@ import { ElementDef } from "@angular/core/src/view";
                 let elementId = "";
                 label.innerText = element.placeholder || "";
                 if (element.nodeName === "SELECT") {
-                    label.innerText ="Select "+ element.getAttribute('data-placeholder') || '';
+                    label.innerText = element.getAttribute('data-placeholder') || '';
                 }
                 if (!element.id) {
                     elementId = "id_" + Date.now();

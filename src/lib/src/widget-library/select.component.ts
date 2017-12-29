@@ -14,7 +14,7 @@ import { buildTitleMap, isArray } from '../shared';
         [class]="options?.labelHtmlClass || ''"
         [style.display]="options?.notitle ? 'none' : ''"
         [innerHTML]="options?.title"></label>
-      <select [attr.data-placeholder]="options?.placeholder" float-label *ngIf="boundControl"
+      <select [attr.data-placeholder]="options?.selectText" float-label *ngIf="boundControl"
         [formControl]="formControl"
         [attr.aria-describedby]="'control' + layoutNode?._id + 'Status'"
         [attr.readonly]="options?.readonly ? 'readonly' : null"
@@ -36,7 +36,7 @@ import { buildTitleMap, isArray } from '../shared';
           </optgroup>
         </ng-template>
       </select>
-      <select [attr.data-placeholder]="options?.placeholder" float-label *ngIf="!boundControl"
+      <select [attr.data-placeholder]="options?.selectText" float-label *ngIf="!boundControl"
         [attr.aria-describedby]="'control' + layoutNode?._id + 'Status'"
         [attr.readonly]="options?.readonly ? 'readonly' : null"
         [attr.required]="options?.required"

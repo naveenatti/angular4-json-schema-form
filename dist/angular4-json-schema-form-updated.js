@@ -7503,7 +7503,7 @@ SelectComponent.decorators = [
         [class]="options?.labelHtmlClass || ''"
         [style.display]="options?.notitle ? 'none' : ''"
         [innerHTML]="options?.title"></label>
-      <select [attr.data-placeholder]="options?.placeholder" float-label *ngIf="boundControl"
+      <select [attr.data-placeholder]="options?.selectText" float-label *ngIf="boundControl"
         [formControl]="formControl"
         [attr.aria-describedby]="'control' + layoutNode?._id + 'Status'"
         [attr.readonly]="options?.readonly ? 'readonly' : null"
@@ -7525,7 +7525,7 @@ SelectComponent.decorators = [
           </optgroup>
         </ng-template>
       </select>
-      <select [attr.data-placeholder]="options?.placeholder" float-label *ngIf="!boundControl"
+      <select [attr.data-placeholder]="options?.selectText" float-label *ngIf="!boundControl"
         [attr.aria-describedby]="'control' + layoutNode?._id + 'Status'"
         [attr.readonly]="options?.readonly ? 'readonly' : null"
         [attr.required]="options?.required"
@@ -8101,7 +8101,7 @@ class FloatLabelDirective {
             let elementId = "";
             label.innerText = element.placeholder || "";
             if (element.nodeName === "SELECT") {
-                label.innerText = "Select " + element.getAttribute('data-placeholder') || '';
+                label.innerText = element.getAttribute('data-placeholder') || '';
             }
             if (!element.id) {
                 elementId = "id_" + Date.now();
