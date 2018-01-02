@@ -3056,6 +3056,22 @@ var JsonValidators = (function () {
                 null : { 'const': { requiredValue: requiredValue, currentValue: currentValue } };
         };
     };
+    JsonValidators.equalTo = function (equalField) {
+        if (!hasValue(equalField)) {
+            return JsonValidators.nullValidator;
+        }
+        return function (control, invert) {
+            if (invert === void 0) { invert = false; }
+            if (isEmpty(control.value)) {
+                return null;
+            }
+            var currentValue = control.value;
+            var isValid = isString(currentValue) ? (control.parent && control.parent.value && control.parent.value[equalField] === currentValue)
+                : false;
+            return xor(isValid, invert) ?
+                null : { 'equalTo': { equalField: equalField, currentValue: currentValue } };
+        };
+    };
     JsonValidators.minLength = function (minimumLength) {
         if (!hasValue(minimumLength)) {
             return JsonValidators.nullValidator;
@@ -4192,7 +4208,7 @@ function getControlValidators(schema) {
     if (hasOwn(schema, 'type')) {
         switch (schema.type) {
             case 'string':
-                forEach(['pattern', 'format', 'minLength', 'maxLength'], function (prop) {
+                forEach(['pattern', 'format', 'minLength', 'maxLength', 'equalTo'], function (prop) {
                     if (hasOwn(schema, prop)) {
                         validators[prop] = [schema[prop]];
                     }

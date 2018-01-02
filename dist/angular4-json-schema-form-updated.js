@@ -2945,6 +2945,21 @@ class JsonValidators {
                 null : { 'const': { requiredValue, currentValue } };
         };
     }
+    static equalTo(equalField) {
+        if (!hasValue(equalField)) {
+            return JsonValidators.nullValidator;
+        }
+        return (control, invert = false) => {
+            if (isEmpty(control.value)) {
+                return null;
+            }
+            let currentValue = control.value;
+            let isValid = isString(currentValue) ? (control.parent && control.parent.value && control.parent.value[equalField] === currentValue)
+                : false;
+            return xor(isValid, invert) ?
+                null : { 'equalTo': { equalField, currentValue } };
+        };
+    }
     static minLength(minimumLength) {
         if (!hasValue(minimumLength)) {
             return JsonValidators.nullValidator;
@@ -4001,7 +4016,7 @@ function getControlValidators(schema) {
     if (hasOwn(schema, 'type')) {
         switch (schema.type) {
             case 'string':
-                forEach(['pattern', 'format', 'minLength', 'maxLength'], (prop) => {
+                forEach(['pattern', 'format', 'minLength', 'maxLength', 'equalTo'], (prop) => {
                     if (hasOwn(schema, prop)) {
                         validators[prop] = [schema[prop]];
                     }

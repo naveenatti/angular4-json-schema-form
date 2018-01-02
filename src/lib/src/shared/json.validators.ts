@@ -233,6 +233,34 @@ export class JsonValidators {
     };
   }
 
+  
+  /**
+   * 'equalTo' validator
+   *
+   * Note: NOT the same as Angular's default equalTo validator.
+   *
+   * Requires a control's value to match a specified equalTo control value.
+   *
+   * This validator validate the two control values
+   * which allows for partial matches.
+   *
+   * To return to the default funcitonality, and match the entire string,
+   *
+   * @param {string} equalField - value to match a specified equalTo control value
+   * @return {IValidatorFn}
+   */
+  static equalTo(equalField: string): IValidatorFn {
+    if (!hasValue(equalField)) { return JsonValidators.nullValidator; }
+    return (control: AbstractControl, invert = false): ValidationErrors|null => {
+      if (isEmpty(control.value)) { return null; }
+      let currentValue: string = control.value;
+      let isValid = isString(currentValue) ? (control.parent && control.parent.value && control.parent.value[equalField] === currentValue) 
+                                    : false;
+      return xor(isValid, invert) ?
+        null : { 'equalTo': { equalField, currentValue } };
+    };
+  }
+
   /**
    * 'minLength' validator
    *

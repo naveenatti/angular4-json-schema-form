@@ -7,6 +7,7 @@ export declare class JsonValidators {
     static type(requiredType: SchemaPrimitiveType | SchemaPrimitiveType[]): IValidatorFn;
     static enum(allowedValues: any[]): IValidatorFn;
     static const(requiredValue: any): IValidatorFn;
+    static equalTo(equalField: string): IValidatorFn;
     static minLength(minimumLength: number): IValidatorFn;
     static maxLength(maximumLength: number): IValidatorFn;
     static pattern(pattern: string | RegExp, wholeString?: boolean): IValidatorFn;
