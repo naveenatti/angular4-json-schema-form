@@ -63579,7 +63579,7 @@ Bootstrap3FrameworkComponent.decorators = [
     [innerHTML]="options?.title"></label>
   <strong *ngIf="options?.title && !options?.notitle && options?.required"
     class="text-danger">*</strong>
-  <p *ngIf="layoutNode?.type === 'submit' && jsf?.globalOptions?.fieldsRequired">
+  <p *ngIf="layoutNode?.type === 'submit'">
     <strong class="text-danger">*</strong> = required fields
   </p>
   <div [class.input-group]="options?.fieldAddonLeft || options?.fieldAddonRight">
