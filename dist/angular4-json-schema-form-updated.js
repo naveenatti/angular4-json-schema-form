@@ -8125,7 +8125,7 @@ class FloatLabelDirective {
             this.renderer.setElementAttribute(label, "for", !element.id ? elementId : element.id);
             this.renderer.setElementAttribute(label, "id", "label-class");
             this.renderer.attachViewAfter(element, [label]);
-        }, 0);
+        }, 500);
     }
     onFocus(event) {
         this.toggleClass(true, event.currentTarget);

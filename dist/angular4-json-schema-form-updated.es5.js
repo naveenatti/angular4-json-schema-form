@@ -8047,7 +8047,7 @@ var FloatLabelDirective = (function () {
             _this.renderer.setElementAttribute(label, "for", !element.id ? elementId : element.id);
             _this.renderer.setElementAttribute(label, "id", "label-class");
             _this.renderer.attachViewAfter(element, [label]);
-        }, 0);
+        }, 500);
     };
     FloatLabelDirective.prototype.onFocus = function (event) {
         this.toggleClass(true, event.currentTarget);
