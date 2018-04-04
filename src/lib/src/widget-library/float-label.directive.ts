@@ -42,7 +42,7 @@ import { ElementDef } from "@angular/core/src/view";
                 this.renderer.setElementAttribute(label, "for", !element.id ? elementId : element.id);
                 this.renderer.setElementAttribute(label, "id", "label-class");
                 this.renderer.attachViewAfter(element, [label]);
-            },0)
+            },500)
         }
         /**
          * Adding a float label if the element has a Focus
