@@ -34,7 +34,7 @@ export class FloatLabelDirective implements AfterViewInit {
             } else {
                 this.createLabel(element);
             }
-        }, 500)
+        }, 1000)
     }
 
     createLabel(element: any) {

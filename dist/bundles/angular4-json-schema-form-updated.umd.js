@@ -8036,7 +8036,7 @@ var FloatLabelDirective = (function () {
             else {
                 _this.createLabel(element);
             }
-        }, 500);
+        }, 1000);
     };
     FloatLabelDirective.prototype.createLabel = function (element) {
         var label = this.renderer.createElement(element, "label");

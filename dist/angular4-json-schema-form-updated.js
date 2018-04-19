@@ -8118,7 +8118,7 @@ class FloatLabelDirective {
             else {
                 this.createLabel(element);
             }
-        }, 500);
+        }, 1000);
     }
     createLabel(element) {
         let label = this.renderer.createElement(element, "label");
