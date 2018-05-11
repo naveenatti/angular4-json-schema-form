@@ -8112,20 +8112,28 @@ class FloatLabelDirective {
     }
     appendLabel(element) {
         setTimeout(() => {
-            let label = this.renderer.createElement(element, "label");
-            let elementId = "";
-            label.innerText = element.placeholder || "";
-            if (element.nodeName === "SELECT") {
-                label.innerText = element.getAttribute('data-placeholder') || '';
+            if (!element.placeholder) {
+                this.appendLabel(element);
             }
-            if (!element.id) {
-                elementId = "id_" + Date.now();
-                element.id = elementId;
+            else {
+                this.createLabel(element);
             }
-            this.renderer.setElementAttribute(label, "for", !element.id ? elementId : element.id);
-            this.renderer.setElementAttribute(label, "id", "label-class");
-            this.renderer.attachViewAfter(element, [label]);
-        }, 0);
+        }, 1000);
+    }
+    createLabel(element) {
+        let label = this.renderer.createElement(element, "label");
+        let elementId = "";
+        label.innerText = element.placeholder || '';
+        if (element.nodeName === "SELECT") {
+            label.innerText = element.getAttribute('data-placeholder') || '';
+        }
+        if (!element.id) {
+            elementId = "id_" + Date.now();
+            element.id = elementId;
+        }
+        this.renderer.setElementAttribute(label, "for", !element.id ? elementId : element.id);
+        this.renderer.setElementAttribute(label, "id", "label-class");
+        this.renderer.attachViewAfter(element, [label]);
     }
     onFocus(event) {
         this.toggleClass(true, event.currentTarget);
@@ -8349,7 +8357,6 @@ FlexLayoutSectionComponent.decorators = [
         [style.align-items]="getFlexAttribute('align-items')"
         [style.align-content]="getFlexAttribute('align-content')"
         [fxLayout]="options?.fxLayout"
-        [fxLayoutWrap]="options?.fxLayoutWrap"
         [fxLayoutGap]="options?.fxLayoutGap"
         [fxLayoutAlign]="options?.fxLayoutAlign"
         [attr.fxFlexFill]="options?.fxLayoutAlign"></flex-layout-root-widget>
@@ -8381,7 +8388,6 @@ FlexLayoutSectionComponent.decorators = [
         [style.align-items]="getFlexAttribute('align-items')"
         [style.align-content]="getFlexAttribute('align-content')"
         [fxLayout]="options?.fxLayout"
-        [fxLayoutWrap]="options?.fxLayoutWrap"
         [fxLayoutGap]="options?.fxLayoutGap"
         [fxLayoutAlign]="options?.fxLayoutAlign"
         [attr.fxFlexFill]="options?.fxLayoutAlign"></flex-layout-root-widget>
@@ -8416,7 +8422,6 @@ FlexLayoutSectionComponent.decorators = [
             [style.align-items]="getFlexAttribute('align-items')"
             [style.align-content]="getFlexAttribute('align-content')"
             [fxLayout]="options?.fxLayout"
-            [fxLayoutWrap]="options?.fxLayoutWrap"
             [fxLayoutGap]="options?.fxLayoutGap"
             [fxLayoutAlign]="options?.fxLayoutAlign"
             [attr.fxFlexFill]="options?.fxLayoutAlign"></flex-layout-root-widget>
@@ -8455,7 +8460,6 @@ FlexLayoutSectionComponent.decorators = [
           [style.align-items]="getFlexAttribute('align-items')"
           [style.align-content]="getFlexAttribute('align-content')"
           [fxLayout]="options?.fxLayout"
-          [fxLayoutWrap]="options?.fxLayoutWrap"
           [fxLayoutGap]="options?.fxLayoutGap"
           [fxLayoutAlign]="options?.fxLayoutAlign"
           [attr.fxFlexFill]="options?.fxLayoutAlign"></flex-layout-root-widget>
