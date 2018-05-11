@@ -9,11 +9,12 @@ import { JsonSchemaFormService } from '../json-schema-form.service';
 
 import { BASIC_WIDGETS } from './index';
 import { FloatLabelDirective } from './float-label.directive';
+import { InputFocusOutDirective } from './input-focusout.directive';
 
 @NgModule({
   imports:         [ CommonModule, FormsModule, ReactiveFormsModule ],
-  declarations:    [ ...BASIC_WIDGETS, OrderableDirective,FloatLabelDirective ],
-  exports:         [ ...BASIC_WIDGETS, OrderableDirective,FloatLabelDirective ],
+  declarations:    [ ...BASIC_WIDGETS, OrderableDirective,FloatLabelDirective,InputFocusOutDirective ],
+  exports:         [ ...BASIC_WIDGETS, OrderableDirective,FloatLabelDirective,InputFocusOutDirective ],
   entryComponents: [ ...BASIC_WIDGETS ],
   providers:       [ JsonSchemaFormService, WidgetLibraryService ]
 })
