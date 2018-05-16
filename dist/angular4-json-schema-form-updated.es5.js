@@ -8025,47 +8025,61 @@ var FloatLabelDirective = (function () {
     function FloatLabelDirective(elementRef, renderer) {
         this.elementRef = elementRef;
         this.renderer = renderer;
+        this.hasFocus = false;
+        this.hasFloat = false;
+        this.addLabel = true;
+        this.labelClass = '';
     }
     FloatLabelDirective.prototype.ngAfterViewInit = function () {
+        this.labelClass = 'float-label--class ' + this.labelClass;
         this.element = this.elementRef.nativeElement;
-        this.appendLabel(this.element);
+        if (this.addLabel) {
+            this.appendLabel(this.element);
+        }
         this.toggleClass(false, this.element, true);
     };
-    FloatLabelDirective.prototype.appendLabel = function (element) {
-        var _this = this;
-        setTimeout(function () {
-            if (!element.placeholder) {
-                _this.appendLabel(element);
-            }
-            else {
-                _this.createLabel(element);
-            }
-        }, 1000);
+    FloatLabelDirective.prototype.ngAfterViewChecked = function () {
+        this.element = this.elementRef.nativeElement;
+        this.toggleClass(this.hasFocus, this.element, true);
     };
-    FloatLabelDirective.prototype.createLabel = function (element) {
-        var label = this.renderer.createElement(element, "label");
-        var elementId = "";
-        label.innerText = element.placeholder || '';
-        if (element.nodeName === "SELECT") {
-            label.innerText = element.getAttribute('data-placeholder') || '';
-        }
-        if (!element.id) {
-            elementId = "id_" + Date.now();
-            element.id = elementId;
-        }
-        this.renderer.setElementAttribute(label, "for", !element.id ? elementId : element.id);
-        this.renderer.setElementAttribute(label, "id", "label-class");
-        this.renderer.attachViewAfter(element, [label]);
+    FloatLabelDirective.prototype.appendLabel = function (element, count) {
+        var _this = this;
+        count = count || 0;
+        setTimeout(function () {
+            var label = _this.renderer.createElement(element, "label");
+            var elementId = "";
+            label.innerText = element.placeholder || element.getAttribute('data-placeholder') || '';
+            if (label.innerText.trim().length === 0 && count < 3) {
+                console.log(count);
+                count++;
+                _this.appendLabel(element, count);
+                return;
+            }
+            if (!element.id) {
+                elementId = "id_" + Date.now();
+                element.id = elementId;
+            }
+            _this.renderer.setElementAttribute(label, "for", !element.id ? elementId : element.id);
+            _this.renderer.setElementAttribute(label, "id", "label-class");
+            _this.renderer.setElementAttribute(label, "class", _this.labelClass);
+            _this.renderer.attachViewAfter(element, [label]);
+        }, 100);
     };
     FloatLabelDirective.prototype.onFocus = function (event) {
+        this.hasFocus = true;
         this.toggleClass(true, event.currentTarget);
     };
     FloatLabelDirective.prototype.onBlur = function (event) {
+        this.hasFocus = false;
         this.toggleClass(false, event.currentTarget);
     };
     FloatLabelDirective.prototype.toggleClass = function (isFocused, element, isInitialize) {
         var parentEleClassList = element.parentElement.classList;
         var hasValue = this.checkValue(element);
+        if (this.hasFloat) {
+            parentEleClassList.add("has-float");
+            return;
+        }
         if (isInitialize && hasValue || this.addFloatByDefault(element)) {
             parentEleClassList.add("has-float");
             return;
@@ -8106,6 +8120,11 @@ var FloatLabelDirective = (function () {
         { type: ElementRef, },
         { type: Renderer, },
     ]; };
+    FloatLabelDirective.propDecorators = {
+        "hasFloat": [{ type: Input },],
+        "addLabel": [{ type: Input },],
+        "labelClass": [{ type: Input },],
+    };
     return FloatLabelDirective;
 }());
 
