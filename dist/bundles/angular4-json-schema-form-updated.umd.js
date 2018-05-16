@@ -8105,14 +8105,35 @@ var FloatLabelDirective = (function () {
     return FloatLabelDirective;
 }());
 
+var InputFocusOutDirective = (function () {
+    function InputFocusOutDirective(element) {
+        this.element = element;
+    }
+    InputFocusOutDirective.prototype.onKeyUp = function (event) {
+        if (event.which === 13) {
+            this.element.nativeElement.blur();
+        }
+    };
+    InputFocusOutDirective.decorators = [
+        { type: core.Directive, args: [{ selector: 'input' },] },
+    ];
+    InputFocusOutDirective.ctorParameters = function () { return [
+        { type: core.ElementRef, },
+    ]; };
+    InputFocusOutDirective.propDecorators = {
+        "onKeyUp": [{ type: core.HostListener, args: ['keyup', ['$event'],] },],
+    };
+    return InputFocusOutDirective;
+}());
+
 var WidgetLibraryModule = (function () {
     function WidgetLibraryModule() {
     }
     WidgetLibraryModule.decorators = [
         { type: core.NgModule, args: [{
                     imports: [common.CommonModule, forms.FormsModule, forms.ReactiveFormsModule],
-                    declarations: BASIC_WIDGETS.concat([OrderableDirective, FloatLabelDirective]),
-                    exports: BASIC_WIDGETS.concat([OrderableDirective, FloatLabelDirective]),
+                    declarations: BASIC_WIDGETS.concat([OrderableDirective, FloatLabelDirective, InputFocusOutDirective]),
+                    exports: BASIC_WIDGETS.concat([OrderableDirective, FloatLabelDirective, InputFocusOutDirective]),
                     entryComponents: BASIC_WIDGETS.slice(),
                     providers: [JsonSchemaFormService, WidgetLibraryService]
                 },] },
@@ -63744,13 +63765,14 @@ var JsonSchemaFormModule = (function () {
     return JsonSchemaFormModule;
 }());
 
-exports.ɵf = Bootstrap3FrameworkModule;
-exports.ɵg = Bootstrap4FrameworkModule;
-exports.ɵe = MATERIAL_FRAMEWORK_COMPONENTS;
+exports.ɵg = Bootstrap3FrameworkModule;
+exports.ɵh = Bootstrap4FrameworkModule;
+exports.ɵf = MATERIAL_FRAMEWORK_COMPONENTS;
 exports.ɵa = ANGULAR_MATERIAL_MODULES;
 exports.ɵb = JSON_SCHEMA_FORM_VALUE_ACCESSOR;
 exports.ɵd = FloatLabelDirective;
 exports.ɵc = BASIC_WIDGETS;
+exports.ɵe = InputFocusOutDirective;
 exports._executeValidators = _executeValidators;
 exports._executeAsyncValidators = _executeAsyncValidators;
 exports._mergeObjects = _mergeObjects;
