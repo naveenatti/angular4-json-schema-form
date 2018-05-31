@@ -63946,6 +63946,12 @@ Bootstrap4FrameworkComponent.decorators = [
         <p *ngIf="options?.helpBlock"
           class="help-block"
           [innerHTML]="options?.helpBlock"></p>
+          <p *ngIf="options?.customhelpBlock"
+          class="help-block show"
+          [innerHTML]="options?.customhelpBlock"></p>
+          <p *ngIf="options?.customErrorMessage"
+          class="errorCode block"
+          [innerHTML]="options?.customErrorMessage"></p>
       </div>
     </div>
 
