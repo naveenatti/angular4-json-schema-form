@@ -63943,13 +63943,13 @@ Bootstrap4FrameworkComponent.decorators = [
         aria-hidden="true"
         class="form-control-feedback glyphicon"></span>
       <div *ngIf="options?.messageLocation !== 'top'">
-        <p *ngIf="options?.helpBlock"
+        <p tabindex="0" *ngIf="options?.helpBlock"
           class="help-block"
           [innerHTML]="options?.helpBlock"></p>
-          <p *ngIf="options?.customhelpBlock"
+          <p tabindex="0"  *ngIf="options?.customhelpBlock"
           class="help-block show"
           [innerHTML]="options?.customhelpBlock"></p>
-          <p *ngIf="options?.customErrorMessage"
+          <p tabindex="0"  *ngIf="options?.customErrorMessage"
           class="errorCode block"
           [innerHTML]="options?.customErrorMessage"></p>
       </div>
