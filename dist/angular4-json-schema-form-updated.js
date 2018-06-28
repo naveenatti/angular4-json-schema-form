@@ -8104,46 +8104,60 @@ class FloatLabelDirective {
     constructor(elementRef, renderer) {
         this.elementRef = elementRef;
         this.renderer = renderer;
+        this.hasFocus = false;
+        this.hasFloat = false;
+        this.addLabel = true;
+        this.labelClass = '';
     }
     ngAfterViewInit() {
+        this.labelClass = 'float-label--class ' + this.labelClass;
         this.element = this.elementRef.nativeElement;
-        this.appendLabel(this.element);
+        if (this.addLabel) {
+            this.appendLabel(this.element);
+        }
         this.toggleClass(false, this.element, true);
     }
-    appendLabel(element) {
-        setTimeout(() => {
-            if (!element.placeholder) {
-                this.appendLabel(element);
-            }
-            else {
-                this.createLabel(element);
-            }
-        }, 1000);
+    ngAfterViewChecked() {
+        this.element = this.elementRef.nativeElement;
+        this.toggleClass(this.hasFocus, this.element, true);
     }
-    createLabel(element) {
-        let label = this.renderer.createElement(element, "label");
-        let elementId = "";
-        label.innerText = element.placeholder || '';
-        if (element.nodeName === "SELECT") {
-            label.innerText = element.getAttribute('data-placeholder') || '';
-        }
-        if (!element.id) {
-            elementId = "id_" + Date.now();
-            element.id = elementId;
-        }
-        this.renderer.setElementAttribute(label, "for", !element.id ? elementId : element.id);
-        this.renderer.setElementAttribute(label, "id", "label-class");
-        this.renderer.attachViewAfter(element, [label]);
+    appendLabel(element, count) {
+        count = count || 0;
+        setTimeout(() => {
+            let label = this.renderer.createElement(element, "label");
+            let elementId = "";
+            label.innerText = element.placeholder || element.getAttribute('data-placeholder') || '';
+            if (label.innerText.trim().length === 0 && count < 3) {
+                console.log(count);
+                count++;
+                this.appendLabel(element, count);
+                return;
+            }
+            if (!element.id) {
+                elementId = "id_" + Date.now();
+                element.id = elementId;
+            }
+            this.renderer.setElementAttribute(label, "for", !element.id ? elementId : element.id);
+            this.renderer.setElementAttribute(label, "id", "label-class");
+            this.renderer.setElementAttribute(label, "class", this.labelClass);
+            this.renderer.attachViewAfter(element, [label]);
+        }, 100);
     }
     onFocus(event) {
+        this.hasFocus = true;
         this.toggleClass(true, event.currentTarget);
     }
     onBlur(event) {
+        this.hasFocus = false;
         this.toggleClass(false, event.currentTarget);
     }
     toggleClass(isFocused, element, isInitialize) {
         let parentEleClassList = element.parentElement.classList;
         let hasValue = this.checkValue(element);
+        if (this.hasFloat) {
+            parentEleClassList.add("has-float");
+            return;
+        }
         if (isInitialize && hasValue || this.addFloatByDefault(element)) {
             parentEleClassList.add("has-float");
             return;
@@ -8185,6 +8199,11 @@ FloatLabelDirective.ctorParameters = () => [
     { type: ElementRef, },
     { type: Renderer, },
 ];
+FloatLabelDirective.propDecorators = {
+    "hasFloat": [{ type: Input },],
+    "addLabel": [{ type: Input },],
+    "labelClass": [{ type: Input },],
+};
 
 class InputFocusOutDirective {
     constructor(element) {
@@ -63927,6 +63946,12 @@ Bootstrap4FrameworkComponent.decorators = [
         <p *ngIf="options?.helpBlock"
           class="help-block"
           [innerHTML]="options?.helpBlock"></p>
+          <p *ngIf="options?.customhelpBlock"
+          class="help-block show"
+          [innerHTML]="options?.customhelpBlock"></p>
+          <p *ngIf="options?.customErrorMessage"
+          class="errorCode block"
+          [innerHTML]="options?.customErrorMessage"></p>
       </div>
     </div>
 

@@ -8021,47 +8021,61 @@ var FloatLabelDirective = (function () {
     function FloatLabelDirective(elementRef, renderer) {
         this.elementRef = elementRef;
         this.renderer = renderer;
+        this.hasFocus = false;
+        this.hasFloat = false;
+        this.addLabel = true;
+        this.labelClass = '';
     }
     FloatLabelDirective.prototype.ngAfterViewInit = function () {
+        this.labelClass = 'float-label--class ' + this.labelClass;
         this.element = this.elementRef.nativeElement;
-        this.appendLabel(this.element);
+        if (this.addLabel) {
+            this.appendLabel(this.element);
+        }
         this.toggleClass(false, this.element, true);
     };
-    FloatLabelDirective.prototype.appendLabel = function (element) {
-        var _this = this;
-        setTimeout(function () {
-            if (!element.placeholder) {
-                _this.appendLabel(element);
-            }
-            else {
-                _this.createLabel(element);
-            }
-        }, 1000);
+    FloatLabelDirective.prototype.ngAfterViewChecked = function () {
+        this.element = this.elementRef.nativeElement;
+        this.toggleClass(this.hasFocus, this.element, true);
     };
-    FloatLabelDirective.prototype.createLabel = function (element) {
-        var label = this.renderer.createElement(element, "label");
-        var elementId = "";
-        label.innerText = element.placeholder || '';
-        if (element.nodeName === "SELECT") {
-            label.innerText = element.getAttribute('data-placeholder') || '';
-        }
-        if (!element.id) {
-            elementId = "id_" + Date.now();
-            element.id = elementId;
-        }
-        this.renderer.setElementAttribute(label, "for", !element.id ? elementId : element.id);
-        this.renderer.setElementAttribute(label, "id", "label-class");
-        this.renderer.attachViewAfter(element, [label]);
+    FloatLabelDirective.prototype.appendLabel = function (element, count) {
+        var _this = this;
+        count = count || 0;
+        setTimeout(function () {
+            var label = _this.renderer.createElement(element, "label");
+            var elementId = "";
+            label.innerText = element.placeholder || element.getAttribute('data-placeholder') || '';
+            if (label.innerText.trim().length === 0 && count < 3) {
+                console.log(count);
+                count++;
+                _this.appendLabel(element, count);
+                return;
+            }
+            if (!element.id) {
+                elementId = "id_" + Date.now();
+                element.id = elementId;
+            }
+            _this.renderer.setElementAttribute(label, "for", !element.id ? elementId : element.id);
+            _this.renderer.setElementAttribute(label, "id", "label-class");
+            _this.renderer.setElementAttribute(label, "class", _this.labelClass);
+            _this.renderer.attachViewAfter(element, [label]);
+        }, 100);
     };
     FloatLabelDirective.prototype.onFocus = function (event) {
+        this.hasFocus = true;
         this.toggleClass(true, event.currentTarget);
     };
     FloatLabelDirective.prototype.onBlur = function (event) {
+        this.hasFocus = false;
         this.toggleClass(false, event.currentTarget);
     };
     FloatLabelDirective.prototype.toggleClass = function (isFocused, element, isInitialize) {
         var parentEleClassList = element.parentElement.classList;
         var hasValue = this.checkValue(element);
+        if (this.hasFloat) {
+            parentEleClassList.add("has-float");
+            return;
+        }
         if (isInitialize && hasValue || this.addFloatByDefault(element)) {
             parentEleClassList.add("has-float");
             return;
@@ -8102,6 +8116,11 @@ var FloatLabelDirective = (function () {
         { type: core.ElementRef, },
         { type: core.Renderer, },
     ]; };
+    FloatLabelDirective.propDecorators = {
+        "hasFloat": [{ type: core.Input },],
+        "addLabel": [{ type: core.Input },],
+        "labelClass": [{ type: core.Input },],
+    };
     return FloatLabelDirective;
 }());
 
@@ -63065,7 +63084,7 @@ var Bootstrap4FrameworkComponent = (function () {
     Bootstrap4FrameworkComponent.decorators = [
         { type: core.Component, args: [{
                     selector: 'bootstrap-3-framework',
-                    template: "\n    <div\n      [class]=\"options?.htmlClass || ''\"\n      [class.has-feedback]=\"options?.feedback && options?.isInputWidget &&\n        (formControl?.dirty || options?.feedbackOnRender)\"\n      [class.has-error]=\"options?.enableErrorState && formControl?.errors &&\n        (formControl?.dirty || options?.feedbackOnRender)\"\n      [class.has-success]=\"options?.enableSuccessState && !formControl?.errors &&\n        (formControl?.dirty || options?.feedbackOnRender)\">\n\n      <button *ngIf=\"showRemoveButton\"\n        class=\"close pull-right\"\n        type=\"button\"\n        (click)=\"removeItem()\">\n        <span aria-hidden=\"true\">&times;</span>\n        <span class=\"sr-only\">Close</span>\n      </button>\n      <div *ngIf=\"options?.messageLocation === 'top'\">\n        <p *ngIf=\"options?.helpBlock\"\n          class=\"help-block\"\n          [innerHTML]=\"options?.helpBlock\"></p>\n      </div>\n\n      <label *ngIf=\"options?.title && layoutNode?.type !== 'tab'\"\n        [attr.for]=\"'control' + layoutNode?._id\"\n        [class]=\"options?.labelHtmlClass || ''\"\n        [class.sr-only]=\"options?.notitle\"\n        [innerHTML]=\"options?.title\"></label>\n      <p *ngIf=\"layoutNode?.type === 'submit' && jsf?.formOptions?.fieldsRequired\">\n        <strong class=\"text-danger\">*</strong> = required fields\n      </p>\n      <div [class.input-group]=\"options?.fieldAddonLeft || options?.fieldAddonRight\">\n        <span *ngIf=\"options?.fieldAddonLeft\"\n          class=\"input-group-addon\"\n          [innerHTML]=\"options?.fieldAddonLeft\"></span>\n\n        <select-widget-widget\n          [layoutNode]=\"widgetLayoutNode\"\n          [dataIndex]=\"dataIndex\"\n          [layoutIndex]=\"layoutIndex\"></select-widget-widget>\n\n        <span *ngIf=\"options?.fieldAddonRight\"\n          class=\"input-group-addon\"\n          [innerHTML]=\"options?.fieldAddonRight\"></span>\n      </div>\n\n      <span *ngIf=\"options?.feedback && options?.isInputWidget &&\n          !options?.fieldAddonRight && !layoutNode.arrayItem &&\n          (formControl?.dirty || options?.feedbackOnRender)\"\n        [class.glyphicon-ok]=\"options?.enableSuccessState && !formControl?.errors\"\n        [class.glyphicon-remove]=\"options?.enableErrorState && formControl?.errors\"\n        aria-hidden=\"true\"\n        class=\"form-control-feedback glyphicon\"></span>\n      <div *ngIf=\"options?.messageLocation !== 'top'\">\n        <p *ngIf=\"options?.helpBlock\"\n          class=\"help-block\"\n          [innerHTML]=\"options?.helpBlock\"></p>\n      </div>\n    </div>\n\n    <div *ngIf=\"debug && debugOutput\">debug: <pre>{{debugOutput}}</pre></div>\n  ",
+                    template: "\n    <div\n      [class]=\"options?.htmlClass || ''\"\n      [class.has-feedback]=\"options?.feedback && options?.isInputWidget &&\n        (formControl?.dirty || options?.feedbackOnRender)\"\n      [class.has-error]=\"options?.enableErrorState && formControl?.errors &&\n        (formControl?.dirty || options?.feedbackOnRender)\"\n      [class.has-success]=\"options?.enableSuccessState && !formControl?.errors &&\n        (formControl?.dirty || options?.feedbackOnRender)\">\n\n      <button *ngIf=\"showRemoveButton\"\n        class=\"close pull-right\"\n        type=\"button\"\n        (click)=\"removeItem()\">\n        <span aria-hidden=\"true\">&times;</span>\n        <span class=\"sr-only\">Close</span>\n      </button>\n      <div *ngIf=\"options?.messageLocation === 'top'\">\n        <p *ngIf=\"options?.helpBlock\"\n          class=\"help-block\"\n          [innerHTML]=\"options?.helpBlock\"></p>\n      </div>\n\n      <label *ngIf=\"options?.title && layoutNode?.type !== 'tab'\"\n        [attr.for]=\"'control' + layoutNode?._id\"\n        [class]=\"options?.labelHtmlClass || ''\"\n        [class.sr-only]=\"options?.notitle\"\n        [innerHTML]=\"options?.title\"></label>\n      <p *ngIf=\"layoutNode?.type === 'submit' && jsf?.formOptions?.fieldsRequired\">\n        <strong class=\"text-danger\">*</strong> = required fields\n      </p>\n      <div [class.input-group]=\"options?.fieldAddonLeft || options?.fieldAddonRight\">\n        <span *ngIf=\"options?.fieldAddonLeft\"\n          class=\"input-group-addon\"\n          [innerHTML]=\"options?.fieldAddonLeft\"></span>\n\n        <select-widget-widget\n          [layoutNode]=\"widgetLayoutNode\"\n          [dataIndex]=\"dataIndex\"\n          [layoutIndex]=\"layoutIndex\"></select-widget-widget>\n\n        <span *ngIf=\"options?.fieldAddonRight\"\n          class=\"input-group-addon\"\n          [innerHTML]=\"options?.fieldAddonRight\"></span>\n      </div>\n\n      <span *ngIf=\"options?.feedback && options?.isInputWidget &&\n          !options?.fieldAddonRight && !layoutNode.arrayItem &&\n          (formControl?.dirty || options?.feedbackOnRender)\"\n        [class.glyphicon-ok]=\"options?.enableSuccessState && !formControl?.errors\"\n        [class.glyphicon-remove]=\"options?.enableErrorState && formControl?.errors\"\n        aria-hidden=\"true\"\n        class=\"form-control-feedback glyphicon\"></span>\n      <div *ngIf=\"options?.messageLocation !== 'top'\">\n        <p *ngIf=\"options?.helpBlock\"\n          class=\"help-block\"\n          [innerHTML]=\"options?.helpBlock\"></p>\n          <p *ngIf=\"options?.customhelpBlock\"\n          class=\"help-block show\"\n          [innerHTML]=\"options?.customhelpBlock\"></p>\n          <p *ngIf=\"options?.customErrorMessage\"\n          class=\"errorCode block\"\n          [innerHTML]=\"options?.customErrorMessage\"></p>\n      </div>\n    </div>\n\n    <div *ngIf=\"debug && debugOutput\">debug: <pre>{{debugOutput}}</pre></div>\n  ",
                     styles: ["\n    :host /deep/ .list-group-item .form-control-feedback { top: 40px; }\n    :host /deep/ .checkbox,\n    :host /deep/ .radio { margin-top: 0; margin-bottom: 0; }\n    :host /deep/ .checkbox-inline,\n    :host /deep/ .checkbox-inline + .checkbox-inline,\n    :host /deep/ .checkbox-inline + .radio-inline,\n    :host /deep/ .radio-inline,\n    :host /deep/ .radio-inline + .radio-inline,\n    :host /deep/ .radio-inline + .checkbox-inline { margin-left: 0; margin-right: 10px; }\n    :host /deep/ .checkbox-inline:last-child,\n    :host /deep/ .radio-inline:last-child { margin-right: 0; }\n  "],
                 },] },
     ];
