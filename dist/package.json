@@ -1,6 +1,6 @@
 {
   "name": "angular4-json-schema-form-updated",
-  "version": "2.1.7",
+  "version": "2.2.0",
   "author": {
     "name": "Naveen Atti",
     "email": "naveenatti9@gmail.com"
@@ -33,17 +33,16 @@
   "es2015": "./angular4-json-schema-form-updated.js",
   "typings": "./angular4-json-schema-form-updated.d.ts",
   "dependencies": {
-    "ajv": "^5.3.0",
-    "lodash": "4.x",
-    "sass-loader": "^6.0.6"
+    "ajv": "^6.0.1",
+    "lodash": "4.x"
   },
   "peerDependencies": {
-    "@angular/cdk": ">=2.0.0",
+    "@angular/cdk": ">=5.0.0",
     "@angular/common": ">=4.0.0",
     "@angular/core": ">=4.0.0",
     "@angular/flex-layout": ">=2.0.0",
     "@angular/forms": ">=4.0.0",
-    "@angular/material": ">=2.0.0",
+    "@angular/material": ">=5.0.0",
     "@angular/platform-browser": ">=4.0.0",
     "rxjs": ">=5.0.0"
   }

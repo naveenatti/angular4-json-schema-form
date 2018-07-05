@@ -9,6 +9,7 @@ export declare class SectionComponent implements OnInit {
     layoutIndex: number[];
     dataIndex: number[];
     constructor(jsf: JsonSchemaFormService);
+    readonly sectionTitle: string;
     ngOnInit(): void;
     toggleExpanded(): void;
     getFlexAttribute(attribute: string): any;

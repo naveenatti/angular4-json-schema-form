@@ -9,8 +9,8 @@ A [JSON Schema](http://json-schema.org) Form builder for Angular 2 or 4, similar
   * [Mozilla](https://blog.mozilla.org/services/)'s [React JSON Schema Form](https://github.com/mozilla-services/react-jsonschema-form) for [React](https://facebook.github.io/react/) ([examples](https://mozilla-services.github.io/react-jsonschema-form/)), and
   * [Joshfire](http://www.joshfire.com)'s [JSON Form](http://github.com/joshfire/jsonform/wiki) for [jQuery](https://jquery.com) ([examples](http://ulion.github.io/jsonform/playground/))
 
-Note: This is Modified Plugin of Angular2-json-schema-form We have added custom Btn Click for buttons added new feature to display error messages with in the element level,
-This is currently a personal proof-of-concept project, and is NOT affiliated with any of the organizations listed above. (Though they are all awesome, and totally worth checking out.)
+## Note: This is Modified Plugin of Angular2-json-schema-form this is for Personl purpose don't use in your Web Applications it will deprecated soon. We have added custom Btn Click for buttons added new feature to display error messages with in the element level,
+## This is currently a personal proof-of-concept project, and is NOT affiliated with any of the organizations listed above. (Though they are all awesome, and totally worth checking out.)
 
 ## Check out the live demo and play with the examples
 

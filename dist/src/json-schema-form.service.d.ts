@@ -47,10 +47,13 @@ export declare class JsonSchemaFormService {
     layoutRefLibrary: any;
     templateRefLibrary: any;
     hasRootReference: boolean;
+    language: string;
     defaultFormOptions: any;
     private subject;
     setBtnClick(shippingInfo: any): void;
     getBtnClick(): Observable<any>;
+    constructor();
+    setLanguage(language?: string): void;
     getData(): any;
     getSchema(): any;
     getLayout(): any[];
@@ -67,7 +70,9 @@ export declare class JsonSchemaFormService {
     setTpldata(newTpldata?: any): void;
     parseText(text?: string, value?: any, values?: any, key?: number | string): string;
     parseExpression(expression?: string, value?: any, values?: any, key?: number | string, tpldata?: any): any;
-    setTitle(parentCtx?: any, childNode?: any, index?: number): string;
+    setArrayItemTitle(parentCtx?: any, childNode?: any, index?: number): string;
+    setItemTitle(ctx: any): string;
+    evaluateCondition(layoutNode: any, dataIndex: number[]): boolean;
     initializeControl(ctx: any, bind?: boolean): boolean;
     formatErrors(errors: any, validationMessages?: any): string;
     updateValue(ctx: any, value: any): void;

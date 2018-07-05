@@ -1,234 +1,65 @@
 {
   "schema": {
-      "type": "object",
-      "properties": {
-          "name": {
-              "notitle": true,
-              "placeholder": "Full Name",
-              "type": "string",
-              "fieldHtmlClass": "error-red",
-              "validationMessage": "Required",
-              "customValidationMessage":"",
-              "feedbackOnRender": true
-          },
-          "addressLine1": {
-              "notitle": true,
-              "fieldHtmlClass": "error-red",
-              "placeholder": "Address Line 1",
-              "type": "string",
-              "validationMessage": "Required",
-              "feedbackOnRender": true,
-              "customErrorMessage": ""
-          },
-          "addressLine2": {
-              "notitle": true,
-              "fieldHtmlClass": "error-red not-required",
-              "placeholder": "Address Line 2",
-              "type": "string",
-              "validationMessage": "Required",
-              "feedbackOnRender": true,
-              "customErrorMessage": ""
-          },
-          "city": {
-              "notitle": true,
-              "fieldHtmlClass": "error-red",
-              "placeholder": "City",
-              "type": "string",
-              "validationMessage": "Required",
-              "feedbackOnRender": true,
-              "customErrorMessage": ""
-          },
-          "state": {
-              "notitle": true,
-              "type": "string",
-              "fieldHtmlClass": "error-red",
-              "widget": "custom-select-widget",
-              "countryIdRequired": true,
-              "selectText":"Select State",
-              "nameField": "stateName",
-              "valueField":"stateCode",
-              "optionGetUrl": "https://apigw-titanqa.nextsphere.com/api/admin/V1/countries/states?countryID=1",
-              "validationMessage": "Required",
-              "feedbackOnRender": true,
-              "customErrorMessage": ""
-          },
-          "zip": {
-              "notitle": true,
-              "fieldHtmlClass": "error-red",
-              "placeholder": "Zip/Postal Code",
-              "type": "string",
-              "pattern": "^[0-9]{5}(-[0-9]{4})?$",
-              "patternValidation": "Please enter valid zip code.",
-              "validationMessage": "Required",
-              "feedbackOnRender": true,
-              "customErrorMessage": ""
-          },
-          "country": {
-              "notitle": true,
-              "type": "string",
-              "widget": "custom-select-widget",
-              "selectText":"Select Country",
-              "optionGetUrl": "https://apigw-titanqa.nextsphere.com/api/admin/V1/countries",
-              "nameField": "name",
-              "valueField":"id",
-              "disabled": true,
-              "default": 1,
-              "filterField": "id",
-              "customErrorMessage": ""
-          },
-          "phone": {
-              "notitle": true,
-              "fieldHtmlClass": "error-red",
-              "placeholder": "Phone Number",
-              "type": "string",
-              "validationMessage": "Required",
-              "feedbackOnRender": true
-          }
+    "type": "object",
+    "title": "Comment",
+    "properties": {
+      "name": {
+        "title": "Name",
+        "type": "string"
       },
-      "required": [
-          "name",
-          "addressLine1",
-          "city",
-          "zip",
-          "state",
-          "phone"
-      ]
-  },
-  "form": [{
-          "type": "section",
-          "htmlClass": "col-xs-12 no-padding address-component",
-          "items": [
-              {
-                  "type":"div",
-                  "htmlClass":"col-xs-12",
-                  "items":[
-                      {
-                          "type": "div",
-                          "htmlClass": "col-xs-12 col-sm-4 col-md-3",
-                          "items": [
-                              "name"
-                          ]
-                      },
-                      {
-                          "type": "div",
-                          "htmlClass": "col-xs-12 col-sm-4 col-md-3",
-                          "items": [
-                              "addressLine1"
-                          ]
-                      },
-                      {
-                          "type": "div",
-                          "htmlClass": "col-xs-12 col-sm-4 col-md-3",
-                          "items": [
-                              "addressLine2"
-                          ]
-                      },
-                      {
-                          "type": "div",
-                          "htmlClass": "col-xs-12 col-sm-4 col-md-3",
-                          "items": [
-                              "city"
-                          ]
-                      }
-                  ]
-              },
-              {   "type":"div",                                                                                                                                                                                                                                   
-                  "htmlClass":"col-xs-12",
-                  "items":[
-                      {
-                          "type": "div",
-                          "htmlClass": "col-xs-12 col-sm-4 col-md-3 no-margin selector",
-                          "items": [
-                              "state"
-                          ]
-                      },
-                      {
-                          "type": "div",
-                          "htmlClass": "col-xs-12 col-sm-4 col-md-3",
-                          "items": [
-                              "zip"
-                          ]
-                      },
-                      {
-                          "type": "div",
-                          "htmlClass": "col-xs-12 col-sm-4 col-md-3 no-margin selector",
-                          "items": ["country"]
-                      },
-                      {
-                          "type": "div",
-                          "htmlClass": "col-xs-12 col-sm-4 col-md-3",
-                          "items": [ "phone"]
-                      }
-                  ]
-              }
-          ]
+      "email": {
+        "title": "Email",
+        "type": "string",
+        "pattern": "^\\S+@\\S+$",
+        "description": "Email will be used for evil."
       },
-      {
-          "type": "div",
-          "items": [
-              {
-              "type": "div",
-              "htmlClass": "col-xs-12 hide",
-              "items": [
-                  {
-                      "type": "string",
-                      "htmlClass": "col-xs-12 note"
-                  }
-              ]
-          },
-          {
-              "type": "div",
-              "htmlClass": "col-xs-12 no-margin",
-              "items": [
-              {
-                  "type": "button",
-                  "fieldHtmlClass":"hide",
-                  "style": "btn btn-link pull-right",
-                  "title": "Back To Saved Address",
-                  "eventId":"BackToSavedAddress"     
-              },  
-              {
-                  "type": "submit",
-                  "fieldHtmlClass":"show",
-                  "disabled": true,
-                  "style": "btn blue-button addrs-button",
-                  "title": "Verify Address",
-                  "eventId":"VerifyAddress"
-              },
-              {
-                  "type": "submit",
-                  "fieldHtmlClass": "hide",
-                  "style": "btn blue-button addrs-button",
-                  "title": "Re-verify",
-                  "eventId": "Reverify"
-              },
-              {
-                  "type": "button",
-                  "fieldHtmlClass":"hide",
-                  "style": "btn blue-button addrs-button",
-                  "title": "Use Verified Address Above",
-                  "eventId": "UseVerifiedAddressAbove"
-              },
-              {
-                  "type": "button",
-                  "fieldHtmlClass":"hide",
-                  "style": "btn blue-button addrs-button",
-                  "title": "Use Original Address",
-                  "eventId":"UseOriginalAddress"
-              },
-              {
-                  "type": "button",
-                  "fieldHtmlClass":"hide",
-                  "style": "btn blue-button addrs-button",
-                  "title": "Re Enter Address",
-                  "eventId":"ReEnterAddress"
-              }
-          ]
-          }
-      ]
-
+      "comment": {
+        "title": "Comment",
+        "type": "string",
+        "maxLength": 20,
+        "validationMessage": "Don't be greedy!"
       }
-  ],
-  "data":{},
-  "model": {}
+    },
+    "required": [
+      "name",
+      "email",
+      "comment"
+    ]
+  },
+  "form": [
+    {
+      "type": "help",
+      "helpvalue": "<div class=\"alert alert-info\">Grid it up with bootstrap</div>"
+    },
+    {
+      "type": "section",
+      "htmlClass": "row",
+      "items": [
+        {
+          "type": "section",
+          "htmlClass": "col-xs-6",
+          "items": [
+            "name"
+          ]
+        },
+        {
+          "type": "section",
+          "htmlClass": "col-xs-6",
+          "items": [
+            "email"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "comment",
+      "type": "textarea",
+      "placeholder": "Make a comment"
+    },
+    {
+      "type": "submit",
+      "style": "btn-info",
+      "title": "OK"
+    }
+  ]
 }

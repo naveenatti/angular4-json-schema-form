@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -24,10 +24,11 @@ export const ANGULAR_MATERIAL_MODULES = [
  * MatToolbarModule,
  */
 
-import { WidgetLibraryModule } from '../../widget-library/widget-library.module';
 import { JsonSchemaFormService } from '../../json-schema-form.service';
-
+import { WidgetLibraryModule } from '../../widget-library/widget-library.module';
+import { Framework } from '../framework';
 import { MATERIAL_FRAMEWORK_COMPONENTS } from './index';
+import { MaterialDesignFramework } from './material-design.framework';
 
 @NgModule({
   imports: [
@@ -36,7 +37,15 @@ import { MATERIAL_FRAMEWORK_COMPONENTS } from './index';
   ],
   declarations:    [ ...MATERIAL_FRAMEWORK_COMPONENTS ],
   exports:         [ ...MATERIAL_FRAMEWORK_COMPONENTS ],
-  entryComponents: [ ...MATERIAL_FRAMEWORK_COMPONENTS ],
-  providers:       [ JsonSchemaFormService ]
+  entryComponents: [ ...MATERIAL_FRAMEWORK_COMPONENTS ]
 })
-export class MaterialDesignFrameworkModule { }
+export class MaterialDesignFrameworkModule {
+  static forRoot(): ModuleWithProviders {
+    return {
+      ngModule: MaterialDesignFrameworkModule,
+      providers: [
+        { provide: Framework, useClass: MaterialDesignFramework, multi: true }
+      ]
+    };
+  }
+}

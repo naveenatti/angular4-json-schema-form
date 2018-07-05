@@ -8,11 +8,11 @@ import {
 } from '../../shared';
 
 /**
- * Bootstrap 3 framework for Angular JSON Schema Form.
+ * Bootstrap 4 framework for Angular JSON Schema Form.
  *
  */
 @Component({
-  selector: 'bootstrap-3-framework',
+  selector: 'bootstrap-4-framework',
   template: `
     <div
       [class]="options?.htmlClass || ''"
@@ -93,6 +93,7 @@ import {
     :host /deep/ .radio-inline + .checkbox-inline { margin-left: 0; margin-right: 10px; }
     :host /deep/ .checkbox-inline:last-child,
     :host /deep/ .radio-inline:last-child { margin-right: 0; }
+    :host /deep/ .ng-invalid.ng-touched { border: 1px solid #f44336; }
   `],
 })
 export class Bootstrap4FrameworkComponent implements OnInit, OnChanges {
@@ -183,7 +184,7 @@ export class Bootstrap4FrameworkComponent implements OnInit, OnChanges {
 
       // Add asterisk to titles if required
       if (this.options.title && this.layoutNode.type !== 'tab' &&
-        !this.options.notitle && this.options.required  &&
+        !this.options.notitle && this.options.required &&
         !this.options.title.includes('*')
       ) {
         this.options.title += ' <strong class="text-danger">*</strong>';
@@ -192,9 +193,9 @@ export class Bootstrap4FrameworkComponent implements OnInit, OnChanges {
       switch (this.layoutNode.type) {
         // Checkbox controls
         case 'checkbox': case 'checkboxes':
-        this.widgetOptions.htmlClass = addClasses(
-          this.widgetOptions.htmlClass, 'checkbox');
-        break;
+          this.widgetOptions.htmlClass = addClasses(
+            this.widgetOptions.htmlClass, 'checkbox');
+          break;
         case 'checkboxes-inline':
           this.widgetOptions.htmlClass = addClasses(
             this.widgetOptions.htmlClass, 'checkbox');
@@ -203,9 +204,9 @@ export class Bootstrap4FrameworkComponent implements OnInit, OnChanges {
           break;
         // Radio controls
         case 'radio': case 'radios':
-        this.widgetOptions.htmlClass = addClasses(
-          this.widgetOptions.htmlClass, 'radio');
-        break;
+          this.widgetOptions.htmlClass = addClasses(
+            this.widgetOptions.htmlClass, 'radio');
+          break;
         case 'radios-inline':
           this.widgetOptions.htmlClass = addClasses(
             this.widgetOptions.htmlClass, 'radio');
@@ -214,36 +215,36 @@ export class Bootstrap4FrameworkComponent implements OnInit, OnChanges {
           break;
         // Button sets - checkboxbuttons and radiobuttons
         case 'checkboxbuttons': case 'radiobuttons':
-        this.widgetOptions.htmlClass = addClasses(
-          this.widgetOptions.htmlClass, 'btn-group');
-        this.widgetOptions.itemLabelHtmlClass = addClasses(
-          this.widgetOptions.itemLabelHtmlClass, 'btn');
-        this.widgetOptions.itemLabelHtmlClass = addClasses(
-          this.widgetOptions.itemLabelHtmlClass, this.options.style || 'btn-default');
-        this.widgetOptions.fieldHtmlClass = addClasses(
-          this.widgetOptions.fieldHtmlClass, 'sr-only');
-        break;
+          this.widgetOptions.htmlClass = addClasses(
+            this.widgetOptions.htmlClass, 'btn-group');
+          this.widgetOptions.itemLabelHtmlClass = addClasses(
+            this.widgetOptions.itemLabelHtmlClass, 'btn');
+          this.widgetOptions.itemLabelHtmlClass = addClasses(
+            this.widgetOptions.itemLabelHtmlClass, this.options.style || 'btn-default');
+          this.widgetOptions.fieldHtmlClass = addClasses(
+            this.widgetOptions.fieldHtmlClass, 'sr-only');
+          break;
         // Single button controls
         case 'button': case 'submit':
-        this.widgetOptions.fieldHtmlClass = addClasses(
-          this.widgetOptions.fieldHtmlClass, 'btn');
-        this.widgetOptions.fieldHtmlClass = addClasses(
-          this.widgetOptions.fieldHtmlClass, this.options.style || 'btn-info');
-        break;
+          this.widgetOptions.fieldHtmlClass = addClasses(
+            this.widgetOptions.fieldHtmlClass, 'btn');
+          this.widgetOptions.fieldHtmlClass = addClasses(
+            this.widgetOptions.fieldHtmlClass, this.options.style || 'btn-info');
+          break;
         // Containers - arrays and fieldsets
         case 'array': case 'fieldset': case 'section': case 'conditional':
         case 'advancedfieldset': case 'authfieldset':
         case 'selectfieldset': case 'optionfieldset':
-        this.options.messageLocation = 'top';
-        break;
+          this.options.messageLocation = 'top';
+          break;
         case 'tabarray': case 'tabs':
-        this.widgetOptions.htmlClass = addClasses(
-          this.widgetOptions.htmlClass, 'tab-content');
-        this.widgetOptions.fieldHtmlClass = addClasses(
-          this.widgetOptions.fieldHtmlClass, 'tab-pane');
-        this.widgetOptions.labelHtmlClass = addClasses(
-          this.widgetOptions.labelHtmlClass, 'nav nav-tabs');
-        break;
+          this.widgetOptions.htmlClass = addClasses(
+            this.widgetOptions.htmlClass, 'tab-content');
+          this.widgetOptions.fieldHtmlClass = addClasses(
+            this.widgetOptions.fieldHtmlClass, 'tab-pane');
+          this.widgetOptions.labelHtmlClass = addClasses(
+            this.widgetOptions.labelHtmlClass, 'nav nav-tabs');
+          break;
         // 'Add' buttons - references
         case '$ref':
           this.widgetOptions.fieldHtmlClass = addClasses(
@@ -274,17 +275,17 @@ export class Bootstrap4FrameworkComponent implements OnInit, OnChanges {
 
   updateHelpBlock(status) {
     this.options.helpBlock = status === 'INVALID' &&
-    this.options.enableErrorState && this.formControl.errors &&
-    (this.formControl.dirty || this.options.feedbackOnRender) ?
+      this.options.enableErrorState && this.formControl.errors &&
+      (this.formControl.dirty || this.options.feedbackOnRender) ?
       this.jsf.formatErrors(this.formControl.errors, this.options.validationMessages) :
       this.options.description || this.options.help || null;
   }
 
   setTitle(): string {
     switch (this.layoutNode.type) {
-      case 'button':  case 'checkbox': case 'help':     case 'msg':
-      case 'message': case 'submit':   case 'tabarray': case '$ref':
-      return null;
+      case 'button': case 'checkbox': case 'section': case 'help': case 'msg':
+      case 'submit': case 'message': case 'tabarray': case 'tabs': case '$ref':
+        return null;
       case 'advancedfieldset':
         this.widgetOptions.expandable = true;
         this.widgetOptions.title = 'Advanced options';
@@ -293,22 +294,12 @@ export class Bootstrap4FrameworkComponent implements OnInit, OnChanges {
         this.widgetOptions.expandable = true;
         this.widgetOptions.title = 'Authentication settings';
         return null;
-      case 'tabs': case 'section':
-      return null;
+      case 'fieldset':
+        this.widgetOptions.title = this.options.title;
+        return null;
       default:
-        let thisTitle = this.options.title ||
-          (isNaN(this.layoutNode.name) && this.layoutNode.name !== '-' ?
-            toTitleCase(this.layoutNode.name) : null);
         this.widgetOptions.title = null;
-        return !thisTitle ? null :
-          thisTitle.indexOf('{{') === -1 || !this.formControl || !this.dataIndex ?
-            thisTitle :
-            this.jsf.parseText(
-              thisTitle,
-              this.jsf.getFormControlValue(this),
-              this.jsf.getFormControlGroup(this).value,
-              this.dataIndex[this.dataIndex.length - 1]
-            );
+        return this.jsf.setItemTitle(this);
     }
   }
 

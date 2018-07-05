@@ -1,24 +1,17 @@
 import { WidgetLibraryService } from '../widget-library/widget-library.service';
-export interface Framework {
-    framework: any;
-    widgets?: {
-        [key: string]: any;
-    };
-    stylesheets?: string[];
-    scripts?: string[];
-}
-export interface FrameworkLibrary {
-    [key: string]: Framework;
-}
+import { Framework } from './framework';
 export declare class FrameworkLibraryService {
+    private frameworks;
     private widgetLibrary;
     activeFramework: Framework;
     stylesheets: (HTMLStyleElement | HTMLLinkElement)[];
     scripts: HTMLScriptElement[];
     loadExternalAssets: boolean;
     defaultFramework: string;
-    frameworkLibrary: FrameworkLibrary;
-    constructor(widgetLibrary: WidgetLibraryService);
+    frameworkLibrary: {
+        [name: string]: Framework;
+    };
+    constructor(frameworks: any[], widgetLibrary: WidgetLibraryService);
     setLoadExternalAssets(loadExternalAssets?: boolean): void;
     setFramework(framework?: string | Framework, loadExternalAssets?: boolean): boolean;
     registerFrameworkWidgets(framework: Framework): boolean;

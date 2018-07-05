@@ -1,12 +1,14 @@
-import { NoFrameworkComponent }          from './no-framework.component';
-import { Bootstrap3FrameworkComponent }  from './bootstrap-3-framework.component';
+export { FrameworkLibraryService } from './framework-library.service';
+export { FrameworkLibraryModule } from './framework-library.module';
 
-export const FRAMEWORK_COMPONENTS = [
-  NoFrameworkComponent, Bootstrap3FrameworkComponent
-];
+export { NoFramework } from './no-framework/no.framework';
+export { NoFrameworkModule } from './no-framework/no-framework.module';
 
-export { NoFrameworkComponent }          from './no-framework.component';
-export { Bootstrap3FrameworkComponent }  from './bootstrap-3-framework.component';
+export { MaterialDesignFramework } from './material-design-framework/material-design.framework';
+export { MaterialDesignFrameworkModule } from './material-design-framework/material-design-framework.module';
 
-export { FrameworkLibraryService }  from './framework-library.service';
-export { FrameworkLibraryModule }  from './framework-library.module';
+export { Bootstrap3Framework } from './bootstrap-3-framework/bootstrap-3.framework';
+export { Bootstrap3FrameworkModule } from './bootstrap-3-framework/bootstrap-3-framework.module';
+
+export { Bootstrap4Framework } from './bootstrap-4-framework/bootstrap-4.framework';
+export { Bootstrap4FrameworkModule } from './bootstrap-4-framework/bootstrap-4-framework.module';

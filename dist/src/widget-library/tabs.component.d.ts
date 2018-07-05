@@ -13,5 +13,5 @@ export declare class TabsComponent implements OnInit {
     ngOnInit(): void;
     select(index: any): void;
     updateControl(): void;
-    setTitle(item: any, index: number): string;
+    setTabTitle(item: any, index: number): string;
 }
