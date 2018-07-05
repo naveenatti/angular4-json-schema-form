@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, EventEmitter, OnChanges, OnInit, OnDestroy } from '@angular/core';
+import { ChangeDetectorRef, EventEmitter, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { FrameworkLibraryService } from './framework-library/framework-library.service';
@@ -43,7 +43,6 @@ export declare class JsonSchemaFormComponent implements ControlValueAccessor, On
     UISchema: any;
     formData: any;
     ngModel: any;
-    language: string;
     loadExternalAssets: boolean;
     debug: boolean;
     value: any;

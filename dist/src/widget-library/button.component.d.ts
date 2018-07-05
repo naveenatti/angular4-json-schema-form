@@ -9,6 +9,7 @@ export declare class ButtonComponent implements OnInit {
     controlDisabled: boolean;
     boundControl: boolean;
     options: any;
+    formID: number;
     layoutNode: any;
     layoutIndex: number[];
     dataIndex: number[];

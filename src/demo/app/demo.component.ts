@@ -27,11 +27,6 @@ import { JsonPointer } from '../../lib/src/shared';
 })
 export class DemoComponent implements OnInit {
   examples: any = Examples;
-  languageList: any = ['en', 'fr'];
-  languages: any = {
-    'en': 'English',
-    'fr': 'French',
-  };
   frameworkList: any = ['material-design', 'bootstrap-3', 'bootstrap-4', 'no-framework'];
   frameworks: any = {
     'material-design': 'Material Design',
@@ -44,7 +39,6 @@ export class DemoComponent implements OnInit {
   selectedExample = 'ng-jsf-flex-layout';
   selectedExampleName = 'Flexbox layout';
   selectedFramework = 'material-design';
-  selectedLanguage = 'en';
   visible: { [item: string]: boolean } = {
     options: true,
     schema: true,
@@ -103,9 +97,6 @@ export class DemoComponent implements OnInit {
         }
         if (params['framework']) {
           this.selectedFramework = params['framework'];
-        }
-        if (params['language']) {
-          this.selectedLanguage = params['language'];
         }
         this.loadSelectedExample();
       }
@@ -172,8 +163,7 @@ export class DemoComponent implements OnInit {
       this.router.navigateByUrl(
         '/?set=' + selectedSet +
         '&example=' + selectedExample +
-        '&framework=' + this.selectedFramework +
-        '&language=' + this.selectedLanguage
+        '&framework=' + this.selectedFramework
       );
       this.liveFormData = {};
       this.submittedFormData = null;
@@ -189,12 +179,13 @@ export class DemoComponent implements OnInit {
       });
   }
 
-  loadSelectedLanguage() {
-    window.location.href =
+  loadSelectedFramework(selectedFramework: string) {
+    this.router.navigateByUrl(
       '/?set=' + this.selectedSet +
       '&example=' + this.selectedExample +
-      '&framework=' + this.selectedFramework +
-      '&language=' + this.selectedLanguage;
+      '&framework=' + selectedFramework
+    );
+    this.generateForm(this.jsonFormSchema);
   }
 
   // Display the form entered by the user

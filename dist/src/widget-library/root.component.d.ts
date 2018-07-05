@@ -10,5 +10,6 @@ export declare class RootComponent {
     constructor(jsf: JsonSchemaFormService);
     isDraggable(node: any): boolean;
     getFlexAttribute(node: any, attribute: string): any;
-    showWidget(layoutNode: any): boolean;
+    trackByItem(layoutItem: any): any;
+    isConditionallyShown(layoutNode: any): boolean;
 }

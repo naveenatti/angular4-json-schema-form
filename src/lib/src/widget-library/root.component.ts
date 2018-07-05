@@ -1,7 +1,7 @@
 import { Component, Input, Host } from '@angular/core';
 
 import { JsonSchemaFormService } from '../json-schema-form.service';
-import { hasValue, JsonPointer } from '../shared';
+import { isDefined, JsonPointer } from '../shared';
 
 @Component({
   selector: 'root-widget',
@@ -18,7 +18,7 @@ import { hasValue, JsonPointer } from '../shared';
         [layoutIndex]="(layoutIndex || []).concat(i)"
         [layoutNode]="layoutItem"
         [orderable]="isDraggable(layoutItem)">
-        <select-framework-widget *ngIf="showWidget(layoutItem)"
+        <select-framework-widget *ngIf="isConditionallyShown(layoutItem)"
           [dataIndex]="layoutItem?.arrayItem ? (dataIndex || []).concat(i) : (dataIndex || [])"
           [layoutIndex]="(layoutIndex || []).concat(i)"
           [layoutNode]="layoutItem"></select-framework-widget>
@@ -72,7 +72,28 @@ export class RootComponent {
       (node.options || {})[attribute] || ['1', '1', 'auto'][index];
   }
 
-  showWidget(layoutNode: any): boolean {
-    return this.jsf.evaluateCondition(layoutNode, this.dataIndex);
+  trackByItem(layoutItem: any) {
+    return layoutItem && layoutItem._id;
+  }
+
+  isConditionallyShown(layoutNode: any): boolean {
+    const arrayIndex = this.dataIndex && this.dataIndex[this.dataIndex.length - 1];
+    let result = true;
+    if (isDefined((layoutNode.options || {}).condition)) {
+      if (typeof layoutNode.options.condition === 'string') {
+        let pointer = layoutNode.options.condition
+        if (isDefined(arrayIndex)) {
+          pointer = pointer.replace('[arrayIndex]', `[${arrayIndex}]`);
+        }
+        pointer = JsonPointer.parseObjectPath(pointer);
+        result = !!JsonPointer.get(this.jsf.data, pointer);
+        if (!result && pointer[0] === 'model') {
+          result = !!JsonPointer.get({ model: this.jsf.data }, pointer);
+        }
+      } else if (typeof layoutNode.options.condition === 'function') {
+        result = layoutNode.options.condition(this.jsf.data);
+      }
+    }
+    return result;
   }
 }

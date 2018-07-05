@@ -7,8 +7,8 @@ export class InputFocusOutDirective {
     constructor(private element: ElementRef) {
 
     }
-
-    @HostListener('keyup', ['$event']) onKeyUp(event: any) {
+  
+    @HostListener('keyup', ['$event']) onKeyUp(event: any) { 
         if (event.which === 13) {
             this.element.nativeElement.blur();
         }

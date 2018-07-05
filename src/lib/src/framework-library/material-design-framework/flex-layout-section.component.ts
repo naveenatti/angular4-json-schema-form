@@ -1,7 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
 
-import { toTitleCase } from '../../shared';
 import { JsonSchemaFormService } from '../../json-schema-form.service';
 
 @Component({
@@ -11,9 +10,10 @@ import { JsonSchemaFormService } from '../../json-schema-form.service';
       [class]="options?.htmlClass || ''"
       [class.expandable]="options?.expandable && !expanded"
       [class.expanded]="options?.expandable && expanded">
-      <label *ngIf="sectionTitle"
+      <label
         [class]="'legend ' + (options?.labelHtmlClass || '')"
-        [innerHTML]="sectionTitle"
+        [style.display]="(options?.notitle || !options?.title) ? 'none' : ''"
+        [innerHTML]="options?.title"
         (click)="toggleExpanded()"></label>
       <flex-layout-root-widget *ngIf="expanded"
         [layout]="layoutNode.items"
@@ -29,7 +29,6 @@ import { JsonSchemaFormService } from '../../json-schema-form.service';
         [style.align-items]="getFlexAttribute('align-items')"
         [style.align-content]="getFlexAttribute('align-content')"
         [fxLayout]="options?.fxLayout"
-        [fxLayoutWrap]="options?.fxLayoutWrap"
         [fxLayoutGap]="options?.fxLayoutGap"
         [fxLayoutAlign]="options?.fxLayoutAlign"
         [attr.fxFlexFill]="options?.fxLayoutAlign"></flex-layout-root-widget>
@@ -42,9 +41,10 @@ import { JsonSchemaFormService } from '../../json-schema-form.service';
       [class.expandable]="options?.expandable && !expanded"
       [class.expanded]="options?.expandable && expanded"
       [disabled]="options?.readonly">
-      <legend *ngIf="sectionTitle"
+      <legend
         [class]="'legend ' + (options?.labelHtmlClass || '')"
-        [innerHTML]="sectionTitle"
+        [style.display]="(options?.notitle || !options?.title) ? 'none' : ''"
+        [innerHTML]="options?.title"
         (click)="toggleExpanded()"></legend>
       <flex-layout-root-widget *ngIf="expanded"
         [layout]="layoutNode.items"
@@ -60,7 +60,6 @@ import { JsonSchemaFormService } from '../../json-schema-form.service';
         [style.align-items]="getFlexAttribute('align-items')"
         [style.align-content]="getFlexAttribute('align-content')"
         [fxLayout]="options?.fxLayout"
-        [fxLayoutWrap]="options?.fxLayoutWrap"
         [fxLayoutGap]="options?.fxLayoutGap"
         [fxLayoutAlign]="options?.fxLayoutAlign"
         [attr.fxFlexFill]="options?.fxLayoutAlign"></flex-layout-root-widget>
@@ -72,10 +71,11 @@ import { JsonSchemaFormService } from '../../json-schema-form.service';
       [class]="options?.htmlClass || ''"
       [class.expandable]="options?.expandable && !expanded"
       [class.expanded]="options?.expandable && expanded">
-      <mat-card-header *ngIf="sectionTitle">
+      <mat-card-header>
         <legend
           [class]="'legend ' + (options?.labelHtmlClass || '')"
-          [innerHTML]="sectionTitle"
+          [style.display]="(options?.notitle || !options?.title) ? 'none' : ''"
+          [innerHTML]="options?.title"
           (click)="toggleExpanded()"></legend>
       </mat-card-header>
       <mat-card-content *ngIf="expanded">
@@ -94,7 +94,6 @@ import { JsonSchemaFormService } from '../../json-schema-form.service';
             [style.align-items]="getFlexAttribute('align-items')"
             [style.align-content]="getFlexAttribute('align-content')"
             [fxLayout]="options?.fxLayout"
-            [fxLayoutWrap]="options?.fxLayoutWrap"
             [fxLayoutGap]="options?.fxLayoutGap"
             [fxLayoutAlign]="options?.fxLayoutAlign"
             [attr.fxFlexFill]="options?.fxLayoutAlign"></flex-layout-root-widget>
@@ -111,9 +110,10 @@ import { JsonSchemaFormService } from '../../json-schema-form.service';
       [hideToggle]="!options?.expandable">
       <mat-expansion-panel-header>
         <mat-panel-title>
-          <legend *ngIf="sectionTitle"
+          <legend
             [class]="options?.labelHtmlClass"
-            [innerHTML]="sectionTitle"
+            [style.display]="(options?.notitle || !options?.title) ? 'none' : ''"
+            [innerHTML]="options?.title"
             (click)="toggleExpanded()"></legend>
         </mat-panel-title>
       </mat-expansion-panel-header>
@@ -132,7 +132,6 @@ import { JsonSchemaFormService } from '../../json-schema-form.service';
           [style.align-items]="getFlexAttribute('align-items')"
           [style.align-content]="getFlexAttribute('align-content')"
           [fxLayout]="options?.fxLayout"
-          [fxLayoutWrap]="options?.fxLayoutWrap"
           [fxLayoutGap]="options?.fxLayoutGap"
           [fxLayoutAlign]="options?.fxLayoutAlign"
           [attr.fxFlexFill]="options?.fxLayoutAlign"></flex-layout-root-widget>
@@ -163,10 +162,6 @@ export class FlexLayoutSectionComponent implements OnInit {
   constructor(
     private jsf: JsonSchemaFormService
   ) { }
-
-  get sectionTitle() {
-    return this.options.notitle ? null : this.jsf.setItemTitle(this);
-  }
 
   ngOnInit() {
     this.jsf.initializeControl(this);

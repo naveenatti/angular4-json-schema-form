@@ -1,38 +1,28 @@
-import { NgModule, ModuleWithProviders } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { FrameworkLibraryService } from './framework-library/framework-library.service';
+import { FrameworkLibraryModule } from './framework-library/framework-library.module';
 import { WidgetLibraryModule } from './widget-library/widget-library.module';
-import { WidgetLibraryService } from './widget-library/widget-library.service';
 
 import { JsonSchemaFormComponent } from './json-schema-form.component';
 
 import { JsonSchemaFormService } from './json-schema-form.service';
-
-import { Framework } from './framework-library/framework';
-import { NoFramework } from './framework-library/no-framework/no.framework';
-import { NoFrameworkModule } from './framework-library/no-framework/no-framework.module';
+import { FrameworkLibraryService } from './framework-library/framework-library.service';
+import { WidgetLibraryService } from './widget-library/widget-library.service';
+import { FloatLabelDirective} from './widget-library/float-label.directive';
 
 @NgModule({
   imports: [
     CommonModule, FormsModule, ReactiveFormsModule,
-    WidgetLibraryModule, NoFrameworkModule
+    FrameworkLibraryModule, WidgetLibraryModule
   ],
   declarations: [ JsonSchemaFormComponent ],
-  exports: [ JsonSchemaFormComponent, WidgetLibraryModule ]
+  exports: [
+    JsonSchemaFormComponent, FrameworkLibraryModule, WidgetLibraryModule
+  ],
+  providers: [
+    JsonSchemaFormService, FrameworkLibraryService, WidgetLibraryService
+  ]
 })
-export class JsonSchemaFormModule {
-  static forRoot(...frameworks): ModuleWithProviders {
-    const loadFrameworks = frameworks.length ?
-      frameworks.map(framework => framework.forRoot().providers[0]) :
-      [{ provide: Framework, useClass: NoFramework, multi: true }];
-    return {
-      ngModule: JsonSchemaFormModule,
-      providers: [
-        JsonSchemaFormService, FrameworkLibraryService, WidgetLibraryService,
-        ...loadFrameworks
-      ]
-    };
-  }
-}
+export class JsonSchemaFormModule { }

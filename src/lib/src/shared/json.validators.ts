@@ -1,4 +1,5 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { Observable } from 'rxjs/Observable';
 import { forkJoin } from 'rxjs/observable/forkJoin';
 import { map } from 'rxjs/operator/map';
 
@@ -232,6 +233,7 @@ export class JsonValidators {
     };
   }
 
+  
   /**
    * 'equalTo' validator
    *

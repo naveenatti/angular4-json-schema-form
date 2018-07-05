@@ -13,5 +13,5 @@ export declare class MaterialTabsComponent implements OnInit {
     ngOnInit(): void;
     select(index: any): void;
     updateControl(): void;
-    setTabTitle(item: any, index: number): string;
+    setTitle(item: any, index: number): string;
 }

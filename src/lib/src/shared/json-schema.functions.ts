@@ -174,7 +174,7 @@ export function getFromSchema(schema, dataPointer, returnType = 'schema') {
         schemaPointer.push('additionalItems');
       } else if (subSchema.additionalItems !== false) {
         subSchemaFound = true;
-        subSchema = {};
+        subSchema = { };
         schemaPointer.push('additionalItems');
       }
     } else if (subSchema.type === 'object') {
@@ -188,7 +188,7 @@ export function getFromSchema(schema, dataPointer, returnType = 'schema') {
         schemaPointer.push('additionalProperties');
       } else if (subSchema.additionalProperties !== false) {
         subSchemaFound = true
-        subSchema = {};
+        subSchema = { };
         schemaPointer.push('additionalProperties');
       }
     }
@@ -272,12 +272,12 @@ export function getInputType(schema, layoutNode: any = null) {
     if (isArray(schemaType)) { // If multiple types listed, use most inclusive type
       schemaType =
         inArray('object', schemaType) && hasOwn(schema, 'properties') ? 'object' :
-          inArray('array', schemaType) && hasOwn(schema, 'items') ? 'array' :
-            inArray('array', schemaType) && hasOwn(schema, 'additionalItems') ? 'array' :
-              inArray('string', schemaType) ? 'string' :
-                inArray('number', schemaType) ? 'number' :
-                  inArray('integer', schemaType) ? 'integer' :
-                    inArray('boolean', schemaType) ? 'boolean' : 'unknown';
+        inArray('array', schemaType) && hasOwn(schema, 'items') ? 'array' :
+        inArray('array', schemaType) && hasOwn(schema, 'additionalItems') ? 'array' :
+        inArray('string', schemaType) ? 'string' :
+        inArray('number', schemaType) ? 'number' :
+        inArray('integer', schemaType) ? 'integer' :
+        inArray('boolean', schemaType) ? 'boolean' : 'unknown';
     }
     if (schemaType === 'boolean') { return 'checkbox'; }
     if (schemaType === 'object') {
@@ -409,23 +409,23 @@ export function updateInputOptions(layoutNode, schema, jsf) {
   if (!isObject(layoutNode) || !isObject(layoutNode.options)) { return; }
 
   // Set all option values in layoutNode.options
-  let newOptions: any = {};
+  let newOptions: any = { };
   const fixUiKeys = key => key.slice(0, 3).toLowerCase() === 'ui:' ? key.slice(3) : key;
   mergeFilteredObject(newOptions, jsf.formOptions.defautWidgetOptions, [], fixUiKeys);
-  [[JsonPointer.get(schema, '/ui:widget/options'), []],
-  [JsonPointer.get(schema, '/ui:widget'), []],
-  [schema, [
-    'additionalProperties', 'additionalItems', 'properties', 'items',
-    'required', 'type', 'x-schema-form', '$ref'
-  ]],
-  [JsonPointer.get(schema, '/x-schema-form/options'), []],
-  [JsonPointer.get(schema, '/x-schema-form'), ['items', 'options']],
-  [layoutNode, [
-    '_id', '$ref', 'arrayItem', 'arrayItemType', 'dataPointer', 'dataType',
-    'items', 'key', 'name', 'options', 'recursiveReference', 'type', 'widget'
-  ]],
-  [layoutNode.options, []],
-  ].forEach(([object, excludeKeys]) =>
+  [ [ JsonPointer.get(schema, '/ui:widget/options'), [] ],
+    [ JsonPointer.get(schema, '/ui:widget'), [] ],
+    [ schema, [
+      'additionalProperties', 'additionalItems', 'properties', 'items',
+      'required', 'type', 'x-schema-form', '$ref'
+    ] ],
+    [ JsonPointer.get(schema, '/x-schema-form/options'), [] ],
+    [ JsonPointer.get(schema, '/x-schema-form'), ['items', 'options'] ],
+    [ layoutNode, [
+      '_id', '$ref', 'arrayItem', 'arrayItemType', 'dataPointer', 'dataType',
+      'items', 'key', 'name', 'options', 'recursiveReference', 'type', 'widget'
+    ] ],
+    [ layoutNode.options, [] ],
+  ].forEach(([ object, excludeKeys ]) =>
     mergeFilteredObject(newOptions, object, excludeKeys, fixUiKeys)
   );
   if (!hasOwn(newOptions, 'titleMap')) {
@@ -438,7 +438,7 @@ export function updateInputOptions(layoutNode, schema, jsf) {
       } else if (JsonPointer.has(schema, '/items/enum')) {
         newOptions.enum = schema.items.enum;
         if (!hasOwn(newOptions, 'enumNames') && JsonPointer.has(schema, '/items/enumNames')) {
-          newOptions.enumNames = schema.items.enumNames;
+          newOptions.enum = schema.items.enumNames;
         }
       } else if (JsonPointer.has(schema, '/items/oneOf')) {
         newTitleMap = getTitleMapFromOneOf(schema.items, newOptions.flatList);
@@ -516,14 +516,14 @@ export function getTitleMapFromOneOf(
  */
 export function getControlValidators(schema) {
   if (!isObject(schema)) { return null; }
-  let validators: any = {};
+  let validators: any = { };
   if (hasOwn(schema, 'type')) {
     switch (schema.type) {
       case 'string':
-        forEach(['pattern', 'format', 'minLength', 'maxLength', 'equalTo'], (prop) => {
+        forEach(['pattern', 'format', 'minLength', 'maxLength','equalTo'], (prop) => {
           if (hasOwn(schema, prop)) { validators[prop] = [schema[prop]]; }
         });
-        break;
+      break;
       case 'number': case 'integer':
         forEach(['Minimum', 'Maximum'], (ucLimit) => {
           let eLimit = 'exclusive' + ucLimit;
@@ -536,17 +536,17 @@ export function getControlValidators(schema) {
         forEach(['multipleOf', 'type'], (prop) => {
           if (hasOwn(schema, prop)) { validators[prop] = [schema[prop]]; }
         });
-        break;
+      break;
       case 'object':
         forEach(['minProperties', 'maxProperties', 'dependencies'], (prop) => {
           if (hasOwn(schema, prop)) { validators[prop] = [schema[prop]]; }
         });
-        break;
+      break;
       case 'array':
         forEach(['minItems', 'maxItems', 'uniqueItems'], (prop) => {
           if (hasOwn(schema, prop)) { validators[prop] = [schema[prop]]; }
         });
-        break;
+      break;
     }
   }
   if (hasOwn(schema, 'enum')) { validators.enum = [schema.enum]; }
@@ -691,13 +691,13 @@ export function getSubSchema(
     return JsonPointer.getCopy(schema, pointer);
   }
   if (typeof pointer !== 'string') { pointer = JsonPointer.compile(pointer); }
-  usedPointers = [...usedPointers, pointer];
+  usedPointers = [ ...usedPointers, pointer ];
   let newSchema: any = null;
   if (pointer === '') {
     newSchema = _.cloneDeep(schema);
   } else {
     const shortPointer = removeRecursiveReferences(pointer, schemaRecursiveRefMap);
-    if (shortPointer !== pointer) { usedPointers = [...usedPointers, shortPointer]; }
+    if (shortPointer !== pointer) { usedPointers = [ ...usedPointers, shortPointer ]; }
     newSchema = JsonPointer.getFirstCopy([
       [schemaRefLibrary, [shortPointer]],
       [schema, pointer],
