@@ -56,6 +56,8 @@ export declare class JsonSchemaFormComponent implements ControlValueAccessor, On
     modelChange: EventEmitter<any>;
     formDataChange: EventEmitter<any>;
     ngModelChange: EventEmitter<any>;
+    valueChanges: EventEmitter<any>;
+    statusChanges: EventEmitter<any>;
     onChange: Function;
     onTouched: Function;
     btnClick: EventEmitter<any>;

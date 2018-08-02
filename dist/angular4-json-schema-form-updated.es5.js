@@ -63324,6 +63324,8 @@ var JsonSchemaFormComponent = (function () {
         this.modelChange = new EventEmitter();
         this.formDataChange = new EventEmitter();
         this.ngModelChange = new EventEmitter();
+        this.valueChanges = new EventEmitter();
+        this.statusChanges = new EventEmitter();
         this.btnClick = new EventEmitter();
     }
     Object.defineProperty(JsonSchemaFormComponent.prototype, "value", {
@@ -63694,7 +63696,11 @@ var JsonSchemaFormComponent = (function () {
                     return _this[_this.formValuesInput + "Change"].emit(_this.objectWrap ? data['1'] : data);
                 });
             }
-            this.jsf.formGroup.statusChanges.subscribe(function () { return _this.changeDetector.markForCheck(); });
+            this.jsf.formGroup.statusChanges.subscribe(function (status) {
+                _this.changeDetector.markForCheck();
+                _this.statusChanges.emit(status);
+            });
+            this.jsf.formGroup.valueChanges.subscribe(function (value) { return _this.valueChanges.emit(value); });
             this.jsf.isValidChanges.subscribe(function (isValid) { return _this.isValid.emit(isValid); });
             this.jsf.validationErrorChanges.subscribe(function (err) { return _this.validationErrors.emit(err); });
             this.formSchema.emit(this.jsf.schema);
@@ -63761,6 +63767,8 @@ var JsonSchemaFormComponent = (function () {
         "modelChange": [{ type: Output },],
         "formDataChange": [{ type: Output },],
         "ngModelChange": [{ type: Output },],
+        "valueChanges": [{ type: Output },],
+        "statusChanges": [{ type: Output },],
         "btnClick": [{ type: Output },],
     };
     return JsonSchemaFormComponent;
