@@ -1,15 +1,15 @@
 import { Subscription } from 'rxjs/Rx';
 import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    EventEmitter,
-    forwardRef,
-    Input,
-    OnChanges,
-    OnDestroy,
-    OnInit,
-    Output,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  forwardRef,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
@@ -85,7 +85,7 @@ export const JSON_SCHEMA_FORM_VALUE_ACCESSOR: any = {
   changeDetection: ChangeDetectionStrategy.OnPush,
   // Adding 'JsonSchemaFormService' here, instead of in the module,
   // creates a separate instance of the service for each component
-  providers:  [ JsonSchemaFormService, JSON_SCHEMA_FORM_VALUE_ACCESSOR ],
+  providers: [JsonSchemaFormService, JSON_SCHEMA_FORM_VALUE_ACCESSOR],
 })
 export class JsonSchemaFormComponent implements ControlValueAccessor, OnChanges, OnInit, OnDestroy {
   debugOutput: any; // Debug information, if requested
@@ -95,21 +95,21 @@ export class JsonSchemaFormComponent implements ControlValueAccessor, OnChanges,
 
   formValuesInput: string; // Name of the input providing the form data
   previousInputs: { // Previous input values, to detect which input triggers onChanges
-    schema: any, layout: any[], data: any, options: any, framework: any|string,
+    schema: any, layout: any[], data: any, options: any, framework: any | string,
     widgets: any, form: any, model: any, JSONSchema: any, UISchema: any,
     formData: any, loadExternalAssets: boolean, debug: boolean,
   } = {
-    schema: null, layout: null, data: null, options: null, framework: null,
-    widgets: null, form: null, model: null, JSONSchema: null, UISchema: null,
-    formData: null, loadExternalAssets: null, debug: null,
-  };
+      schema: null, layout: null, data: null, options: null, framework: null,
+      widgets: null, form: null, model: null, JSONSchema: null, UISchema: null,
+      formData: null, loadExternalAssets: null, debug: null,
+    };
 
   // Recommended inputs
   @Input() schema: any; // The JSON Schema
   @Input() layout: any[]; // The form layout
   @Input() data: any; // The form data
   @Input() options: any; // The global form options
-  @Input() framework: any|string; // The framework to load
+  @Input() framework: any | string; // The framework to load
   @Input() widgets: any; // Any custom widgets to load
 
   // Alternate combined single input
@@ -153,7 +153,10 @@ export class JsonSchemaFormComponent implements ControlValueAccessor, OnChanges,
   @Output() modelChange = new EventEmitter<any>();
   @Output() formDataChange = new EventEmitter<any>();
   @Output() ngModelChange = new EventEmitter<any>();
-
+  // Triggers every time the value of the control changes,
+  @Output() valueChanges = new EventEmitter<any>();
+  // Triggers every time the control status changes after valueChanges event,
+  @Output() statusChanges = new EventEmitter<any>();
   onChange: Function;
   onTouched: Function;
 
@@ -182,7 +185,7 @@ export class JsonSchemaFormComponent implements ControlValueAccessor, OnChanges,
 
   ngOnInit() {
     this.updateForm();
-    this.subscription = this.jsf.getBtnClick().subscribe(x=>{
+    this.subscription = this.jsf.getBtnClick().subscribe(x => {
       this.btnClick.emit(x)
     })
   }
@@ -239,7 +242,7 @@ export class JsonSchemaFormComponent implements ControlValueAccessor, OnChanges,
           this.setFormValues(this[input][key], resetFirst);
         }
 
-      // If anything else has changed, re-render the entire form
+        // If anything else has changed, re-render the entire form
       } else if (changedInput.length) {
         this.initializeForm();
         if (this.onChange) { this.onChange(this.jsf.formValues); }
@@ -309,11 +312,11 @@ export class JsonSchemaFormComponent implements ControlValueAccessor, OnChanges,
       this.jsf.resetAllValues();  // Reset all form values to defaults
       this.initializeOptions();   // Update options
       this.initializeSchema();    // Update schema, schemaRefLibrary,
-                                  // schemaRecursiveRefMap, & dataRecursiveRefMap
+      // schemaRecursiveRefMap, & dataRecursiveRefMap
       this.initializeLayout();    // Update layout, layoutRefLibrary,
       this.initializeData();      // Update formValues
       this.activateForm();        // Update dataMap, templateRefLibrary,
-                                  // formGroupTemplate, formGroup
+      // formGroupTemplate, formGroup
 
       // Uncomment individual lines to output debugging information to console:
       // (These always work.)
@@ -455,7 +458,7 @@ export class JsonSchemaFormComponent implements ControlValueAccessor, OnChanges,
         ) {
           this.jsf.schema.type = 'object';
 
-        // Fix JSON schema shorthand (JSON Form style)
+          // Fix JSON schema shorthand (JSON Form style)
         } else {
           this.jsf.JsonFormCompatibility = true;
           this.jsf.schema = {
@@ -586,7 +589,7 @@ export class JsonSchemaFormComponent implements ControlValueAccessor, OnChanges,
       this.jsf.layout = _.cloneDeep(this.form.layout);
     } else {
       this.jsf.layout = this.jsf.formOptions.addSubmit === false ?
-        [ '*' ] : [ '*', { type: 'submit', title: 'Submit' } ];
+        ['*'] : ['*', { type: 'submit', title: 'Submit' }];
     }
 
     // Check for alternate layout inputs
@@ -621,8 +624,8 @@ export class JsonSchemaFormComponent implements ControlValueAccessor, OnChanges,
           if (key.toLowerCase() === 'ui:order') {
             itemPointer = [...groupPointer, 'ui:order'];
 
-          // Copy other alternate layout options to schema 'x-schema-form',
-          // (like Angular Schema Form options) and remove any 'ui:' prefixes
+            // Copy other alternate layout options to schema 'x-schema-form',
+            // (like Angular Schema Form options) and remove any 'ui:' prefixes
           } else {
             if (key.slice(0, 3).toLowerCase() === 'ui:') { key = key.slice(3); }
             itemPointer = [...groupPointer, 'x-schema-form', key];
@@ -715,7 +718,13 @@ export class JsonSchemaFormComponent implements ControlValueAccessor, OnChanges,
       }
 
       // Trigger change detection on statusChanges to show updated errors
-      this.jsf.formGroup.statusChanges.subscribe(() => this.changeDetector.markForCheck());
+      this.jsf.formGroup.statusChanges.subscribe((status) => {
+        this.changeDetector.markForCheck()
+        this.statusChanges.emit(status);
+      }
+      );
+      // Triggers everytime the control value got changed
+      this.jsf.formGroup.valueChanges.subscribe((value) => this.valueChanges.emit(value));
       this.jsf.isValidChanges.subscribe(isValid => this.isValid.emit(isValid));
       this.jsf.validationErrorChanges.subscribe(err => this.validationErrors.emit(err));
 
