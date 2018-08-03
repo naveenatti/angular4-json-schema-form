@@ -64188,6 +64188,8 @@ class JsonSchemaFormComponent {
         this.modelChange = new EventEmitter();
         this.formDataChange = new EventEmitter();
         this.ngModelChange = new EventEmitter();
+        this.valueChanges = new EventEmitter();
+        this.statusChanges = new EventEmitter();
         this.btnClick = new EventEmitter();
     }
     get value() {
@@ -64536,7 +64538,11 @@ class JsonSchemaFormComponent {
             if (this.formValuesInput && this.formValuesInput.indexOf('.') === -1) {
                 this.jsf.dataChanges.subscribe(data => this[`${this.formValuesInput}Change`].emit(this.objectWrap ? data['1'] : data));
             }
-            this.jsf.formGroup.statusChanges.subscribe(() => this.changeDetector.markForCheck());
+            this.jsf.formGroup.statusChanges.subscribe((status) => {
+                this.changeDetector.markForCheck();
+                this.statusChanges.emit(status);
+            });
+            this.jsf.formGroup.valueChanges.subscribe((value) => this.valueChanges.emit(value));
             this.jsf.isValidChanges.subscribe(isValid => this.isValid.emit(isValid));
             this.jsf.validationErrorChanges.subscribe(err => this.validationErrors.emit(err));
             this.formSchema.emit(this.jsf.schema);
@@ -64616,6 +64622,8 @@ JsonSchemaFormComponent.propDecorators = {
     "modelChange": [{ type: Output },],
     "formDataChange": [{ type: Output },],
     "ngModelChange": [{ type: Output },],
+    "valueChanges": [{ type: Output },],
+    "statusChanges": [{ type: Output },],
     "btnClick": [{ type: Output },],
 };
 
