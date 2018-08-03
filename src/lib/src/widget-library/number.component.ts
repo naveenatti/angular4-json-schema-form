@@ -13,7 +13,7 @@ import { JsonSchemaFormService } from '../json-schema-form.service';
         [class]="options?.labelHtmlClass || ''"
         [style.display]="options?.notitle ? 'none' : ''"
         [innerHTML]="options?.title"></label>
-      <input float-label *ngIf="boundControl"
+      <input float-label [hasFloat]="options?.hasFloat" *ngIf="boundControl"
         [formControl]="formControl"
         [attr.aria-describedby]="'control' + layoutNode?._id + 'Status'"
         [attr.max]="options?.maximum"
@@ -28,7 +28,7 @@ import { JsonSchemaFormService } from '../json-schema-form.service';
         [readonly]="options?.readonly ? 'readonly' : null"
         [title]="lastValidNumber"
         [type]="layoutNode?.type === 'range' ? 'range' : 'number'">
-      <input float-label *ngIf="!boundControl"
+      <input float-label [hasFloat]="options?.hasFloat" *ngIf="!boundControl"
         [attr.aria-describedby]="'control' + layoutNode?._id + 'Status'"
         [attr.max]="options?.maximum"
         [attr.min]="options?.minimum"

@@ -93,6 +93,84 @@ import {
     :host /deep/ .radio-inline + .checkbox-inline { margin-left: 0; margin-right: 10px; }
     :host /deep/ .checkbox-inline:last-child,
     :host /deep/ .radio-inline:last-child { margin-right: 0; }
+    :host /deep/ .floatLabelContainer {position:relative;}
+    :host /deep/ .floatLabelContainer {
+      position: relative;
+      font-family: helvetica-regular;
+      font-weight: 400;
+  }
+  :host /deep/ .floatLabelContainer input[float-label],
+  :host /deep/ .floatLabelContainer select[float-label] {
+      height: 42px!important;
+  }
+  :host /deep/ .floatLabelContainer [float-label] {
+      /* padding: 15px 10px 0!important; */
+      border-radius: 2px!important;
+      border-color: #e2e2e2;
+      font-size: 0.875rem;
+  }
+  :host /deep/ .floatLabelContainer input[float-label]::-webkit-input-placeholder,
+  :host /deep/ .floatLabelContainer textarea[float-label]::-webkit-input-placeholder {
+      color: transparent;
+  }
+  :host /deep/ .floatLabelContainer input[float-label]::-moz-placeholder,
+  :host /deep/ .floatLabelContainer textarea[float-label]::-moz-placeholder {
+      color: transparent;
+  }
+  :host /deep/ .floatLabelContainer input[float-label]:-moz-placeholder,
+  :host /deep/ .floatLabelContainer textarea[float-label]:-moz-placeholder {
+      color: transparent;
+  }
+  :host /deep/ .floatLabelContainer input[float-label]:-ms-input-placeholder,
+  :host /deep/ .floatLabelContainer textarea[float-label]:-ms-input-placeholder {
+      color: transparent;
+  }
+  :host /deep/ .floatLabelContainer [float-label]+label#label-class {
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      transform: translate(15px, 15px);
+      cursor: text;
+      -webkit-transition: all 0.3s;
+      transition: all 0.3s;
+      z-index: 3;
+      line-height: 1;
+      font-weight: normal;
+      color: #958d8d;
+      font-family: helvetica-regular;
+      font-weight: 400;
+      font-size: 12px;
+  }
+  :host /deep/ .floatLabelContainer.has-float [float-label]+label#label-class {
+      font-size: 13px !important;
+      opacity: 1;
+      transform: translate(8px, -6px);
+      /* background-color: #fff!important; */
+      color: #919da9;
+      padding: 0 4px;
+  }
+  :host /deep/ .floatLabelContainer [float-label]+label#label-class:after,
+  :host /deep/ .floatLabelContainer [float-label]+label#label-class::after {
+      content: "";
+      position: absolute;
+      width: 100%;
+      background: #fff;
+      height: 2px;
+      top: 38%;
+      left: 0;
+      z-index: -1;
+      opacity: 0;
+  }
+  :host /deep/ .floatLabelContainer.has-float [float-label]+label#label-class:after
+  ,:host /deep/ .floatLabelContainer.has-float [float-label]+label#label-class::after {
+      opacity: 1;
+  }
+  :host /deep/ .floatLabelContainer [float-label].ng-invalid.ng-touched {
+      border: 1px solid rgba(255, 0, 0, 0.5)!important;
+  }
+  :host /deep/ .floatLabelContainer [float-label].ng-invalid.ng-touched+label {
+      color: rgba(255, 0, 0, 0.7)!important;
+  }
   `],
 })
 export class Bootstrap4FrameworkComponent implements OnInit, OnChanges {
