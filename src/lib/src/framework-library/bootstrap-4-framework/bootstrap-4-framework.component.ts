@@ -44,7 +44,7 @@ import {
       <p *ngIf="layoutNode?.type === 'submit' && jsf?.formOptions?.fieldsRequired">
         <strong class="text-danger">*</strong> = required fields
       </p>
-      <div [class.input-group]="options?.fieldAddonLeft || options?.fieldAddonRight">
+      <div class="input-focus" [class.input-group]="options?.fieldAddonLeft || options?.fieldAddonRight">
         <span *ngIf="options?.fieldAddonLeft"
           class="input-group-addon"
           [innerHTML]="options?.fieldAddonLeft"></span>

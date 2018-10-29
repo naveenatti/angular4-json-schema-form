@@ -76,6 +76,7 @@ export class FloatLabelDirective implements AfterViewInit, AfterViewChecked {
      */
     onFocus(event: any): void {
         this.hasFocus = true;
+        this.focusSelectedParent(event.currentTarget, this.hasFocus);
         this.toggleClass(true, event.currentTarget);
     }
 
@@ -86,6 +87,7 @@ export class FloatLabelDirective implements AfterViewInit, AfterViewChecked {
      */
     onBlur(event: any): void {
         this.hasFocus = false;
+        this.focusSelectedParent(event.currentTarget, this.hasFocus);
         this.toggleClass(false, event.currentTarget);
     }
     /**
@@ -138,5 +140,40 @@ export class FloatLabelDirective implements AfterViewInit, AfterViewChecked {
             return true;
         }
         return false;
+    }
+    /**
+     * @description find the selected parent element
+     * using selector
+     * @param {*} elem
+     * @param {*} selector
+     * @returns {HTMLElement}
+     * @memberof FloatLabelDirective
+     */
+    getClosest(elem, selector): HTMLElement {
+        for (; elem && elem !== document; elem = elem.parentNode) {
+            if (elem.classList.contains(selector)) {
+                return elem;
+            }
+        }
+        return null;
+    };
+
+    /**
+     * @description Add/Remove error-focus for the particular parent element
+     * on Focus/Blur
+     * @param {HTMLElement} element
+     * @param {boolean} isFocused
+     * @memberof FloatLabelDirective
+     */
+    focusSelectedParent(element: HTMLElement, isFocused: boolean): void {
+        let focusParent = this.getClosest(element, 'input-focus');
+        if (focusParent) {
+            if (isFocused) {
+                focusParent.classList.add('error-focus');
+            } else {
+                focusParent.classList.remove('error-focus');
+            }
+
+        }
     }
 }

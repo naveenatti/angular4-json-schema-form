@@ -8145,10 +8145,12 @@ class FloatLabelDirective {
     }
     onFocus(event) {
         this.hasFocus = true;
+        this.focusSelectedParent(event.currentTarget, this.hasFocus);
         this.toggleClass(true, event.currentTarget);
     }
     onBlur(event) {
         this.hasFocus = false;
+        this.focusSelectedParent(event.currentTarget, this.hasFocus);
         this.toggleClass(false, event.currentTarget);
     }
     toggleClass(isFocused, element, isInitialize) {
@@ -8184,6 +8186,26 @@ class FloatLabelDirective {
             return true;
         }
         return false;
+    }
+    getClosest(elem, selector) {
+        for (; elem && elem !== document; elem = elem.parentNode) {
+            if (elem.classList.contains(selector)) {
+                return elem;
+            }
+        }
+        return null;
+    }
+    ;
+    focusSelectedParent(element, isFocused) {
+        let focusParent = this.getClosest(element, 'input-focus');
+        if (focusParent) {
+            if (isFocused) {
+                focusParent.classList.add('error-focus');
+            }
+            else {
+                focusParent.classList.remove('error-focus');
+            }
+        }
     }
 }
 FloatLabelDirective.decorators = [
@@ -63981,7 +64003,7 @@ Bootstrap4FrameworkComponent.decorators = [
       <p *ngIf="layoutNode?.type === 'submit' && jsf?.formOptions?.fieldsRequired">
         <strong class="text-danger">*</strong> = required fields
       </p>
-      <div [class.input-group]="options?.fieldAddonLeft || options?.fieldAddonRight">
+      <div class="input-focus" [class.input-group]="options?.fieldAddonLeft || options?.fieldAddonRight">
         <span *ngIf="options?.fieldAddonLeft"
           class="input-group-addon"
           [innerHTML]="options?.fieldAddonLeft"></span>
