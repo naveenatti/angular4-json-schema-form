@@ -173,7 +173,29 @@ export class FloatLabelDirective implements AfterViewInit, AfterViewChecked {
             } else {
                 focusParent.classList.remove('error-focus');
             }
-
+            this.showErrorBlock(focusParent, isFocused);
         }
+    }
+
+    /**
+     * @description
+     * @date 2018-10-31
+     * @param {HTMLElement} parent
+     * @param {boolean} focused
+     * @memberof FloatLabelDirective
+     */
+    showErrorBlock(parent: HTMLElement, focused: boolean): void {
+        setTimeout(() => {
+            const errorFocus = parent.querySelector('.err-block');
+            if (errorFocus) {
+                if (focused) {
+                    errorFocus.classList.add('hide');
+                    errorFocus.classList.remove('show');
+                } else {
+                    errorFocus.classList.add('show');
+                    errorFocus.classList.remove('hide');
+                }
+            }
+        }, 0);
     }
 }

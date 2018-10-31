@@ -8205,7 +8205,23 @@ class FloatLabelDirective {
             else {
                 focusParent.classList.remove('error-focus');
             }
+            this.showErrorBlock(focusParent, isFocused);
         }
+    }
+    showErrorBlock(parent, focused) {
+        setTimeout(() => {
+            const errorFocus = parent.querySelector('.err-block');
+            if (errorFocus) {
+                if (focused) {
+                    errorFocus.classList.add('hide');
+                    errorFocus.classList.remove('show');
+                }
+                else {
+                    errorFocus.classList.add('show');
+                    errorFocus.classList.remove('hide');
+                }
+            }
+        }, 0);
     }
 }
 FloatLabelDirective.decorators = [
@@ -63840,7 +63856,7 @@ class Bootstrap4FrameworkComponent {
             ]);
             this.options.title = this.setTitle();
             this.options.htmlClass =
-                addClasses(this.options.htmlClass, 'schema-form-' + this.layoutNode.type);
+                addClasses(this.options.htmlClass, 'input-focus schema-form-' + this.layoutNode.type);
             this.options.htmlClass =
                 this.layoutNode.type === 'array' ?
                     addClasses(this.options.htmlClass, 'list-group') :
@@ -64003,7 +64019,7 @@ Bootstrap4FrameworkComponent.decorators = [
       <p *ngIf="layoutNode?.type === 'submit' && jsf?.formOptions?.fieldsRequired">
         <strong class="text-danger">*</strong> = required fields
       </p>
-      <div class="input-focus" [class.input-group]="options?.fieldAddonLeft || options?.fieldAddonRight">
+      <div [class.input-group]="options?.fieldAddonLeft || options?.fieldAddonRight">
         <span *ngIf="options?.fieldAddonLeft"
           class="input-group-addon"
           [innerHTML]="options?.fieldAddonLeft"></span>
@@ -64027,7 +64043,7 @@ Bootstrap4FrameworkComponent.decorators = [
         class="form-control-feedback glyphicon"></span>
       <div *ngIf="options?.messageLocation !== 'top'">
         <p tabindex="0" *ngIf="options?.helpBlock"
-          class="help-block"
+          class="help-block hide err-block"
           [innerHTML]="options?.helpBlock"></p>
           <p tabindex="0"  *ngIf="options?.customhelpBlock"
           class="help-block show"
@@ -64129,6 +64145,12 @@ Bootstrap4FrameworkComponent.decorators = [
   }
   :host /deep/ .floatLabelContainer [float-label].ng-invalid.ng-touched+label {
       color: rgba(255, 0, 0, 0.7)!important;
+  }
+  :host /deep/ .show {
+    display: block !important;
+  }
+  :host /deep/ .hide {
+    display: none !important;
   }
   `],
             },] },

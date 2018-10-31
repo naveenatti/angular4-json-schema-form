@@ -44,7 +44,7 @@ import {
       <p *ngIf="layoutNode?.type === 'submit' && jsf?.formOptions?.fieldsRequired">
         <strong class="text-danger">*</strong> = required fields
       </p>
-      <div class="input-focus" [class.input-group]="options?.fieldAddonLeft || options?.fieldAddonRight">
+      <div [class.input-group]="options?.fieldAddonLeft || options?.fieldAddonRight">
         <span *ngIf="options?.fieldAddonLeft"
           class="input-group-addon"
           [innerHTML]="options?.fieldAddonLeft"></span>
@@ -68,7 +68,7 @@ import {
         class="form-control-feedback glyphicon"></span>
       <div *ngIf="options?.messageLocation !== 'top'">
         <p tabindex="0" *ngIf="options?.helpBlock"
-          class="help-block"
+          class="help-block hide err-block"
           [innerHTML]="options?.helpBlock"></p>
           <p tabindex="0"  *ngIf="options?.customhelpBlock"
           class="help-block show"
@@ -171,6 +171,12 @@ import {
   :host /deep/ .floatLabelContainer [float-label].ng-invalid.ng-touched+label {
       color: rgba(255, 0, 0, 0.7)!important;
   }
+  :host /deep/ .show {
+    display: block !important;
+  }
+  :host /deep/ .hide {
+    display: none !important;
+  }
   `],
 })
 export class Bootstrap4FrameworkComponent implements OnInit, OnChanges {
@@ -240,9 +246,8 @@ export class Bootstrap4FrameworkComponent implements OnInit, OnChanges {
       ]);
 
       this.options.title = this.setTitle();
-
       this.options.htmlClass =
-        addClasses(this.options.htmlClass, 'schema-form-' + this.layoutNode.type);
+        addClasses(this.options.htmlClass, 'input-focus schema-form-' + this.layoutNode.type);
       this.options.htmlClass =
         this.layoutNode.type === 'array' ?
           addClasses(this.options.htmlClass, 'list-group') :
