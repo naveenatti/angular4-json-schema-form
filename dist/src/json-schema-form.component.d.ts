@@ -37,6 +37,7 @@ export declare class JsonSchemaFormComponent implements ControlValueAccessor, On
     options: any;
     framework: any | string;
     widgets: any;
+    isPreventSubmit: boolean;
     form: any;
     model: any;
     JSONSchema: any;
@@ -73,7 +74,7 @@ export declare class JsonSchemaFormComponent implements ControlValueAccessor, On
     setDisabledState(isDisabled: boolean): void;
     updateForm(): void;
     setFormValues(formValues: any, resetFirst?: boolean): void;
-    submitForm(): void;
+    submitForm($event: Event): void;
     initializeForm(): void;
     private initializeOptions();
     private initializeSchema();

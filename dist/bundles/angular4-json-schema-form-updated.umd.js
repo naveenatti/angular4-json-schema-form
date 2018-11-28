@@ -63486,7 +63486,10 @@ var JsonSchemaFormComponent = (function () {
             this.jsf.formGroup.reset();
         }
     };
-    JsonSchemaFormComponent.prototype.submitForm = function () {
+    JsonSchemaFormComponent.prototype.submitForm = function ($event) {
+        if (this.isPreventSubmit) {
+            $event.preventDefault();
+        }
         var validData = this.jsf.validData;
         this.onSubmit.emit(this.objectWrap ? validData['1'] : validData);
     };
@@ -63763,7 +63766,7 @@ var JsonSchemaFormComponent = (function () {
     JsonSchemaFormComponent.decorators = [
         { type: core.Component, args: [{
                     selector: 'json-schema-form',
-                    template: "\n    <div *ngFor=\"let stylesheet of stylesheets\">\n      <link rel=\"stylesheet\" [href]=\"stylesheet\">\n    </div>\n    <div *ngFor=\"let script of scripts\">\n      <script type=\"text/javascript\" [src]=\"script\"></script>\n    </div>\n    <form class=\"json-schema-form\" (ngSubmit)=\"submitForm()\">\n      <root-widget [layout]=\"jsf?.layout\"></root-widget>\n    </form>\n    <div *ngIf=\"debug || jsf?.formOptions?.debug\">\n      Debug output: <pre>{{debugOutput}}</pre>\n    </div>",
+                    template: "\n    <div *ngFor=\"let stylesheet of stylesheets\">\n      <link rel=\"stylesheet\" [href]=\"stylesheet\">\n    </div>\n    <div *ngFor=\"let script of scripts\">\n      <script type=\"text/javascript\" [src]=\"script\"></script>\n    </div>\n    <form class=\"json-schema-form\" (ngSubmit)=\"submitForm($event)\">\n      <root-widget [layout]=\"jsf?.layout\"></root-widget>\n    </form>\n    <div *ngIf=\"debug || jsf?.formOptions?.debug\">\n      Debug output: <pre>{{debugOutput}}</pre>\n    </div>",
                     changeDetection: core.ChangeDetectionStrategy.OnPush,
                     providers: [JsonSchemaFormService, JSON_SCHEMA_FORM_VALUE_ACCESSOR],
                 },] },
@@ -63782,6 +63785,7 @@ var JsonSchemaFormComponent = (function () {
         "options": [{ type: core.Input },],
         "framework": [{ type: core.Input },],
         "widgets": [{ type: core.Input },],
+        "isPreventSubmit": [{ type: core.Input },],
         "form": [{ type: core.Input },],
         "model": [{ type: core.Input },],
         "JSONSchema": [{ type: core.Input },],

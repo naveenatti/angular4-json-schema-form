@@ -141,6 +141,7 @@
         [form]="jsonFormObject"
         [options]="jsonFormOptions"
         [framework]="selectedFramework"
+        [isPreventSubmit]="true"
         (onChanges)="onChanges($event)"
         (onSubmit)="onSubmit($event)"
         (isValid)="isValid($event)"

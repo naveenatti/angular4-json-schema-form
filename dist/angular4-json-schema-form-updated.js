@@ -64484,7 +64484,10 @@ class JsonSchemaFormComponent {
             this.jsf.formGroup.reset();
         }
     }
-    submitForm() {
+    submitForm($event) {
+        if (this.isPreventSubmit) {
+            $event.preventDefault();
+        }
         const validData = this.jsf.validData;
         this.onSubmit.emit(this.objectWrap ? validData['1'] : validData);
     }
@@ -64762,7 +64765,7 @@ JsonSchemaFormComponent.decorators = [
     <div *ngFor="let script of scripts">
       <script type="text/javascript" [src]="script"></script>
     </div>
-    <form class="json-schema-form" (ngSubmit)="submitForm()">
+    <form class="json-schema-form" (ngSubmit)="submitForm($event)">
       <root-widget [layout]="jsf?.layout"></root-widget>
     </form>
     <div *ngIf="debug || jsf?.formOptions?.debug">
@@ -64786,6 +64789,7 @@ JsonSchemaFormComponent.propDecorators = {
     "options": [{ type: Input },],
     "framework": [{ type: Input },],
     "widgets": [{ type: Input },],
+    "isPreventSubmit": [{ type: Input },],
     "form": [{ type: Input },],
     "model": [{ type: Input },],
     "JSONSchema": [{ type: Input },],

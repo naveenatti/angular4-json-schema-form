@@ -76,7 +76,7 @@ export const JSON_SCHEMA_FORM_VALUE_ACCESSOR: any = {
     <div *ngFor="let script of scripts">
       <script type="text/javascript" [src]="script"></script>
     </div>
-    <form class="json-schema-form" (ngSubmit)="submitForm()">
+    <form class="json-schema-form" (ngSubmit)="submitForm($event)">
       <root-widget [layout]="jsf?.layout"></root-widget>
     </form>
     <div *ngIf="debug || jsf?.formOptions?.debug">
@@ -111,6 +111,7 @@ export class JsonSchemaFormComponent implements ControlValueAccessor, OnChanges,
   @Input() options: any; // The global form options
   @Input() framework: any | string; // The framework to load
   @Input() widgets: any; // Any custom widgets to load
+  @Input() isPreventSubmit: boolean;
 
   // Alternate combined single input
   @Input() form: any; // For testing, and JSON Schema Form API compatibility
@@ -277,7 +278,10 @@ export class JsonSchemaFormComponent implements ControlValueAccessor, OnChanges,
     }
   }
 
-  submitForm() {
+  submitForm($event: Event) {
+    if (this.isPreventSubmit) {
+      $event.preventDefault();
+    }
     const validData = this.jsf.validData;
     this.onSubmit.emit(this.objectWrap ? validData['1'] : validData);
   }
