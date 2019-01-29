@@ -7701,6 +7701,10 @@ var JsonValidators = (function () {
             else if (value && !value._i && (typeof value === 'object')) {
                 value = moment(value).format('DD-MMM-YYYY');
             }
+            else if (value && !value._i && value.length === 10
+                && value.split('-')[0] && value.split('-')[0].length === 4) {
+                value = moment(value, 'YYYY-MM-DD').format('DD-MMM-YYYY');
+            }
             if (!(new RegExp(datepattern).test(value))) {
                 return { 'dateValidation': true };
             }
