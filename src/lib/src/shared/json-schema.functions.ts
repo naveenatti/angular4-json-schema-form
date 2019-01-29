@@ -272,12 +272,12 @@ export function getInputType(schema, layoutNode: any = null) {
     if (isArray(schemaType)) { // If multiple types listed, use most inclusive type
       schemaType =
         inArray('object', schemaType) && hasOwn(schema, 'properties') ? 'object' :
-        inArray('array', schemaType) && hasOwn(schema, 'items') ? 'array' :
-        inArray('array', schemaType) && hasOwn(schema, 'additionalItems') ? 'array' :
-        inArray('string', schemaType) ? 'string' :
-        inArray('number', schemaType) ? 'number' :
-        inArray('integer', schemaType) ? 'integer' :
-        inArray('boolean', schemaType) ? 'boolean' : 'unknown';
+          inArray('array', schemaType) && hasOwn(schema, 'items') ? 'array' :
+            inArray('array', schemaType) && hasOwn(schema, 'additionalItems') ? 'array' :
+              inArray('string', schemaType) ? 'string' :
+                inArray('number', schemaType) ? 'number' :
+                  inArray('integer', schemaType) ? 'integer' :
+                    inArray('boolean', schemaType) ? 'boolean' : 'unknown';
     }
     if (schemaType === 'boolean') { return 'checkbox'; }
     if (schemaType === 'object') {
@@ -520,10 +520,10 @@ export function getControlValidators(schema) {
   if (hasOwn(schema, 'type')) {
     switch (schema.type) {
       case 'string':
-        forEach(['pattern', 'format', 'minLength', 'maxLength','equalTo'], (prop) => {
+        forEach(['pattern', 'format', 'minLength', 'maxLength', 'equalTo', 'dobFormat'], (prop) => {
           if (hasOwn(schema, prop)) { validators[prop] = [schema[prop]]; }
         });
-      break;
+        break;
       case 'number': case 'integer':
         forEach(['Minimum', 'Maximum'], (ucLimit) => {
           let eLimit = 'exclusive' + ucLimit;
@@ -536,17 +536,17 @@ export function getControlValidators(schema) {
         forEach(['multipleOf', 'type'], (prop) => {
           if (hasOwn(schema, prop)) { validators[prop] = [schema[prop]]; }
         });
-      break;
+        break;
       case 'object':
         forEach(['minProperties', 'maxProperties', 'dependencies'], (prop) => {
           if (hasOwn(schema, prop)) { validators[prop] = [schema[prop]]; }
         });
-      break;
+        break;
       case 'array':
         forEach(['minItems', 'maxItems', 'uniqueItems'], (prop) => {
           if (hasOwn(schema, prop)) { validators[prop] = [schema[prop]]; }
         });
-      break;
+        break;
     }
   }
   if (hasOwn(schema, 'enum')) { validators.enum = [schema.enum]; }

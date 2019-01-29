@@ -8,6 +8,7 @@ export declare class JsonValidators {
     static enum(allowedValues: any[]): IValidatorFn;
     static const(requiredValue: any): IValidatorFn;
     static equalTo(equalField: string): IValidatorFn;
+    static dobFormat(dateValue: any): IValidatorFn;
     static minLength(minimumLength: number): IValidatorFn;
     static maxLength(maximumLength: number): IValidatorFn;
     static pattern(pattern: string | RegExp, wholeString?: boolean): IValidatorFn;

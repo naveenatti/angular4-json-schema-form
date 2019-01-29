@@ -5,7 +5,8 @@
     "outDir": "../../out-ngc/lib-es5/",
     "baseUrl": "",
     "types": [],
-    "emitDecoratorMetadata": false
+    "emitDecoratorMetadata": false,
+    "allowSyntheticDefaultImports": true
   },
   "files": [
     "./index.ts",

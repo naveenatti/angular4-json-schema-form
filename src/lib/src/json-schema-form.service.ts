@@ -22,6 +22,7 @@ import {
 } from './shared/form-group.functions';
 import { buildLayout, getLayoutNode } from './shared/layout.functions';
 import { Observable } from 'rxjs/Observable';
+import moment from 'moment';
 
 export interface TitleMapItem {
   name?: string, value?: any, checked?: boolean, group?: string, items?: TitleMapItem[]
@@ -249,6 +250,15 @@ export class JsonSchemaFormService {
   }
 
   validateData(newValue: any, updateSubscriptions = true): void {
+    if (newValue && newValue.dateOfBirth) {
+      let value = newValue.dateOfBirth;
+      if (value && value._i && (typeof value._i === 'object')) {
+        value = moment(value._d).format('DD-MMM-YYYY');
+      } else if (value && value._i && (typeof value._i === 'string')) {
+        value = value._i;
+      }
+      newValue.dateOfBirth = value;
+    }
 
     // Format raw form data to correct data types
     this.data = formatFormData(

@@ -1,6 +1,6 @@
 {
     "name": "angular4-json-schema-form-updated",
-    "version": "2.2.8",
+    "version": "2.3.6",
     "author": {
         "name": "Naveen Atti",
         "email": "naveenatti9@gmail.com"
@@ -57,6 +57,7 @@
     "dependencies": {
         "ajv": "^5.3.0",
         "lodash": "4.x",
+        "moment": "^2.24.0",
         "sass-loader": "^6.0.6"
     },
     "peerDependencies": {

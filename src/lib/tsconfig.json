@@ -6,7 +6,8 @@
     "rootDir": "./",
     "baseUrl": "",
     "types": [],
-    "emitDecoratorMetadata": false
+    "emitDecoratorMetadata": false,
+    "allowSyntheticDefaultImports": true
   },
   "files": [
     "./index.ts",

@@ -12,7 +12,8 @@
     "skipLibCheck": true,
     "stripInternal": true,
     "lib": [ "es2015", "dom", "es7" ],
-    "emitDecoratorMetadata": true
+    "emitDecoratorMetadata": true,
+    "allowSyntheticDefaultImports": true
   },
   "atom": {
     "rewriteTsconfig": false
