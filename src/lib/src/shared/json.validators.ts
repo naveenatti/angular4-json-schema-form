@@ -280,10 +280,10 @@ export class JsonValidators {
     if (!hasValue(dateValue)) { return JsonValidators.nullValidator; }
     return (control: AbstractControl, invert = false): ValidationErrors | null => {
       if (control.value === undefined || control.value === null || control.value instanceof Array) {
-        return { 'dateValidation': true };
+        return undefined;
       }
       let value = control.value;
-      if (value.length === 0) {
+      if (value && value.length === 0) {
         return undefined;
       }
       // tslint:disable-next-line:max-line-length

@@ -7686,10 +7686,10 @@ var JsonValidators = (function () {
         return function (control, invert) {
             if (invert === void 0) { invert = false; }
             if (control.value === undefined || control.value === null || control.value instanceof Array) {
-                return { 'dateValidation': true };
+                return undefined;
             }
             var value = control.value;
-            if (value.length === 0) {
+            if (value && value.length === 0) {
                 return undefined;
             }
             var datepattern = /^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]|(?:Jan|Mar|May|Jul|Aug|Oct|Dec|jan|mar|may|jul|aug|oct|dec|JAN|MAR|MAY|JUL|AUG|OCT|DEC)))\1|(?:(?:29|30)(\/|-|\.)(?:0?[1,3-9]|1[0-2]|(?:Jan|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec|jan|mar|apr|may|jun|jul|aug|sep|oct|nov|dec|JAN|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC))\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)(?:0?2|(?:Feb|feb|FEB))\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9]|(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|jan|feb|mar|apr|may|jun|jul|aug|sep|JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP))|(?:1[0-2]|(?:Oct|Nov|Dec|oct|nov|dec|OCT|NOV|DEC)))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/;
