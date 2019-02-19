@@ -19,6 +19,9 @@ export declare class JsonSchemaFormService {
     ReactJsonSchemaFormCompatibility: boolean;
     AngularSchemaFormCompatibility: boolean;
     tpldata: any;
+    customKeywords: {
+        dobFormat: boolean;
+    };
     ajvOptions: any;
     ajv: any;
     validateFormData: any;

@@ -10967,7 +10967,8 @@ var JsonSchemaFormService = (function () {
         this.ReactJsonSchemaFormCompatibility = false;
         this.AngularSchemaFormCompatibility = false;
         this.tpldata = {};
-        this.ajvOptions = { allErrors: true, jsonPointers: true, unknownFormats: 'ignore' };
+        this.customKeywords = { dobFormat: false };
+        this.ajvOptions = { allErrors: true, jsonPointers: true };
         this.ajv = new Ajv(this.ajvOptions);
         this.validateFormData = null;
         this.formValues = {};
@@ -11210,6 +11211,36 @@ var JsonSchemaFormService = (function () {
                 this.schema['ui:order'] = this.schema.properties['ui:order'];
                 delete this.schema.properties['ui:order'];
             }
+            if (!this.customKeywords.dobFormat) {
+                this.ajv.addKeyword('dobFormat', {
+                    compile: function (sch, parentSchema) {
+                        var datepattern = /^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]|(?:Jan|Mar|May|Jul|Aug|Oct|Dec|jan|mar|may|jul|aug|oct|dec|JAN|MAR|MAY|JUL|AUG|OCT|DEC)))\1|(?:(?:29|30)(\/|-|\.)(?:0?[1,3-9]|1[0-2]|(?:Jan|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec|jan|mar|apr|may|jun|jul|aug|sep|oct|nov|dec|JAN|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC))\2))(?:(?:1[6-9]|[2-9]\d)?\d{4})$|^(?:29(\/|-|\.)(?:0?2|(?:Feb|feb|FEB))\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9]|(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|jan|feb|mar|apr|may|jun|jul|aug|sep|JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP))|(?:1[0-2]|(?:Oct|Nov|Dec|oct|nov|dec|OCT|NOV|DEC)))\4(?:(?:1[6-9]|[2-9]\d)?\d{4})$/;
+                        return function (data) {
+                            if (data && data.length === 10 && data.split('-')[0] && data.split('-')[0].length === 4) {
+                                data = moment(data, 'YYYY-MM-DD').format('DD-MMM-YYYY');
+                            }
+                            if (new RegExp(datepattern).test(data)) {
+                                var characterCheck = /[a-zA-z]/;
+                                var dateParts = data.split('-');
+                                if (characterCheck.test(dateParts[1])) {
+                                    data = moment(data, 'DD-MMM-YYYY').format('DD-MM-YYYY');
+                                }
+                                dateParts = data.split('-');
+                                var eighteenYearsBeforeNow = new Date(+dateParts[2] + 18, +dateParts[1] - 1, +dateParts[0]) <= new Date();
+                                if (!eighteenYearsBeforeNow) {
+                                    return false;
+                                }
+                                return true;
+                            }
+                            else {
+                                return false;
+                            }
+                        };
+                    },
+                    errors: false,
+                });
+            }
+            this.customKeywords.dobFormat = true;
             this.ajv.removeSchema(this.schema);
             this.validateFormData = this.ajv.compile(this.schema);
         }
