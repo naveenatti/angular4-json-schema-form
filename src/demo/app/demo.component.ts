@@ -38,7 +38,7 @@ export class DemoComponent implements OnInit {
   selectedSetName = '';
   selectedExample = 'ng-jsf-flex-layout';
   selectedExampleName = 'Flexbox layout';
-  selectedFramework = 'material-design';
+  selectedFramework = 'bootstrap-4';
   visible: { [item: string]: boolean } = {
     options: true,
     schema: true,
