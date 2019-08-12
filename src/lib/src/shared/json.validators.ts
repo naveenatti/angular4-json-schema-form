@@ -280,7 +280,7 @@ export class JsonValidators {
     if (!hasValue(dateValue)) { return JsonValidators.nullValidator; }
     return (control: AbstractControl, invert = false): ValidationErrors | null => {
       if (control.value === undefined || control.value === null || control.value instanceof Array) {
-        return undefined;
+        return { 'dateValidation': true };
       }
       let value = control.value;
       if (value && value.length === 0) {
