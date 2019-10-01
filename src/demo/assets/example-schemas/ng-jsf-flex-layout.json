@@ -116,6 +116,8 @@
   "data": {
     "first_name": "Jane",
     "last_name": "Doe",
+    "addressline1":"POBOx",
+    "state":"AL",
     "address": {
       "street_1": "123 Main St.",
       "city": "Las Vegas",
