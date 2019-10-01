@@ -520,7 +520,7 @@ export function getControlValidators(schema) {
   if (hasOwn(schema, 'type')) {
     switch (schema.type) {
       case 'string':
-        forEach(['pattern', 'format', 'minLength', 'maxLength', 'equalTo', 'dobFormat'], (prop) => {
+        forEach(['pattern', 'format', 'minLength', 'maxLength', 'equalTo', 'dobFormat', 'poBoxValidation'], (prop) => {
           if (hasOwn(schema, prop)) { validators[prop] = [schema[prop]]; }
         });
         break;

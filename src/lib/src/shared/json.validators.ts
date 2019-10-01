@@ -959,4 +959,30 @@ export class JsonValidators {
       /^(?=.{1,254}$)(?=.{1,64}@)[-!#$%&'*+/0-9=?A-Z^_`a-z{|}~]+(\.[-!#$%&'*+/0-9=?A-Z^_`a-z{|}~]+)*@[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?(\.[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?)*$/;
     return EMAIL_REGEXP.test(control.value) ? null : { 'email': true };
   }
+
+  /**
+   * PO BOX Validation for Address line
+   * @static
+   * @param {*} poBoxCriteria
+   * @returns {IValidatorFn}
+   * @memberof JsonValidators
+   */
+  static poBoxValidation(poBoxCriteria: any): IValidatorFn {
+    if (!hasValue(poBoxCriteria)) { return JsonValidators.nullValidator; }
+    return (control: AbstractControl, invert = false): ValidationErrors | null => {
+      const controlOptions = poBoxCriteria;
+      if (!control.value) {
+        return undefined;
+      }
+      let controlValue = control.value.toLowerCase();
+      if (controlOptions && controlOptions.allowedStates && controlOptions.allowedText) {
+        const selectedState = control.parent.controls[controlOptions.controlToCheck].value;
+        const isValidPOBox = controlOptions.allowedText.some((value) => controlValue.includes(value.toLowerCase()));
+        if (selectedState && (!controlOptions.allowedStates.includes(selectedState) && isValidPOBox)) {
+          return { 'poBoxValidation': true };
+        }
+      }
+      return undefined;
+    };
+  }
 }

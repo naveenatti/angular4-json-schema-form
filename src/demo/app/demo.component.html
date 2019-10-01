@@ -145,6 +145,7 @@
         (onChanges)="onChanges($event)"
         (onSubmit)="onSubmit($event)"
         (isValid)="isValid($event)"
+        [widgets]="customWidgets"
         (validationErrors)="validationErrors($event)">
       </json-schema-form>
 

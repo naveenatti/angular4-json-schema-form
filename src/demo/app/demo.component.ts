@@ -8,6 +8,7 @@ import 'rxjs/add/operator/map';
 
 import { Examples } from './example-schemas.model';
 import { JsonPointer } from '../../lib/src/shared';
+import { CustomSelectComponent } from './custom-widgets/custom-select.component';
 
 @Component({
   selector: 'demo',
@@ -70,6 +71,9 @@ export class DemoComponent implements OnInit {
     autoScrollEditorIntoView: true,
   };
   @ViewChild(MatMenuTrigger) menuTrigger: MatMenuTrigger;
+  customWidgets = {
+    'custom-select-widget': CustomSelectComponent
+  };
 
   constructor(
     private http: HttpClient,
