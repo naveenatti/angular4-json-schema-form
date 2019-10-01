@@ -7679,8 +7679,9 @@ var JsonValidators = (function () {
                 null : { 'equalTo': { equalField: equalField, currentValue: currentValue } };
         };
     };
-    JsonValidators.dobFormat = function (dateValue) {
-        if (!hasValue(dateValue)) {
+    JsonValidators.dobFormat = function (dobFormat, wholeString) {
+        if (wholeString === void 0) { wholeString = false; }
+        if (!hasValue(dobFormat)) {
             return JsonValidators.nullValidator;
         }
         return function (control, invert) {
@@ -8180,6 +8181,27 @@ var JsonValidators = (function () {
         }
         var EMAIL_REGEXP = /^(?=.{1,254}$)(?=.{1,64}@)[-!#$%&'*+/0-9=?A-Z^_`a-z{|}~]+(\.[-!#$%&'*+/0-9=?A-Z^_`a-z{|}~]+)*@[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?(\.[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?)*$/;
         return EMAIL_REGEXP.test(control.value) ? null : { 'email': true };
+    };
+    JsonValidators.poBoxValidation = function (poBoxCriteria) {
+        if (!hasValue(poBoxCriteria)) {
+            return JsonValidators.nullValidator;
+        }
+        return function (control, invert) {
+            if (invert === void 0) { invert = false; }
+            var controlOptions = poBoxCriteria;
+            if (!control.value) {
+                return undefined;
+            }
+            var controlValue = control.value.toLowerCase();
+            if (controlOptions && controlOptions.allowedStates && controlOptions.allowedText) {
+                var selectedState = control.parent.controls[controlOptions.controlToCheck].value;
+                var isValidPOBox = controlOptions.allowedText.some(function (value) { return controlValue.includes(value.toLowerCase()); });
+                if (selectedState && (!controlOptions.allowedStates.includes(selectedState) && isValidPOBox)) {
+                    return { 'poBoxValidation': true };
+                }
+            }
+            return undefined;
+        };
     };
     return JsonValidators;
 }());
@@ -8873,7 +8895,7 @@ function getControlValidators(schema) {
     if (hasOwn(schema, 'type')) {
         switch (schema.type) {
             case 'string':
-                forEach(['pattern', 'format', 'minLength', 'maxLength', 'equalTo', 'dobFormat'], function (prop) {
+                forEach(['pattern', 'format', 'minLength', 'maxLength', 'equalTo', 'dobFormat', 'poBoxValidation'], function (prop) {
                     if (hasOwn(schema, prop)) {
                         validators[prop] = [schema[prop]];
                     }

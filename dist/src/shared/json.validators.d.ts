@@ -8,7 +8,7 @@ export declare class JsonValidators {
     static enum(allowedValues: any[]): IValidatorFn;
     static const(requiredValue: any): IValidatorFn;
     static equalTo(equalField: string): IValidatorFn;
-    static dobFormat(dateValue: any): IValidatorFn;
+    static dobFormat(dobFormat: string, wholeString?: boolean): IValidatorFn;
     static minLength(minimumLength: number): IValidatorFn;
     static maxLength(maximumLength: number): IValidatorFn;
     static pattern(pattern: string | RegExp, wholeString?: boolean): IValidatorFn;
@@ -36,4 +36,5 @@ export declare class JsonValidators {
     static max(max: number): ValidatorFn;
     static requiredTrue(control: AbstractControl): ValidationErrors | null;
     static email(control: AbstractControl): ValidationErrors | null;
+    static poBoxValidation(poBoxCriteria: any): IValidatorFn;
 }

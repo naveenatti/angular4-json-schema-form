@@ -7563,8 +7563,8 @@ class JsonValidators {
                 null : { 'equalTo': { equalField, currentValue } };
         };
     }
-    static dobFormat(dateValue) {
-        if (!hasValue(dateValue)) {
+    static dobFormat(dobFormat, wholeString = false) {
+        if (!hasValue(dobFormat)) {
             return JsonValidators.nullValidator;
         }
         return (control, invert = false) => {
@@ -8034,6 +8034,26 @@ class JsonValidators {
         }
         const EMAIL_REGEXP = /^(?=.{1,254}$)(?=.{1,64}@)[-!#$%&'*+/0-9=?A-Z^_`a-z{|}~]+(\.[-!#$%&'*+/0-9=?A-Z^_`a-z{|}~]+)*@[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?(\.[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?)*$/;
         return EMAIL_REGEXP.test(control.value) ? null : { 'email': true };
+    }
+    static poBoxValidation(poBoxCriteria) {
+        if (!hasValue(poBoxCriteria)) {
+            return JsonValidators.nullValidator;
+        }
+        return (control, invert = false) => {
+            const controlOptions = poBoxCriteria;
+            if (!control.value) {
+                return undefined;
+            }
+            let controlValue = control.value.toLowerCase();
+            if (controlOptions && controlOptions.allowedStates && controlOptions.allowedText) {
+                const selectedState = control.parent.controls[controlOptions.controlToCheck].value;
+                const isValidPOBox = controlOptions.allowedText.some((value) => controlValue.includes(value.toLowerCase()));
+                if (selectedState && (!controlOptions.allowedStates.includes(selectedState) && isValidPOBox)) {
+                    return { 'poBoxValidation': true };
+                }
+            }
+            return undefined;
+        };
     }
 }
 
@@ -8676,7 +8696,7 @@ function getControlValidators(schema) {
     if (hasOwn(schema, 'type')) {
         switch (schema.type) {
             case 'string':
-                forEach(['pattern', 'format', 'minLength', 'maxLength', 'equalTo', 'dobFormat'], (prop) => {
+                forEach(['pattern', 'format', 'minLength', 'maxLength', 'equalTo', 'dobFormat', 'poBoxValidation'], (prop) => {
                     if (hasOwn(schema, prop)) {
                         validators[prop] = [schema[prop]];
                     }
