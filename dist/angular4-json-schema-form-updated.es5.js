@@ -8194,7 +8194,11 @@ var JsonValidators = (function () {
             }
             var controlValue = control.value.toLowerCase();
             if (controlOptions && controlOptions.allowedStates && controlOptions.allowedText) {
-                var selectedState = control.parent.controls[controlOptions.controlToCheck].value;
+                var selectedState = void 0;
+                if (control.parent && controlOptions.controlToCheck) {
+                    var stateControl = control.parent.controls[controlOptions.controlToCheck];
+                    selectedState = stateControl && stateControl.value;
+                }
                 var isValidPOBox = controlOptions.allowedText.some(function (value) { return controlValue.includes(value.toLowerCase()); });
                 if (selectedState && (!controlOptions.allowedStates.includes(selectedState) && isValidPOBox)) {
                     return { 'poBoxValidation': true };
