@@ -10997,7 +10997,7 @@ var JsonSchemaFormService = (function () {
         this.ReactJsonSchemaFormCompatibility = false;
         this.AngularSchemaFormCompatibility = false;
         this.tpldata = {};
-        this.customKeywords = { dobFormat: false };
+        this.customKeywords = { dobFormat: false, poBoxValidation: false };
         this.ajvOptions = { allErrors: true, jsonPointers: true };
         this.ajv = new Ajv(this.ajvOptions);
         this.validateFormData = null;
@@ -11269,6 +11269,34 @@ var JsonSchemaFormService = (function () {
                     },
                     errors: false,
                 });
+            }
+            if (!this.customKeywords.poBoxValidation) {
+                var jsf_1 = this;
+                this.ajv.addKeyword('poBoxValidation', {
+                    compile: function (sch, parentSchema) {
+                        return function (data) {
+                            var controlOptions = sch;
+                            if (!data) {
+                                return true;
+                            }
+                            var controlValue = data.toLowerCase();
+                            if (controlOptions && controlOptions.allowedStates && controlOptions.allowedText) {
+                                var selectedState = void 0;
+                                if (jsf_1 && jsf_1.formGroup && controlOptions.controlToCheck) {
+                                    var stateControl = jsf_1.formGroup.controls[controlOptions.controlToCheck];
+                                    selectedState = stateControl && stateControl.value;
+                                }
+                                var isValidPOBox = controlOptions.allowedText.some(function (value) { return controlValue.includes(value.toLowerCase()); });
+                                if (selectedState && (!controlOptions.allowedStates.includes(selectedState) && isValidPOBox)) {
+                                    return false;
+                                }
+                            }
+                            return true;
+                        };
+                    },
+                    errors: false,
+                });
+                this.customKeywords.poBoxValidation = true;
             }
             this.customKeywords.dobFormat = true;
             this.ajv.removeSchema(this.schema);

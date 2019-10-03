@@ -21,6 +21,7 @@ export declare class JsonSchemaFormService {
     tpldata: any;
     customKeywords: {
         dobFormat: boolean;
+        poBoxValidation: boolean;
     };
     ajvOptions: any;
     ajv: any;
