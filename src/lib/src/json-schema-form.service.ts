@@ -28,7 +28,7 @@ export interface TitleMapItem {
   name?: string, value?: any, checked?: boolean, group?: string, items?: TitleMapItem[]
 };
 export interface ErrorMessages {
-  [control_name: string]: { message: string|Function|Object, code: string }[]
+  [control_name: string]: { message: string | Function | Object, code: string }[]
 };
 
 @Injectable()
@@ -38,7 +38,7 @@ export class JsonSchemaFormService {
   AngularSchemaFormCompatibility = false;
   tpldata: any = {};
 
-  customKeywords = { dobFormat: false };
+  customKeywords = { dobFormat: false, poBoxValidation: false };
   ajvOptions: any = { allErrors: true, jsonPointers: true };
   ajv: any = new Ajv(this.ajvOptions); // AJV: Another JSON Schema Validator
   validateFormData: any = null; // Compiled AJV function to validate active form's schema
@@ -74,8 +74,8 @@ export class JsonSchemaFormService {
   // Default global form options
   defaultFormOptions: any = {
     addSubmit: 'auto', // Add a submit button if layout does not have one?
-      // for addSubmit: true = always, false = never,
-      // 'auto' = only if layout is undefined (form is built from schema alone)
+    // for addSubmit: true = always, false = never,
+    // 'auto' = only if layout is undefined (form is built from schema alone)
     debug: false, // Show debugging output?
     disableInvalidSubmit: true, // Disable submit if form invalid?
     formDisabled: false, // Set entire form as disabled? (not editable, and disables outputs)
@@ -86,17 +86,17 @@ export class JsonSchemaFormService {
     pristine: { errors: true, success: true },
     supressPropertyTitles: false,
     setSchemaDefaults: 'auto', // Set fefault values from schema?
-      // true = always set (unless overridden by layout default or formValues)
-      // false = never set
-      // 'auto' = set in addable components, and everywhere if formValues not set
+    // true = always set (unless overridden by layout default or formValues)
+    // false = never set
+    // 'auto' = set in addable components, and everywhere if formValues not set
     setLayoutDefaults: 'auto', // Set fefault values from layout?
-      // true = always set (unless overridden by formValues)
-      // false = never set
-      // 'auto' = set in addable components, and everywhere if formValues not set
+    // true = always set (unless overridden by formValues)
+    // false = never set
+    // 'auto' = set in addable components, and everywhere if formValues not set
     validateOnRender: 'auto', // Validate fields immediately, before they are touched?
-      // true = validate all fields immediately
-      // false = only validate fields after they are touched by user
-      // 'auto' = validate fields with values immediately, empty fields after they are touched
+    // true = validate all fields immediately
+    // false = only validate fields after they are touched by user
+    // 'auto' = validate fields with values immediately, empty fields after they are touched
     widgets: {}, // Any custom widgets to load
     defautWidgetOptions: { // Default options for form control widgets
       listItems: 1, // Number of list items to initially add to arrays with no default value
@@ -368,6 +368,34 @@ export class JsonSchemaFormService {
           errors: false,
         });
       }
+      if (!this.customKeywords.poBoxValidation) {
+        const jsf = this;
+        this.ajv.addKeyword('poBoxValidation', {
+          compile: function (sch, parentSchema) {
+            return function (data) {
+              const controlOptions = sch;
+              if (!data) {
+                return true;
+              }
+              let controlValue = data.toLowerCase();
+              if (controlOptions && controlOptions.allowedStates && controlOptions.allowedText) {
+                let selectedState;
+                if (jsf && jsf.formGroup && controlOptions.controlToCheck) {
+                  const stateControl = jsf.formGroup.controls[controlOptions.controlToCheck];
+                  selectedState = stateControl && stateControl.value;
+                }
+                const isValidPOBox = controlOptions.allowedText.some((value) => controlValue.includes(value.toLowerCase()));
+                if (selectedState && (!controlOptions.allowedStates.includes(selectedState) && isValidPOBox)) {
+                  return false;
+                }
+              }
+              return true;
+            }
+          },
+          errors: false,
+        });
+        this.customKeywords.poBoxValidation = true;
+      }
       this.customKeywords.dobFormat = true;
       this.ajv.removeSchema(this.schema);
       this.validateFormData = this.ajv.compile(this.schema);
@@ -390,7 +418,7 @@ export class JsonSchemaFormService {
   }
 
   parseText(
-    text = '', value: any = {}, values: any = {}, key: number|string = null
+    text = '', value: any = {}, values: any = {}, key: number | string = null
   ): string {
     if (!text || !/{{.+?}}/.test(text)) { return text; }
     return text.replace(/{{(.+?)}}/g, (...a) =>
@@ -400,7 +428,7 @@ export class JsonSchemaFormService {
 
   parseExpression(
     expression = '', value: any = {}, values: any = {},
-    key: number|string = null, tpldata: any = null
+    key: number | string = null, tpldata: any = null
   ) {
     if (typeof expression !== 'string') { return ''; }
     const index = typeof key === 'number' ? (key + 1) + '' : (key || '');
@@ -416,12 +444,12 @@ export class JsonSchemaFormService {
     if (['"', "'", ' ', '||', '&&', '+'].every(delim => expression.indexOf(delim) === -1)) {
       const pointer = JsonPointer.parseObjectPath(expression);
       return pointer[0] === 'value' && JsonPointer.has(value, pointer.slice(1)) ?
-          JsonPointer.get(value, pointer.slice(1)) :
+        JsonPointer.get(value, pointer.slice(1)) :
         pointer[0] === 'values' && JsonPointer.has(values, pointer.slice(1)) ?
           JsonPointer.get(values, pointer.slice(1)) :
-        pointer[0] === 'tpldata' && JsonPointer.has(tpldata, pointer.slice(1)) ?
-          JsonPointer.get(tpldata, pointer.slice(1)) :
-        JsonPointer.has(values, pointer) ? JsonPointer.get(values, pointer) : '';
+          pointer[0] === 'tpldata' && JsonPointer.has(tpldata, pointer.slice(1)) ?
+            JsonPointer.get(tpldata, pointer.slice(1)) :
+            JsonPointer.has(values, pointer) ? JsonPointer.get(values, pointer) : '';
     }
     if (expression.indexOf('[idx]') > -1) {
       expression = expression.replace(/\[idx\]/g, <string>index);
@@ -463,11 +491,11 @@ export class JsonSchemaFormService {
         [parentNode, '/options/title'],
         [parentNode, '/options/legend'],
       ] : [
-        [childNode, '/options/title'],
-        [childNode, '/options/legend'],
-        [parentNode, '/options/title'],
-        [parentNode, '/options/legend']
-      ]
+          [childNode, '/options/title'],
+          [childNode, '/options/legend'],
+          [parentNode, '/options/title'],
+          [parentNode, '/options/legend']
+        ]
     );
     if (!text) { return text; }
     const childValue = isArray(parentValues) && index < parentValues.length ?
@@ -517,8 +545,8 @@ export class JsonSchemaFormService {
     const formatError = (error) => typeof error === 'object' ?
       Object.keys(error).map(key =>
         error[key] === true ? addSpaces(key) :
-        error[key] === false ? 'Not ' + addSpaces(key) :
-        addSpaces(key) + ': ' + formatError(error[key])
+          error[key] === false ? 'Not ' + addSpaces(key) :
+            addSpaces(key) + ': ' + formatError(error[key])
       ).join(', ') :
       addSpaces(error.toString());
     const messages = [];
@@ -528,22 +556,22 @@ export class JsonSchemaFormService {
       .map(errorKey =>
         // If validationMessages is a string, return it
         typeof validationMessages === 'string' ? validationMessages :
-        // If custom error message is a function, return function result
-        typeof validationMessages[errorKey] === 'function' ?
-          validationMessages[errorKey](errors[errorKey]) :
-        // If custom error message is a string, replace placeholders and return
-        typeof validationMessages[errorKey] === 'string' ?
-          // Does error message have any {{property}} placeholders?
-          validationMessages[errorKey].indexOf('{{') === -1 ?
-            validationMessages[errorKey] :
-            // Replace {{property}} placeholders with values
-            Object.keys(errors[errorKey])
-              .reduce((errorMessage, errorProperty) => errorMessage.replace(
-                new RegExp('{{' + errorProperty + '}}', 'g'),
-                errors[errorKey][errorProperty]
-              ), validationMessages[errorKey]) :
-          // If no custom error message, return formatted error data instead
-          addSpaces(errorKey) + ' Error: ' + formatError(errors[errorKey])
+          // If custom error message is a function, return function result
+          typeof validationMessages[errorKey] === 'function' ?
+            validationMessages[errorKey](errors[errorKey]) :
+            // If custom error message is a string, replace placeholders and return
+            typeof validationMessages[errorKey] === 'string' ?
+              // Does error message have any {{property}} placeholders?
+              validationMessages[errorKey].indexOf('{{') === -1 ?
+                validationMessages[errorKey] :
+                // Replace {{property}} placeholders with values
+                Object.keys(errors[errorKey])
+                  .reduce((errorMessage, errorProperty) => errorMessage.replace(
+                    new RegExp('{{' + errorProperty + '}}', 'g'),
+                    errors[errorKey][errorProperty]
+                  ), validationMessages[errorKey]) :
+              // If no custom error message, return formatted error data instead
+              addSpaces(errorKey) + ' Error: ' + formatError(errors[errorKey])
       ).join('<br>');
   }
 
