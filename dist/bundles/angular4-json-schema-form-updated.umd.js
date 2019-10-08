@@ -7683,7 +7683,7 @@ var JsonValidators = (function () {
         return function (control, invert) {
             if (invert === void 0) { invert = false; }
             if (control.value === undefined || control.value === null || control.value instanceof Array) {
-                return { 'dateValidation': true };
+                return undefined;
             }
             var value = control.value;
             if (value && value.length === 0) {
