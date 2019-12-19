@@ -1171,7 +1171,7 @@ function isDefined(value) {
     return value !== undefined && value !== null;
 }
 function hasValue(value) {
-    if (typeof (value) === 'string') {
+    if (isString(value)) {
         value = value && value.trim();
     }
     return value !== undefined && value !== null && value !== '';
@@ -7631,7 +7631,7 @@ class JsonValidators {
             if (isEmpty(control.value)) {
                 return null;
             }
-            let currentLength = isString(control.value) ? control.value.length : 0;
+            let currentLength = isString(control.value) ? control.value.trim().length : 0;
             let isValid = currentLength >= minimumLength;
             return xor(isValid, invert) ?
                 null : { 'minLength': { minimumLength, currentLength } };
@@ -7643,7 +7643,7 @@ class JsonValidators {
             return JsonValidators.nullValidator;
         }
         return (control, invert = false) => {
-            let currentLength = isString(control.value) ? control.value.length : 0;
+            let currentLength = isString(control.value) ? control.value.trim().length : 0;
             let isValid = currentLength <= maximumLength;
             return xor(isValid, invert) ?
                 null : { 'maxLength': { maximumLength, currentLength } };
@@ -12860,13 +12860,15 @@ const BASIC_WIDGETS = [
 ];
 
 class FloatLabelDirective {
-    constructor(elementRef, renderer) {
+    constructor(elementRef, renderer, ngControl) {
         this.elementRef = elementRef;
         this.renderer = renderer;
+        this.ngControl = ngControl;
         this.hasFocus = false;
         this.hasFloat = false;
         this.addLabel = true;
         this.labelClass = '';
+        this.trimOnBlur = false;
     }
     ngAfterViewInit() {
         this.labelClass = 'float-label--class ' + this.labelClass;
@@ -12911,6 +12913,19 @@ class FloatLabelDirective {
         this.hasFocus = false;
         this.focusSelectedParent(event.currentTarget, this.hasFocus);
         this.toggleClass(false, event.currentTarget);
+        this.trimAndSetValue();
+    }
+    trimAndSetValue() {
+        if (this.trimOnBlur && this.ngControl) {
+            let controlValue = this.ngControl.control.value;
+            if (controlValue && this.isString(controlValue)) {
+                this.ngControl.control.setValue(controlValue.trim(), {
+                    emitEvent: false,
+                    onlySelf: true,
+                    emitViewToModelChange: false
+                });
+            }
+        }
     }
     toggleClass(isFocused, element, isInitialize) {
         let parentEleClassList = element.parentElement.classList;
@@ -12982,24 +12997,28 @@ class FloatLabelDirective {
             }
         }, 0);
     }
+    isString(value) {
+        return typeof value === 'string';
+    }
 }
 FloatLabelDirective.decorators = [
     { type: Directive, args: [{
                 selector: '[float-label]',
-                host: {
-                    '(focus)': 'onFocus($event)',
-                    '(blur)': 'onBlur($event)'
-                }
+                exportAs: 'floatLabel'
             },] },
 ];
 FloatLabelDirective.ctorParameters = () => [
     { type: ElementRef, },
     { type: Renderer, },
+    { type: NgControl, },
 ];
 FloatLabelDirective.propDecorators = {
     "hasFloat": [{ type: Input },],
     "addLabel": [{ type: Input },],
     "labelClass": [{ type: Input },],
+    "trimOnBlur": [{ type: Input },],
+    "onFocus": [{ type: HostListener, args: ['focus', ['$event'],] },],
+    "onBlur": [{ type: HostListener, args: ['blur', ['$event'],] },],
 };
 
 class InputFocusOutDirective {

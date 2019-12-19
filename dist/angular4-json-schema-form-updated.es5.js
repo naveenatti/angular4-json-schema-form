@@ -1180,7 +1180,7 @@ function isDefined(value) {
     return value !== undefined && value !== null;
 }
 function hasValue(value) {
-    if (typeof (value) === 'string') {
+    if (isString(value)) {
         value = value && value.trim();
     }
     return value !== undefined && value !== null && value !== '';
@@ -7750,7 +7750,7 @@ var JsonValidators = (function () {
             if (isEmpty(control.value)) {
                 return null;
             }
-            var currentLength = isString(control.value) ? control.value.length : 0;
+            var currentLength = isString(control.value) ? control.value.trim().length : 0;
             var isValid = currentLength >= minimumLength;
             return xor(isValid, invert) ?
                 null : { 'minLength': { minimumLength: minimumLength, currentLength: currentLength } };
@@ -7763,7 +7763,7 @@ var JsonValidators = (function () {
         }
         return function (control, invert) {
             if (invert === void 0) { invert = false; }
-            var currentLength = isString(control.value) ? control.value.length : 0;
+            var currentLength = isString(control.value) ? control.value.trim().length : 0;
             var isValid = currentLength <= maximumLength;
             return xor(isValid, invert) ?
                 null : { 'maxLength': { maximumLength: maximumLength, currentLength: currentLength } };
@@ -12784,13 +12784,15 @@ var BASIC_WIDGETS = [
 ];
 
 var FloatLabelDirective = (function () {
-    function FloatLabelDirective(elementRef, renderer) {
+    function FloatLabelDirective(elementRef, renderer, ngControl) {
         this.elementRef = elementRef;
         this.renderer = renderer;
+        this.ngControl = ngControl;
         this.hasFocus = false;
         this.hasFloat = false;
         this.addLabel = true;
         this.labelClass = '';
+        this.trimOnBlur = false;
     }
     FloatLabelDirective.prototype.ngAfterViewInit = function () {
         this.labelClass = 'float-label--class ' + this.labelClass;
@@ -12836,6 +12838,19 @@ var FloatLabelDirective = (function () {
         this.hasFocus = false;
         this.focusSelectedParent(event.currentTarget, this.hasFocus);
         this.toggleClass(false, event.currentTarget);
+        this.trimAndSetValue();
+    };
+    FloatLabelDirective.prototype.trimAndSetValue = function () {
+        if (this.trimOnBlur && this.ngControl) {
+            var controlValue = this.ngControl.control.value;
+            if (controlValue && this.isString(controlValue)) {
+                this.ngControl.control.setValue(controlValue.trim(), {
+                    emitEvent: false,
+                    onlySelf: true,
+                    emitViewToModelChange: false
+                });
+            }
+        }
     };
     FloatLabelDirective.prototype.toggleClass = function (isFocused, element, isInitialize) {
         var parentEleClassList = element.parentElement.classList;
@@ -12907,23 +12922,27 @@ var FloatLabelDirective = (function () {
             }
         }, 0);
     };
+    FloatLabelDirective.prototype.isString = function (value) {
+        return typeof value === 'string';
+    };
     FloatLabelDirective.decorators = [
         { type: Directive, args: [{
                     selector: '[float-label]',
-                    host: {
-                        '(focus)': 'onFocus($event)',
-                        '(blur)': 'onBlur($event)'
-                    }
+                    exportAs: 'floatLabel'
                 },] },
     ];
     FloatLabelDirective.ctorParameters = function () { return [
         { type: ElementRef, },
         { type: Renderer, },
+        { type: NgControl, },
     ]; };
     FloatLabelDirective.propDecorators = {
         "hasFloat": [{ type: Input },],
         "addLabel": [{ type: Input },],
         "labelClass": [{ type: Input },],
+        "trimOnBlur": [{ type: Input },],
+        "onFocus": [{ type: HostListener, args: ['focus', ['$event'],] },],
+        "onBlur": [{ type: HostListener, args: ['blur', ['$event'],] },],
     };
     return FloatLabelDirective;
 }());
