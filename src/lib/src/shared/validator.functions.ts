@@ -167,6 +167,9 @@ export function hasValue(value) {
 export function isEmpty(value) {
   if (isArray(value)) { return !value.length; }
   if (isObject(value)) { return !Object.keys(value).length; }
+  if (isString(value)) {
+    value = value && value.trim();
+  }
   return value === undefined || value === null || value === '';
 }
 
