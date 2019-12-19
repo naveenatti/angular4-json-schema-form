@@ -1,13 +1,10 @@
-import { Directive, ElementRef, Input, AfterViewChecked } from "@angular/core";
+import { Directive, ElementRef, Input, AfterViewChecked, HostListener } from "@angular/core";
 import { Renderer, AfterViewInit } from "@angular/core";
-import { ElementDef } from '@angular/core/src/view';
+import { NgControl } from "@angular/forms";
 
 @Directive({
     selector: '[float-label]',
-    host: {
-        '(focus)': 'onFocus($event)',
-        '(blur)': 'onBlur($event)'
-    }
+    exportAs: 'floatLabel'
 })
 export class FloatLabelDirective implements AfterViewInit, AfterViewChecked {
 
@@ -17,8 +14,11 @@ export class FloatLabelDirective implements AfterViewInit, AfterViewChecked {
     @Input() hasFloat: boolean = false;
     @Input() addLabel: boolean = true;
     @Input() labelClass: string = '';
+    @Input() trimOnBlur: boolean = false;
 
-    constructor(private elementRef: ElementRef, private renderer: Renderer) {
+    constructor(private elementRef: ElementRef,
+        private renderer: Renderer,
+        private ngControl: NgControl) {
     }
     /**
      * Initializing a FloatLabelDirective
@@ -74,6 +74,7 @@ export class FloatLabelDirective implements AfterViewInit, AfterViewChecked {
      * @param  {any} event
      * @returns void
      */
+    @HostListener('focus', ['$event'])
     onFocus(event: any): void {
         this.hasFocus = true;
         this.focusSelectedParent(event.currentTarget, this.hasFocus);
@@ -85,10 +86,30 @@ export class FloatLabelDirective implements AfterViewInit, AfterViewChecked {
      * @param  {any} event
      * @returns void
      */
+    @HostListener('blur', ['$event'])
     onBlur(event: any): void {
         this.hasFocus = false;
         this.focusSelectedParent(event.currentTarget, this.hasFocus);
         this.toggleClass(false, event.currentTarget);
+        this.trimAndSetValue();
+    }
+    /**
+     * @description Trim and set the value
+     * @author njagadeesan
+     * @date 2019-12-19
+     * @memberof FloatLabelDirective
+     */
+    trimAndSetValue(): void {
+        if (this.trimOnBlur && this.ngControl) {
+            let controlValue = this.ngControl.control.value;
+            if (controlValue && this.isString(controlValue)) {
+                this.ngControl.control.setValue(controlValue.trim(), {
+                    emitEvent: false,
+                    onlySelf: true,
+                    emitViewToModelChange: false
+                });
+            }
+        }
     }
     /**
      * Add a 'has-float' class if the element has an value
@@ -197,5 +218,16 @@ export class FloatLabelDirective implements AfterViewInit, AfterViewChecked {
                 }
             }
         }, 0);
+    }
+    /**
+     * @description Check the value is String type
+     * @author njagadeesan
+     * @date 2019-12-19
+     * @param {*} value
+     * @returns {boolean}
+     * @memberof FloatLabelDirective
+     */
+    isString(value: any): boolean {
+        return typeof value === 'string';
     }
 }
