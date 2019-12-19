@@ -150,7 +150,7 @@ export function isDefined(value) {
  * @return { boolean } - false if undefined, null, or '', otherwise true
  */
 export function hasValue(value) {
-  if (typeof(value) === 'string') {
+  if (isString(value)) {
     value = value && value.trim();
   }
   return value !== undefined && value !== null && value !== '';

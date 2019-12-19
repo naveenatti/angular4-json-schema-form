@@ -345,7 +345,7 @@ export class JsonValidators {
     if (!hasValue(minimumLength)) { return JsonValidators.nullValidator; }
     return (control: AbstractControl, invert = false): ValidationErrors | null => {
       if (isEmpty(control.value)) { return null; }
-      let currentLength = isString(control.value) ? control.value.length : 0;
+      let currentLength = isString(control.value) ? control.value.trim().length : 0;
       let isValid = currentLength >= minimumLength;
       return xor(isValid, invert) ?
         null : { 'minLength': { minimumLength, currentLength } };
@@ -364,7 +364,7 @@ export class JsonValidators {
   static maxLength(maximumLength: number): IValidatorFn {
     if (!hasValue(maximumLength)) { return JsonValidators.nullValidator; }
     return (control: AbstractControl, invert = false): ValidationErrors | null => {
-      let currentLength = isString(control.value) ? control.value.length : 0;
+      let currentLength = isString(control.value) ? control.value.trim().length : 0;
       let isValid = currentLength <= maximumLength;
       return xor(isValid, invert) ?
         null : { 'maxLength': { maximumLength, currentLength } };
