@@ -1183,6 +1183,9 @@ function isEmpty(value) {
     if (isObject(value)) {
         return !Object.keys(value).length;
     }
+    if (isString(value)) {
+        value = value && value.trim();
+    }
     return value === undefined || value === null || value === '';
 }
 function isString(value) {
@@ -11772,6 +11775,7 @@ InputComponent.decorators = [
         [innerHTML]="options?.title"></label>
       <input float-label [hasFloat]="options?.hasFloat" *ngIf="boundControl"
         [formControl]="formControl"
+        [trimOnBlur]="options?.trimOnBlur"
         [attr.aria-describedby]="'control' + layoutNode?._id + 'Status'"
         [attr.list]="'control' + layoutNode?._id + 'Autocomplete'"
         [attr.maxlength]="options?.maxLength"
@@ -11785,6 +11789,7 @@ InputComponent.decorators = [
         [readonly]="options?.readonly ? 'readonly' : null"
         [type]="layoutNode?.type">
       <input float-label [hasFloat]="options?.hasFloat" *ngIf="!boundControl"
+        [trimOnBlur]="options?.trimOnBlur"
         [attr.aria-describedby]="'control' + layoutNode?._id + 'Status'"
         [attr.list]="'control' + layoutNode?._id + 'Autocomplete'"
         [attr.maxlength]="options?.maxLength"
