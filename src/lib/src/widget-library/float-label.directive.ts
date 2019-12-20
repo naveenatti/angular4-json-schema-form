@@ -1,6 +1,6 @@
 import { Directive, ElementRef, Input, AfterViewChecked, HostListener } from "@angular/core";
 import { Renderer, AfterViewInit } from "@angular/core";
-import { NgControl } from "@angular/forms";
+// import { NgControl } from "@angular/forms";
 
 @Directive({
     selector: '[float-label]',
@@ -17,8 +17,7 @@ export class FloatLabelDirective implements AfterViewInit, AfterViewChecked {
     @Input() trimOnBlur: boolean = false;
 
     constructor(private elementRef: ElementRef,
-        private renderer: Renderer,
-        private ngControl: NgControl) {
+        private renderer: Renderer) {
     }
     /**
      * Initializing a FloatLabelDirective
@@ -91,7 +90,7 @@ export class FloatLabelDirective implements AfterViewInit, AfterViewChecked {
         this.hasFocus = false;
         this.focusSelectedParent(event.currentTarget, this.hasFocus);
         this.toggleClass(false, event.currentTarget);
-        this.trimAndSetValue();
+        // this.trimAndSetValue();
     }
     /**
      * @description Trim and set the value
@@ -99,18 +98,18 @@ export class FloatLabelDirective implements AfterViewInit, AfterViewChecked {
      * @date 2019-12-19
      * @memberof FloatLabelDirective
      */
-    trimAndSetValue(): void {
-        if (this.trimOnBlur && this.ngControl) {
-            let controlValue = this.ngControl.control.value;
-            if (controlValue && this.isString(controlValue)) {
-                this.ngControl.control.setValue(controlValue.trim(), {
-                    emitEvent: false,
-                    onlySelf: true,
-                    emitViewToModelChange: false
-                });
-            }
-        }
-    }
+    // trimAndSetValue(): void {
+    //     if (this.trimOnBlur && this.ngControl) {
+    //         let controlValue = this.ngControl.control.value;
+    //         if (controlValue && this.isString(controlValue)) {
+    //             this.ngControl.control.setValue(controlValue.trim(), {
+    //                 emitEvent: false,
+    //                 onlySelf: true,
+    //                 emitViewToModelChange: false
+    //             });
+    //         }
+    //     }
+    // }
     /**
      * Add a 'has-float' class if the element has an value
      * @param  {boolean} isFocused

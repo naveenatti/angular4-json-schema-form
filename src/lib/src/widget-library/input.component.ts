@@ -15,7 +15,6 @@ import { JsonSchemaFormService } from '../json-schema-form.service';
         [innerHTML]="options?.title"></label>
       <input float-label [hasFloat]="options?.hasFloat" *ngIf="boundControl"
         [formControl]="formControl"
-        [trimOnBlur]="options?.trimOnBlur"
         [attr.aria-describedby]="'control' + layoutNode?._id + 'Status'"
         [attr.list]="'control' + layoutNode?._id + 'Autocomplete'"
         [attr.maxlength]="options?.maxLength"
@@ -29,7 +28,6 @@ import { JsonSchemaFormService } from '../json-schema-form.service';
         [readonly]="options?.readonly ? 'readonly' : null"
         [type]="layoutNode?.type">
       <input float-label [hasFloat]="options?.hasFloat" *ngIf="!boundControl"
-        [trimOnBlur]="options?.trimOnBlur"
         [attr.aria-describedby]="'control' + layoutNode?._id + 'Status'"
         [attr.list]="'control' + layoutNode?._id + 'Autocomplete'"
         [attr.maxlength]="options?.maxLength"
