@@ -260,13 +260,13 @@ export class JsonSchemaFormService {
       }
       newValue.dateOfBirth = value;
     }
-
     // Format raw form data to correct data types
     this.data = formatFormData(
       newValue, this.dataMap, this.dataRecursiveRefMap,
       this.arrayMap, this.formOptions.returnEmptyFields
     );
-    this.isValid = this.validateFormData(this.data);
+    const data = this.trimObjectValues({...this.data});
+    this.isValid = this.validateFormData(data);
     this.validData = this.isValid ? this.data : null;
     const compileErrors = errors => {
       const compiledErrors = {};
@@ -283,6 +283,19 @@ export class JsonSchemaFormService {
       this.isValidChanges.next(this.isValid);
       this.validationErrorChanges.next(this.ajvErrors);
     }
+  }
+
+  trimObjectValues(obj: any): any {
+    for (const key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        let value = obj[key];
+        if (typeof (value) === 'string') {
+          value = value && value.trim();
+        }
+        obj[key] = value;
+      }
+    }
+    return obj;
   }
 
   buildFormGroupTemplate(formValues: any = null, setValues = true) {

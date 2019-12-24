@@ -14,7 +14,7 @@ export class FloatLabelDirective implements AfterViewInit, AfterViewChecked {
     @Input() hasFloat: boolean = false;
     @Input() addLabel: boolean = true;
     @Input() labelClass: string = '';
-    @Input() trimOnBlur: boolean = false;
+    // @Input() trimOnBlur: boolean = false;
 
     constructor(private elementRef: ElementRef,
         private renderer: Renderer) {
@@ -53,7 +53,6 @@ export class FloatLabelDirective implements AfterViewInit, AfterViewChecked {
             let elementId = '';
             label.innerText = element.placeholder || element.getAttribute('data-placeholder') || '';
             if (label.innerText.trim().length === 0 && count < 3) {
-                console.log(count);
                 count++;
                 this.appendLabel(element, count);
                 return;
