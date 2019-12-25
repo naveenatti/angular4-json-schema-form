@@ -10870,7 +10870,8 @@ class JsonSchemaFormService {
             newValue.dateOfBirth = value;
         }
         this.data = formatFormData(newValue, this.dataMap, this.dataRecursiveRefMap, this.arrayMap, this.formOptions.returnEmptyFields);
-        this.isValid = this.validateFormData(this.data);
+        const data = this.trimObjectValues(Object.assign({}, this.data));
+        this.isValid = this.validateFormData(data);
         this.validData = this.isValid ? this.data : null;
         const compileErrors = errors => {
             const compiledErrors = {};
@@ -10889,6 +10890,18 @@ class JsonSchemaFormService {
             this.isValidChanges.next(this.isValid);
             this.validationErrorChanges.next(this.ajvErrors);
         }
+    }
+    trimObjectValues(obj) {
+        for (const key in obj) {
+            if (obj.hasOwnProperty(key)) {
+                let value = obj[key];
+                if (typeof (value) === 'string') {
+                    value = value && value.trim();
+                }
+                obj[key] = value;
+            }
+        }
+        return obj;
     }
     buildFormGroupTemplate(formValues = null, setValues = true) {
         this.formGroupTemplate = buildFormGroupTemplate(this, formValues, setValues);
@@ -11775,7 +11788,6 @@ InputComponent.decorators = [
         [innerHTML]="options?.title"></label>
       <input float-label [hasFloat]="options?.hasFloat" *ngIf="boundControl"
         [formControl]="formControl"
-        [trimOnBlur]="options?.trimOnBlur"
         [attr.aria-describedby]="'control' + layoutNode?._id + 'Status'"
         [attr.list]="'control' + layoutNode?._id + 'Autocomplete'"
         [attr.maxlength]="options?.maxLength"
@@ -11789,7 +11801,6 @@ InputComponent.decorators = [
         [readonly]="options?.readonly ? 'readonly' : null"
         [type]="layoutNode?.type">
       <input float-label [hasFloat]="options?.hasFloat" *ngIf="!boundControl"
-        [trimOnBlur]="options?.trimOnBlur"
         [attr.aria-describedby]="'control' + layoutNode?._id + 'Status'"
         [attr.list]="'control' + layoutNode?._id + 'Autocomplete'"
         [attr.maxlength]="options?.maxLength"
@@ -12865,15 +12876,13 @@ const BASIC_WIDGETS = [
 ];
 
 class FloatLabelDirective {
-    constructor(elementRef, renderer, ngControl) {
+    constructor(elementRef, renderer) {
         this.elementRef = elementRef;
         this.renderer = renderer;
-        this.ngControl = ngControl;
         this.hasFocus = false;
         this.hasFloat = false;
         this.addLabel = true;
         this.labelClass = '';
-        this.trimOnBlur = false;
     }
     ngAfterViewInit() {
         this.labelClass = 'float-label--class ' + this.labelClass;
@@ -12894,7 +12903,6 @@ class FloatLabelDirective {
             let elementId = '';
             label.innerText = element.placeholder || element.getAttribute('data-placeholder') || '';
             if (label.innerText.trim().length === 0 && count < 3) {
-                console.log(count);
                 count++;
                 this.appendLabel(element, count);
                 return;
@@ -12918,19 +12926,6 @@ class FloatLabelDirective {
         this.hasFocus = false;
         this.focusSelectedParent(event.currentTarget, this.hasFocus);
         this.toggleClass(false, event.currentTarget);
-        this.trimAndSetValue();
-    }
-    trimAndSetValue() {
-        if (this.trimOnBlur && this.ngControl) {
-            let controlValue = this.ngControl.control.value;
-            if (controlValue && this.isString(controlValue)) {
-                this.ngControl.control.setValue(controlValue.trim(), {
-                    emitEvent: false,
-                    onlySelf: true,
-                    emitViewToModelChange: false
-                });
-            }
-        }
     }
     toggleClass(isFocused, element, isInitialize) {
         let parentEleClassList = element.parentElement.classList;
@@ -13015,13 +13010,11 @@ FloatLabelDirective.decorators = [
 FloatLabelDirective.ctorParameters = () => [
     { type: ElementRef, },
     { type: Renderer, },
-    { type: NgControl, },
 ];
 FloatLabelDirective.propDecorators = {
     "hasFloat": [{ type: Input },],
     "addLabel": [{ type: Input },],
     "labelClass": [{ type: Input },],
-    "trimOnBlur": [{ type: Input },],
     "onFocus": [{ type: HostListener, args: ['focus', ['$event'],] },],
     "onBlur": [{ type: HostListener, args: ['blur', ['$event'],] },],
 };

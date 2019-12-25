@@ -10997,6 +10997,16 @@ var Subject_1 = {
 	AnonymousSubject: AnonymousSubject_1
 };
 
+var __assign$7 = (undefined && undefined.__assign) || Object.assign || function(t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+        s = arguments[i];
+        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+            t[p] = s[p];
+    }
+    return t;
+};
+
+
 var JsonSchemaFormService = (function () {
     function JsonSchemaFormService() {
         this.JsonFormCompatibility = false;
@@ -11179,7 +11189,8 @@ var JsonSchemaFormService = (function () {
             newValue.dateOfBirth = value;
         }
         this.data = formatFormData(newValue, this.dataMap, this.dataRecursiveRefMap, this.arrayMap, this.formOptions.returnEmptyFields);
-        this.isValid = this.validateFormData(this.data);
+        var data = this.trimObjectValues(__assign$7({}, this.data));
+        this.isValid = this.validateFormData(data);
         this.validData = this.isValid ? this.data : null;
         var compileErrors = function (errors) {
             var compiledErrors = {};
@@ -11198,6 +11209,18 @@ var JsonSchemaFormService = (function () {
             this.isValidChanges.next(this.isValid);
             this.validationErrorChanges.next(this.ajvErrors);
         }
+    };
+    JsonSchemaFormService.prototype.trimObjectValues = function (obj) {
+        for (var key in obj) {
+            if (obj.hasOwnProperty(key)) {
+                var value = obj[key];
+                if (typeof (value) === 'string') {
+                    value = value && value.trim();
+                }
+                obj[key] = value;
+            }
+        }
+        return obj;
     };
     JsonSchemaFormService.prototype.buildFormGroupTemplate = function (formValues, setValues) {
         if (formValues === void 0) { formValues = null; }
@@ -12032,7 +12055,7 @@ var InputComponent = (function () {
     InputComponent.decorators = [
         { type: Component, args: [{
                     selector: 'input-widget',
-                    template: "\n   <!-- [class]=\"options?.htmlClass || ''\"-->\n    <div   [class.floatLabelContainer]=\"true\">\n      <label *ngIf=\"options?.title\"\n        [attr.for]=\"'control' + layoutNode?._id\"\n        [class]=\"options?.labelHtmlClass || ''\"\n        [style.display]=\"options?.notitle ? 'none' : ''\"\n        [innerHTML]=\"options?.title\"></label>\n      <input float-label [hasFloat]=\"options?.hasFloat\" *ngIf=\"boundControl\"\n        [formControl]=\"formControl\"\n        [trimOnBlur]=\"options?.trimOnBlur\"\n        [attr.aria-describedby]=\"'control' + layoutNode?._id + 'Status'\"\n        [attr.list]=\"'control' + layoutNode?._id + 'Autocomplete'\"\n        [attr.maxlength]=\"options?.maxLength\"\n        [attr.minlength]=\"options?.minLength\"\n        [attr.pattern]=\"options?.pattern\"\n        [attr.placeholder]=\"options?.placeholder\"\n        [attr.required]=\"options?.required\"\n        [class]=\"options?.fieldHtmlClass || ''\"\n        [id]=\"'control' + layoutNode?._id\"\n        [name]=\"controlName\"\n        [readonly]=\"options?.readonly ? 'readonly' : null\"\n        [type]=\"layoutNode?.type\">\n      <input float-label [hasFloat]=\"options?.hasFloat\" *ngIf=\"!boundControl\"\n        [trimOnBlur]=\"options?.trimOnBlur\"\n        [attr.aria-describedby]=\"'control' + layoutNode?._id + 'Status'\"\n        [attr.list]=\"'control' + layoutNode?._id + 'Autocomplete'\"\n        [attr.maxlength]=\"options?.maxLength\"\n        [attr.minlength]=\"options?.minLength\"\n        [attr.pattern]=\"options?.pattern\"\n        [attr.placeholder]=\"options?.placeholder\"\n        [attr.required]=\"options?.required\"\n        [class]=\"options?.fieldHtmlClass || ''\"\n        [disabled]=\"controlDisabled\"\n        [id]=\"'control' + layoutNode?._id\"\n        [name]=\"controlName\"\n        [readonly]=\"options?.readonly ? 'readonly' : null\"\n        [type]=\"layoutNode?.type\"\n        [value]=\"controlValue\"\n        (input)=\"updateValue($event)\">\n        <datalist *ngIf=\"options?.typeahead?.source\"\n          [id]=\"'control' + layoutNode?._id + 'Autocomplete'\">\n          <option *ngFor=\"let word of options?.typeahead?.source\" [value]=\"word\">\n        </datalist>\n    </div>",
+                    template: "\n   <!-- [class]=\"options?.htmlClass || ''\"-->\n    <div   [class.floatLabelContainer]=\"true\">\n      <label *ngIf=\"options?.title\"\n        [attr.for]=\"'control' + layoutNode?._id\"\n        [class]=\"options?.labelHtmlClass || ''\"\n        [style.display]=\"options?.notitle ? 'none' : ''\"\n        [innerHTML]=\"options?.title\"></label>\n      <input float-label [hasFloat]=\"options?.hasFloat\" *ngIf=\"boundControl\"\n        [formControl]=\"formControl\"\n        [attr.aria-describedby]=\"'control' + layoutNode?._id + 'Status'\"\n        [attr.list]=\"'control' + layoutNode?._id + 'Autocomplete'\"\n        [attr.maxlength]=\"options?.maxLength\"\n        [attr.minlength]=\"options?.minLength\"\n        [attr.pattern]=\"options?.pattern\"\n        [attr.placeholder]=\"options?.placeholder\"\n        [attr.required]=\"options?.required\"\n        [class]=\"options?.fieldHtmlClass || ''\"\n        [id]=\"'control' + layoutNode?._id\"\n        [name]=\"controlName\"\n        [readonly]=\"options?.readonly ? 'readonly' : null\"\n        [type]=\"layoutNode?.type\">\n      <input float-label [hasFloat]=\"options?.hasFloat\" *ngIf=\"!boundControl\"\n        [attr.aria-describedby]=\"'control' + layoutNode?._id + 'Status'\"\n        [attr.list]=\"'control' + layoutNode?._id + 'Autocomplete'\"\n        [attr.maxlength]=\"options?.maxLength\"\n        [attr.minlength]=\"options?.minLength\"\n        [attr.pattern]=\"options?.pattern\"\n        [attr.placeholder]=\"options?.placeholder\"\n        [attr.required]=\"options?.required\"\n        [class]=\"options?.fieldHtmlClass || ''\"\n        [disabled]=\"controlDisabled\"\n        [id]=\"'control' + layoutNode?._id\"\n        [name]=\"controlName\"\n        [readonly]=\"options?.readonly ? 'readonly' : null\"\n        [type]=\"layoutNode?.type\"\n        [value]=\"controlValue\"\n        (input)=\"updateValue($event)\">\n        <datalist *ngIf=\"options?.typeahead?.source\"\n          [id]=\"'control' + layoutNode?._id + 'Autocomplete'\">\n          <option *ngFor=\"let word of options?.typeahead?.source\" [value]=\"word\">\n        </datalist>\n    </div>",
                 },] },
     ];
     InputComponent.ctorParameters = function () { return [
@@ -12787,15 +12810,13 @@ var BASIC_WIDGETS = [
 ];
 
 var FloatLabelDirective = (function () {
-    function FloatLabelDirective(elementRef, renderer, ngControl) {
+    function FloatLabelDirective(elementRef, renderer) {
         this.elementRef = elementRef;
         this.renderer = renderer;
-        this.ngControl = ngControl;
         this.hasFocus = false;
         this.hasFloat = false;
         this.addLabel = true;
         this.labelClass = '';
-        this.trimOnBlur = false;
     }
     FloatLabelDirective.prototype.ngAfterViewInit = function () {
         this.labelClass = 'float-label--class ' + this.labelClass;
@@ -12817,7 +12838,6 @@ var FloatLabelDirective = (function () {
             var elementId = '';
             label.innerText = element.placeholder || element.getAttribute('data-placeholder') || '';
             if (label.innerText.trim().length === 0 && count < 3) {
-                console.log(count);
                 count++;
                 _this.appendLabel(element, count);
                 return;
@@ -12841,19 +12861,6 @@ var FloatLabelDirective = (function () {
         this.hasFocus = false;
         this.focusSelectedParent(event.currentTarget, this.hasFocus);
         this.toggleClass(false, event.currentTarget);
-        this.trimAndSetValue();
-    };
-    FloatLabelDirective.prototype.trimAndSetValue = function () {
-        if (this.trimOnBlur && this.ngControl) {
-            var controlValue = this.ngControl.control.value;
-            if (controlValue && this.isString(controlValue)) {
-                this.ngControl.control.setValue(controlValue.trim(), {
-                    emitEvent: false,
-                    onlySelf: true,
-                    emitViewToModelChange: false
-                });
-            }
-        }
     };
     FloatLabelDirective.prototype.toggleClass = function (isFocused, element, isInitialize) {
         var parentEleClassList = element.parentElement.classList;
@@ -12937,13 +12944,11 @@ var FloatLabelDirective = (function () {
     FloatLabelDirective.ctorParameters = function () { return [
         { type: ElementRef, },
         { type: Renderer, },
-        { type: NgControl, },
     ]; };
     FloatLabelDirective.propDecorators = {
         "hasFloat": [{ type: Input },],
         "addLabel": [{ type: Input },],
         "labelClass": [{ type: Input },],
-        "trimOnBlur": [{ type: Input },],
         "onFocus": [{ type: HostListener, args: ['focus', ['$event'],] },],
         "onBlur": [{ type: HostListener, args: ['blur', ['$event'],] },],
     };
@@ -13800,7 +13805,7 @@ var MaterialTextareaComponent = (function () {
     return MaterialTextareaComponent;
 }());
 
-var __assign$7 = (undefined && undefined.__assign) || Object.assign || function(t) {
+var __assign$8 = (undefined && undefined.__assign) || Object.assign || function(t) {
     for (var s, i = 1, n = arguments.length; i < n; i++) {
         s = arguments[i];
         for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
@@ -13851,7 +13856,7 @@ var MaterialDesignFrameworkComponent = (function () {
     MaterialDesignFrameworkComponent.prototype.initializeFramework = function () {
         if (this.layoutNode) {
             this.options = cloneDeep(this.layoutNode.options || {});
-            this.widgetLayoutNode = __assign$7({}, this.layoutNode, { options: cloneDeep(this.layoutNode.options || {}) });
+            this.widgetLayoutNode = __assign$8({}, this.layoutNode, { options: cloneDeep(this.layoutNode.options || {}) });
             this.widgetOptions = this.widgetLayoutNode.options;
             this.formControl = this.jsf.getFormControl(this);
             if (isDefined(this.widgetOptions.minimum) &&
@@ -67487,7 +67492,7 @@ var NoFrameworkComponent = (function () {
     return NoFrameworkComponent;
 }());
 
-var __assign$9 = (undefined && undefined.__assign) || Object.assign || function(t) {
+var __assign$10 = (undefined && undefined.__assign) || Object.assign || function(t) {
     for (var s, i = 1, n = arguments.length; i < n; i++) {
         s = arguments[i];
         for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
@@ -67544,7 +67549,7 @@ var Bootstrap3FrameworkComponent = (function () {
         var _this = this;
         if (this.layoutNode) {
             this.options = cloneDeep(this.layoutNode.options);
-            this.widgetLayoutNode = __assign$9({}, this.layoutNode, { options: cloneDeep(this.layoutNode.options) });
+            this.widgetLayoutNode = __assign$10({}, this.layoutNode, { options: cloneDeep(this.layoutNode.options) });
             this.widgetOptions = this.widgetLayoutNode.options;
             this.formControl = this.jsf.getFormControl(this);
             this.options.isInputWidget = inArray(this.layoutNode.type, [
@@ -67710,7 +67715,7 @@ var Bootstrap3FrameworkComponent = (function () {
     return Bootstrap3FrameworkComponent;
 }());
 
-var __assign$10 = (undefined && undefined.__assign) || Object.assign || function(t) {
+var __assign$11 = (undefined && undefined.__assign) || Object.assign || function(t) {
     for (var s, i = 1, n = arguments.length; i < n; i++) {
         s = arguments[i];
         for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
@@ -67767,7 +67772,7 @@ var Bootstrap4FrameworkComponent = (function () {
         var _this = this;
         if (this.layoutNode) {
             this.options = cloneDeep(this.layoutNode.options);
-            this.widgetLayoutNode = __assign$10({}, this.layoutNode, { options: cloneDeep(this.layoutNode.options) });
+            this.widgetLayoutNode = __assign$11({}, this.layoutNode, { options: cloneDeep(this.layoutNode.options) });
             this.widgetOptions = this.widgetLayoutNode.options;
             this.formControl = this.jsf.getFormControl(this);
             this.options.isInputWidget = inArray(this.layoutNode.type, [

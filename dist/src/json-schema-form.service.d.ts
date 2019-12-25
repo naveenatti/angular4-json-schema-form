@@ -61,6 +61,7 @@ export declare class JsonSchemaFormService {
     resetAllValues(): void;
     buildRemoteError(errors: ErrorMessages): void;
     validateData(newValue: any, updateSubscriptions?: boolean): void;
+    trimObjectValues(obj: any): any;
     buildFormGroupTemplate(formValues?: any, setValues?: boolean): void;
     buildFormGroup(): void;
     buildLayout(widgetLibrary: any): void;
