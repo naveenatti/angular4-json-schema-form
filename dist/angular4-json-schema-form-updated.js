@@ -68708,7 +68708,12 @@ class Bootstrap4FrameworkComponent {
             }
             if (this.formControl) {
                 this.updateHelpBlock(this.formControl.status);
-                this.formControl.statusChanges.subscribe(status => this.updateHelpBlock(status));
+                this.formControl.statusChanges.subscribe((status) => {
+                    this.updateHelpBlock(status);
+                    if (!this.changeDetector['destroyed']) {
+                        this.changeDetector.detectChanges();
+                    }
+                });
                 if (this.options.debug) {
                     let vars = [];
                     this.debugOutput = map(vars, thisVar => JSON.stringify(thisVar, null, 2)).join('\n');

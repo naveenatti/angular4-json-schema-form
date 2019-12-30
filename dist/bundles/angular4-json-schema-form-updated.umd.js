@@ -67856,7 +67856,12 @@ var Bootstrap4FrameworkComponent = (function () {
             }
             if (this.formControl) {
                 this.updateHelpBlock(this.formControl.status);
-                this.formControl.statusChanges.subscribe(function (status) { return _this.updateHelpBlock(status); });
+                this.formControl.statusChanges.subscribe(function (status) {
+                    _this.updateHelpBlock(status);
+                    if (!_this.changeDetector['destroyed']) {
+                        _this.changeDetector.detectChanges();
+                    }
+                });
                 if (this.options.debug) {
                     var vars = [];
                     this.debugOutput = _.map(vars, function (thisVar) { return JSON.stringify(thisVar, null, 2); }).join('\n');
