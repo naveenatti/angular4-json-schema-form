@@ -266,7 +266,7 @@ export class Bootstrap4FrameworkComponent implements OnInit, OnChanges {
 
       // Add asterisk to titles if required
       if (this.options.title && this.layoutNode.type !== 'tab' &&
-        !this.options.notitle && this.options.required  &&
+        !this.options.notitle && this.options.required &&
         !this.options.title.includes('*')
       ) {
         this.options.title += ' <strong class="text-danger">*</strong>';
@@ -275,9 +275,9 @@ export class Bootstrap4FrameworkComponent implements OnInit, OnChanges {
       switch (this.layoutNode.type) {
         // Checkbox controls
         case 'checkbox': case 'checkboxes':
-        this.widgetOptions.htmlClass = addClasses(
-          this.widgetOptions.htmlClass, 'checkbox');
-        break;
+          this.widgetOptions.htmlClass = addClasses(
+            this.widgetOptions.htmlClass, 'checkbox');
+          break;
         case 'checkboxes-inline':
           this.widgetOptions.htmlClass = addClasses(
             this.widgetOptions.htmlClass, 'checkbox');
@@ -286,9 +286,9 @@ export class Bootstrap4FrameworkComponent implements OnInit, OnChanges {
           break;
         // Radio controls
         case 'radio': case 'radios':
-        this.widgetOptions.htmlClass = addClasses(
-          this.widgetOptions.htmlClass, 'radio');
-        break;
+          this.widgetOptions.htmlClass = addClasses(
+            this.widgetOptions.htmlClass, 'radio');
+          break;
         case 'radios-inline':
           this.widgetOptions.htmlClass = addClasses(
             this.widgetOptions.htmlClass, 'radio');
@@ -297,36 +297,36 @@ export class Bootstrap4FrameworkComponent implements OnInit, OnChanges {
           break;
         // Button sets - checkboxbuttons and radiobuttons
         case 'checkboxbuttons': case 'radiobuttons':
-        this.widgetOptions.htmlClass = addClasses(
-          this.widgetOptions.htmlClass, 'btn-group');
-        this.widgetOptions.itemLabelHtmlClass = addClasses(
-          this.widgetOptions.itemLabelHtmlClass, 'btn');
-        this.widgetOptions.itemLabelHtmlClass = addClasses(
-          this.widgetOptions.itemLabelHtmlClass, this.options.style || 'btn-default');
-        this.widgetOptions.fieldHtmlClass = addClasses(
-          this.widgetOptions.fieldHtmlClass, 'sr-only');
-        break;
+          this.widgetOptions.htmlClass = addClasses(
+            this.widgetOptions.htmlClass, 'btn-group');
+          this.widgetOptions.itemLabelHtmlClass = addClasses(
+            this.widgetOptions.itemLabelHtmlClass, 'btn');
+          this.widgetOptions.itemLabelHtmlClass = addClasses(
+            this.widgetOptions.itemLabelHtmlClass, this.options.style || 'btn-default');
+          this.widgetOptions.fieldHtmlClass = addClasses(
+            this.widgetOptions.fieldHtmlClass, 'sr-only');
+          break;
         // Single button controls
         case 'button': case 'submit':
-        this.widgetOptions.fieldHtmlClass = addClasses(
-          this.widgetOptions.fieldHtmlClass, 'btn');
-        this.widgetOptions.fieldHtmlClass = addClasses(
-          this.widgetOptions.fieldHtmlClass, this.options.style || 'btn-info');
-        break;
+          this.widgetOptions.fieldHtmlClass = addClasses(
+            this.widgetOptions.fieldHtmlClass, 'btn');
+          this.widgetOptions.fieldHtmlClass = addClasses(
+            this.widgetOptions.fieldHtmlClass, this.options.style || 'btn-info');
+          break;
         // Containers - arrays and fieldsets
         case 'array': case 'fieldset': case 'section': case 'conditional':
         case 'advancedfieldset': case 'authfieldset':
         case 'selectfieldset': case 'optionfieldset':
-        this.options.messageLocation = 'top';
-        break;
+          this.options.messageLocation = 'top';
+          break;
         case 'tabarray': case 'tabs':
-        this.widgetOptions.htmlClass = addClasses(
-          this.widgetOptions.htmlClass, 'tab-content');
-        this.widgetOptions.fieldHtmlClass = addClasses(
-          this.widgetOptions.fieldHtmlClass, 'tab-pane');
-        this.widgetOptions.labelHtmlClass = addClasses(
-          this.widgetOptions.labelHtmlClass, 'nav nav-tabs');
-        break;
+          this.widgetOptions.htmlClass = addClasses(
+            this.widgetOptions.htmlClass, 'tab-content');
+          this.widgetOptions.fieldHtmlClass = addClasses(
+            this.widgetOptions.fieldHtmlClass, 'tab-pane');
+          this.widgetOptions.labelHtmlClass = addClasses(
+            this.widgetOptions.labelHtmlClass, 'nav nav-tabs');
+          break;
         // 'Add' buttons - references
         case '$ref':
           this.widgetOptions.fieldHtmlClass = addClasses(
@@ -343,7 +343,12 @@ export class Bootstrap4FrameworkComponent implements OnInit, OnChanges {
 
       if (this.formControl) {
         this.updateHelpBlock(this.formControl.status);
-        this.formControl.statusChanges.subscribe(status => this.updateHelpBlock(status));
+        this.formControl.statusChanges.subscribe((status: string) => {
+          this.updateHelpBlock(status);
+          if (!this.changeDetector['destroyed']) {
+            this.changeDetector.detectChanges();
+          }
+        });
 
         if (this.options.debug) {
           let vars: any[] = [];
@@ -357,17 +362,17 @@ export class Bootstrap4FrameworkComponent implements OnInit, OnChanges {
 
   updateHelpBlock(status) {
     this.options.helpBlock = status === 'INVALID' &&
-    this.options.enableErrorState && this.formControl.errors &&
-    (this.formControl.dirty || this.options.feedbackOnRender) ?
+      this.options.enableErrorState && this.formControl.errors &&
+      (this.formControl.dirty || this.options.feedbackOnRender) ?
       this.jsf.formatErrors(this.formControl.errors, this.options.validationMessages) :
       this.options.description || this.options.help || null;
   }
 
   setTitle(): string {
     switch (this.layoutNode.type) {
-      case 'button':  case 'checkbox': case 'help':     case 'msg':
-      case 'message': case 'submit':   case 'tabarray': case '$ref':
-      return null;
+      case 'button': case 'checkbox': case 'help': case 'msg':
+      case 'message': case 'submit': case 'tabarray': case '$ref':
+        return null;
       case 'advancedfieldset':
         this.widgetOptions.expandable = true;
         this.widgetOptions.title = 'Advanced options';
@@ -377,7 +382,7 @@ export class Bootstrap4FrameworkComponent implements OnInit, OnChanges {
         this.widgetOptions.title = 'Authentication settings';
         return null;
       case 'tabs': case 'section':
-      return null;
+        return null;
       default:
         let thisTitle = this.options.title ||
           (isNaN(this.layoutNode.name) && this.layoutNode.name !== '-' ?
