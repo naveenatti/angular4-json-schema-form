@@ -8202,8 +8202,7 @@ var JsonValidators = (function () {
             if (controlOptions && controlOptions.allowedStates && controlOptions.allowedText) {
                 var selectedState = void 0;
                 if (control.parent && controlOptions.controlToCheck) {
-                    var stateControl = control.parent.controls[controlOptions.controlToCheck];
-                    selectedState = stateControl && stateControl.value;
+                    selectedState = control.parent.value && control.parent.value[controlOptions.controlToCheck];
                 }
                 var isValidPOBox = controlOptions.allowedText.some(function (value) { return controlValue.includes(value.toLowerCase()); });
                 if (selectedState && (!controlOptions.allowedStates.includes(selectedState) && isValidPOBox)) {
@@ -11312,8 +11311,7 @@ var JsonSchemaFormService = (function () {
                             if (controlOptions && controlOptions.allowedStates && controlOptions.allowedText) {
                                 var selectedState = void 0;
                                 if (jsf_1 && jsf_1.formGroup && controlOptions.controlToCheck) {
-                                    var stateControl = jsf_1.formGroup.controls[controlOptions.controlToCheck];
-                                    selectedState = stateControl && stateControl.value;
+                                    selectedState = jsf_1.formGroup.value && jsf_1.formGroup.value[controlOptions.controlToCheck];
                                 }
                                 var isValidPOBox = controlOptions.allowedText.some(function (value) { return controlValue.includes(value.toLowerCase()); });
                                 if (selectedState && (!controlOptions.allowedStates.includes(selectedState) && isValidPOBox)) {
@@ -67862,10 +67860,15 @@ var Bootstrap4FrameworkComponent = (function () {
                 this.updateHelpBlock(this.formControl.status);
                 this.formControl.statusChanges.subscribe(function (status) {
                     _this.updateHelpBlock(status);
-                    if (!_this.changeDetector['destroyed']) {
-                        _this.changeDetector.detectChanges();
-                    }
                 });
+                if (this.options.postRenderValidation) {
+                    this.formControl.postRenderValidation = setTimeout(function () {
+                        _this.updateHelpBlock(_this.formControl.status);
+                        if (!_this.changeDetector['destroyed']) {
+                            _this.changeDetector.detectChanges();
+                        }
+                    }, 0);
+                }
                 if (this.options.debug) {
                     var vars = [];
                     this.debugOutput = map(vars, function (thisVar) { return JSON.stringify(thisVar, null, 2); }).join('\n');
@@ -67916,6 +67919,11 @@ var Bootstrap4FrameworkComponent = (function () {
     };
     Bootstrap4FrameworkComponent.prototype.removeItem = function () {
         this.jsf.removeItem(this);
+    };
+    Bootstrap4FrameworkComponent.prototype.ngOnDestroy = function () {
+        if (this.formControl && this.formControl.postRenderValidation) {
+            clearTimeout(this.formControl.postRenderValidation);
+        }
     };
     Bootstrap4FrameworkComponent.decorators = [
         { type: Component, args: [{

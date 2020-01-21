@@ -8054,8 +8054,7 @@ class JsonValidators {
             if (controlOptions && controlOptions.allowedStates && controlOptions.allowedText) {
                 let selectedState;
                 if (control.parent && controlOptions.controlToCheck) {
-                    const stateControl = control.parent.controls[controlOptions.controlToCheck];
-                    selectedState = stateControl && stateControl.value;
+                    selectedState = control.parent.value && control.parent.value[controlOptions.controlToCheck];
                 }
                 const isValidPOBox = controlOptions.allowedText.some((value) => controlValue.includes(value.toLowerCase()));
                 if (selectedState && (!controlOptions.allowedStates.includes(selectedState) && isValidPOBox)) {
@@ -10990,8 +10989,7 @@ class JsonSchemaFormService {
                             if (controlOptions && controlOptions.allowedStates && controlOptions.allowedText) {
                                 let selectedState;
                                 if (jsf && jsf.formGroup && controlOptions.controlToCheck) {
-                                    const stateControl = jsf.formGroup.controls[controlOptions.controlToCheck];
-                                    selectedState = stateControl && stateControl.value;
+                                    selectedState = jsf.formGroup.value && jsf.formGroup.value[controlOptions.controlToCheck];
                                 }
                                 const isValidPOBox = controlOptions.allowedText.some((value) => controlValue.includes(value.toLowerCase()));
                                 if (selectedState && (!controlOptions.allowedStates.includes(selectedState) && isValidPOBox)) {
@@ -68710,10 +68708,15 @@ class Bootstrap4FrameworkComponent {
                 this.updateHelpBlock(this.formControl.status);
                 this.formControl.statusChanges.subscribe((status) => {
                     this.updateHelpBlock(status);
-                    if (!this.changeDetector['destroyed']) {
-                        this.changeDetector.detectChanges();
-                    }
                 });
+                if (this.options.postRenderValidation) {
+                    this.formControl.postRenderValidation = setTimeout(() => {
+                        this.updateHelpBlock(this.formControl.status);
+                        if (!this.changeDetector['destroyed']) {
+                            this.changeDetector.detectChanges();
+                        }
+                    }, 0);
+                }
                 if (this.options.debug) {
                     let vars = [];
                     this.debugOutput = map(vars, thisVar => JSON.stringify(thisVar, null, 2)).join('\n');
@@ -68764,6 +68767,11 @@ class Bootstrap4FrameworkComponent {
     }
     removeItem() {
         this.jsf.removeItem(this);
+    }
+    ngOnDestroy() {
+        if (this.formControl && this.formControl.postRenderValidation) {
+            clearTimeout(this.formControl.postRenderValidation);
+        }
     }
 }
 Bootstrap4FrameworkComponent.decorators = [
