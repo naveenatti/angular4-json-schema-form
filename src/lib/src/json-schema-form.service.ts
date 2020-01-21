@@ -394,8 +394,7 @@ export class JsonSchemaFormService {
               if (controlOptions && controlOptions.allowedStates && controlOptions.allowedText) {
                 let selectedState;
                 if (jsf && jsf.formGroup && controlOptions.controlToCheck) {
-                  const stateControl = jsf.formGroup.controls[controlOptions.controlToCheck];
-                  selectedState = stateControl && stateControl.value;
+                  selectedState = jsf.formGroup.value && jsf.formGroup.value[controlOptions.controlToCheck];
                 }
                 const isValidPOBox = controlOptions.allowedText.some((value) => controlValue.includes(value.toLowerCase()));
                 if (selectedState && (!controlOptions.allowedStates.includes(selectedState) && isValidPOBox)) {

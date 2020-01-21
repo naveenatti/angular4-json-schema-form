@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnChanges, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnChanges, OnInit, OnDestroy } from '@angular/core';
 
 import * as _ from 'lodash';
 
@@ -179,7 +179,7 @@ import {
   }
   `],
 })
-export class Bootstrap4FrameworkComponent implements OnInit, OnChanges {
+export class Bootstrap4FrameworkComponent implements OnInit, OnChanges, OnDestroy {
   frameworkInitialized = false;
   widgetOptions: any; // Options passed to child widget
   widgetLayoutNode: any; // layoutNode passed to child widget
@@ -345,11 +345,16 @@ export class Bootstrap4FrameworkComponent implements OnInit, OnChanges {
         this.updateHelpBlock(this.formControl.status);
         this.formControl.statusChanges.subscribe((status: string) => {
           this.updateHelpBlock(status);
-          if (!this.changeDetector['destroyed']) {
-            this.changeDetector.detectChanges();
-          }
         });
-
+        // To trigger validations after the control has been rendered
+        if (this.options.postRenderValidation) {
+          this.formControl.postRenderValidation = setTimeout(() => {
+            this.updateHelpBlock(this.formControl.status);
+            if (!this.changeDetector['destroyed']) {
+              this.changeDetector.detectChanges();
+            }
+          }, 0);
+        }
         if (this.options.debug) {
           let vars: any[] = [];
           this.debugOutput = _.map(vars, thisVar => JSON.stringify(thisVar, null, 2)).join('\n');
@@ -402,5 +407,10 @@ export class Bootstrap4FrameworkComponent implements OnInit, OnChanges {
 
   removeItem() {
     this.jsf.removeItem(this);
+  }
+  ngOnDestroy(): void {
+    if (this.formControl && this.formControl.postRenderValidation) {
+      clearTimeout(this.formControl.postRenderValidation);
+    }
   }
 }

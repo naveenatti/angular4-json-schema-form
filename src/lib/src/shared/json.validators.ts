@@ -978,8 +978,7 @@ export class JsonValidators {
       if (controlOptions && controlOptions.allowedStates && controlOptions.allowedText) {
         let selectedState;
         if (control.parent && controlOptions.controlToCheck) {
-          const stateControl = control.parent.controls[controlOptions.controlToCheck];
-          selectedState = stateControl && stateControl.value;
+          selectedState = control.parent.value && control.parent.value[controlOptions.controlToCheck];
         }
         const isValidPOBox = controlOptions.allowedText.some((value) => controlValue.includes(value.toLowerCase()));
         if (selectedState && (!controlOptions.allowedStates.includes(selectedState) && isValidPOBox)) {

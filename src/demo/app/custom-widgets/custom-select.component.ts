@@ -88,7 +88,6 @@ export class CustomSelectComponent implements OnInit {
       this.options.enum, !!this.options.required, !!this.options.flatList
     );
     this.jsf.initializeControl(this);
-    this.formControl.parent.controls["addressline1"].updateValueAndValidity();
   }
 
   updateValue(event) {
