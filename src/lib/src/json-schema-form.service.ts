@@ -396,9 +396,22 @@ export class JsonSchemaFormService {
                 if (jsf && jsf.formGroup && controlOptions.controlToCheck) {
                   selectedState = jsf.formGroup.value && jsf.formGroup.value[controlOptions.controlToCheck];
                 }
-                const isValidPOBox = controlOptions.allowedText.some((value) => controlValue.includes(value.toLowerCase()));
-                if (selectedState && (!controlOptions.allowedStates.includes(selectedState) && isValidPOBox)) {
-                  return false;
+                const isValidPOBox = controlOptions.allowedText.some((value) => {
+                  if (controlOptions.exactMatch) {
+                    return controlValue === value.toLowerCase();
+                  } else {
+                    return controlValue.includes(value.toLowerCase());
+                  }
+                });
+                // Exact match both allow text and allow states should satisfy exactly
+                if (controlOptions.exactMatch) {
+                  if (selectedState && (controlOptions.allowedStates.includes(selectedState) && !isValidPOBox)) {
+                    return false;
+                  }
+                } else {
+                  if (selectedState && (!controlOptions.allowedStates.includes(selectedState) && isValidPOBox)) {
+                    return false;
+                  }
                 }
               }
               return true;

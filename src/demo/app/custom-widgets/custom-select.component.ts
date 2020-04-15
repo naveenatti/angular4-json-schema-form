@@ -93,5 +93,6 @@ export class CustomSelectComponent implements OnInit {
   updateValue(event) {
     this.jsf.updateValue(this, event.target.value);
     this.formControl.parent.controls["addressline1"].updateValueAndValidity();
+    this.formControl.parent.controls["city"].updateValueAndValidity();
   }
 }

@@ -25,10 +25,32 @@
       "postRenderValidation":false,
       "customErrorMessage": ""
        },
+       "city": { 
+        "type": "string",
+        "placeholder": "City",
+        "poBoxValidation":{
+          "allowedStates":["AA","AE","AP"],
+          "allowedText":["APO","FPO","DPO"],
+          "controlToCheck":"state",
+          "exactMatch":true
+        },
+        "minLength": 3,
+        "maxLength": 50,
+        "hasFloat": true,
+        "validationMessages": {
+          "required": "Required",
+          "poBoxValidation": "City should be any of the these three APO, FPO, DPO",
+          "minLength": "Minimum length should be 3 characters.",
+          "maxLength": "Maximum length should be 50 characters."
+      },
+      "feedbackOnRender": true,
+      "postRenderValidation":false,
+      "customErrorMessage": ""
+       },
        "state": {
         "type": "string",
         "widget":"custom-select-widget",
-        "enum": [ "AL", "AK", "AS", "AZ", "AR", "CA", "CO", "CT", "DE",
+        "enum": ["AA","AE","AP", "AL", "AK", "AS", "AZ", "AR", "CA", "CO", "CT", "DE",
             "DC", "FM", "FL", "GA", "GU", "HI", "ID", "IL", "IN", "IA",
             "KS", "KY", "LA", "ME", "MH", "MD", "MA", "MI", "MN", "MS",
             "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND",
@@ -71,7 +93,7 @@
   },
   "layout": [
     { "type": "flex", "flex-flow": "row wrap", "items": [ "first_name", "last_name" ] },
-    { "type": "flex", "flex-flow": "row wrap", "items": [ "addressline1","state" ] },
+    { "type": "flex", "flex-flow": "row wrap", "items": [ "addressline1","city","state" ] },
     { "key": "address.street_1", "title": "Address", "placeholder": "Street" },
     { "key": "address.street_2", "notitle": true },
     { "type": "div",
@@ -118,6 +140,7 @@
     "first_name": "Jane",
     "last_name": "Doe",
     "addressline1":"POBOx",
+    "city":"DPOs",
     "state":"AL",
     "address": {
       "street_1": "123 Main St.",
