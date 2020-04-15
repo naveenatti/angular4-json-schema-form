@@ -8056,9 +8056,23 @@ class JsonValidators {
                 if (control.parent && controlOptions.controlToCheck) {
                     selectedState = control.parent.value && control.parent.value[controlOptions.controlToCheck];
                 }
-                const isValidPOBox = controlOptions.allowedText.some((value) => controlValue.includes(value.toLowerCase()));
-                if (selectedState && (!controlOptions.allowedStates.includes(selectedState) && isValidPOBox)) {
-                    return { 'poBoxValidation': true };
+                const isValidPOBox = controlOptions.allowedText.some((value) => {
+                    if (controlOptions.exactMatch) {
+                        return controlValue === value.toLowerCase();
+                    }
+                    else {
+                        return controlValue.includes(value.toLowerCase());
+                    }
+                });
+                if (controlOptions.exactMatch) {
+                    if (selectedState && (controlOptions.allowedStates.includes(selectedState) && !isValidPOBox)) {
+                        return { 'poBoxValidation': true };
+                    }
+                }
+                else {
+                    if (selectedState && (!controlOptions.allowedStates.includes(selectedState) && isValidPOBox)) {
+                        return { 'poBoxValidation': true };
+                    }
                 }
             }
             return undefined;
@@ -10991,9 +11005,23 @@ class JsonSchemaFormService {
                                 if (jsf && jsf.formGroup && controlOptions.controlToCheck) {
                                     selectedState = jsf.formGroup.value && jsf.formGroup.value[controlOptions.controlToCheck];
                                 }
-                                const isValidPOBox = controlOptions.allowedText.some((value) => controlValue.includes(value.toLowerCase()));
-                                if (selectedState && (!controlOptions.allowedStates.includes(selectedState) && isValidPOBox)) {
-                                    return false;
+                                const isValidPOBox = controlOptions.allowedText.some((value) => {
+                                    if (controlOptions.exactMatch) {
+                                        return controlValue === value.toLowerCase();
+                                    }
+                                    else {
+                                        return controlValue.includes(value.toLowerCase());
+                                    }
+                                });
+                                if (controlOptions.exactMatch) {
+                                    if (selectedState && (controlOptions.allowedStates.includes(selectedState) && !isValidPOBox)) {
+                                        return false;
+                                    }
+                                }
+                                else {
+                                    if (selectedState && (!controlOptions.allowedStates.includes(selectedState) && isValidPOBox)) {
+                                        return false;
+                                    }
                                 }
                             }
                             return true;

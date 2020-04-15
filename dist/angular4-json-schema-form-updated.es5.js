@@ -8204,9 +8204,23 @@ var JsonValidators = (function () {
                 if (control.parent && controlOptions.controlToCheck) {
                     selectedState = control.parent.value && control.parent.value[controlOptions.controlToCheck];
                 }
-                var isValidPOBox = controlOptions.allowedText.some(function (value) { return controlValue.includes(value.toLowerCase()); });
-                if (selectedState && (!controlOptions.allowedStates.includes(selectedState) && isValidPOBox)) {
-                    return { 'poBoxValidation': true };
+                var isValidPOBox = controlOptions.allowedText.some(function (value) {
+                    if (controlOptions.exactMatch) {
+                        return controlValue === value.toLowerCase();
+                    }
+                    else {
+                        return controlValue.includes(value.toLowerCase());
+                    }
+                });
+                if (controlOptions.exactMatch) {
+                    if (selectedState && (controlOptions.allowedStates.includes(selectedState) && !isValidPOBox)) {
+                        return { 'poBoxValidation': true };
+                    }
+                }
+                else {
+                    if (selectedState && (!controlOptions.allowedStates.includes(selectedState) && isValidPOBox)) {
+                        return { 'poBoxValidation': true };
+                    }
                 }
             }
             return undefined;
@@ -11313,9 +11327,23 @@ var JsonSchemaFormService = (function () {
                                 if (jsf_1 && jsf_1.formGroup && controlOptions.controlToCheck) {
                                     selectedState = jsf_1.formGroup.value && jsf_1.formGroup.value[controlOptions.controlToCheck];
                                 }
-                                var isValidPOBox = controlOptions.allowedText.some(function (value) { return controlValue.includes(value.toLowerCase()); });
-                                if (selectedState && (!controlOptions.allowedStates.includes(selectedState) && isValidPOBox)) {
-                                    return false;
+                                var isValidPOBox = controlOptions.allowedText.some(function (value) {
+                                    if (controlOptions.exactMatch) {
+                                        return controlValue === value.toLowerCase();
+                                    }
+                                    else {
+                                        return controlValue.includes(value.toLowerCase());
+                                    }
+                                });
+                                if (controlOptions.exactMatch) {
+                                    if (selectedState && (controlOptions.allowedStates.includes(selectedState) && !isValidPOBox)) {
+                                        return false;
+                                    }
+                                }
+                                else {
+                                    if (selectedState && (!controlOptions.allowedStates.includes(selectedState) && isValidPOBox)) {
+                                        return false;
+                                    }
                                 }
                             }
                             return true;
