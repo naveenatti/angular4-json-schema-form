@@ -2,7 +2,16 @@
   "schema": {
     "type": "object",
     "properties": {
-      "first_name": { "type": "string" },
+      "first_name": { "type": "string", 
+        "optionsMatchValidation":{
+          "options":["Iran","Tehran","Teheran","Iranian","Iranain"],
+          "exactMatch":false,
+          "negate":true
+        },
+        "validationMessages": {
+          "optionsMatchValidation":"Please enter valid Address"
+        }
+      },
       "last_name": { "type": "string" },
       "addressline1": { 
         "type": "string",
@@ -28,17 +37,17 @@
        "city": { 
         "type": "string",
         "placeholder": "City",
-        "poBoxValidation":{
-          "allowedStates":["AA","AE","AP"],
-          "allowedText":["APO","FPO","DPO"],
-          "controlToCheck":"state",
-          "exactMatch":true
+        "optionsMatchValidation":{
+          "options":["Abu Dhabi","Dubai","Sharjah","Umm al-Qaiwain","Fujairah","Ajman","Ra's al-Khaimah"],
+          "exactMatch":true,
+          "negate":false
         },
         "minLength": 3,
         "maxLength": 50,
         "hasFloat": true,
         "validationMessages": {
           "required": "Required",
+          "optionsMatchValidation":"Please enter valid City",
           "poBoxValidation": "City should be any of the these three APO, FPO, DPO",
           "minLength": "Minimum length should be 3 characters.",
           "maxLength": "Maximum length should be 50 characters."
@@ -140,7 +149,7 @@
     "first_name": "Jane",
     "last_name": "Doe",
     "addressline1":"POBOx",
-    "city":"DPOs",
+    "city":"Dubai",
     "state":"AL",
     "address": {
       "street_1": "123 Main St.",

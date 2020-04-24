@@ -38,7 +38,7 @@ export class JsonSchemaFormService {
   AngularSchemaFormCompatibility = false;
   tpldata: any = {};
 
-  customKeywords = { dobFormat: false, poBoxValidation: false };
+  customKeywords = { dobFormat: false, poBoxValidation: false, optionsMatchValidation:false };
   ajvOptions: any = { allErrors: true, jsonPointers: true };
   ajv: any = new Ajv(this.ajvOptions); // AJV: Another JSON Schema Validator
   validateFormData: any = null; // Compiled AJV function to validate active form's schema
@@ -421,6 +421,9 @@ export class JsonSchemaFormService {
         });
         this.customKeywords.poBoxValidation = true;
       }
+      if (!this.customKeywords.optionsMatchValidation) {
+        this.addOptionsMatchValidation();
+      }
       this.customKeywords.dobFormat = true;
       this.ajv.removeSchema(this.schema);
       this.validateFormData = this.ajv.compile(this.schema);
@@ -500,6 +503,39 @@ export class JsonSchemaFormService {
         .join('');
     }
     return '';
+  }
+
+  addOptionsMatchValidation(): void {
+    const jsf = this;
+    this.ajv.addKeyword('optionsMatchValidation', {
+      compile: function (sch, parentSchema) {
+        return function (data) {
+          const controlOptions = sch;
+          if (!data) {
+            return true;
+          }
+          let controlValue = data.toLowerCase();
+          if (controlOptions && controlOptions.options) {
+            const isValidData = controlOptions.options.some((value) => {
+              if (controlOptions.exactMatch) {
+                return controlValue === value.toLowerCase();
+              } else {
+                return controlValue.includes(value.toLowerCase());
+              }
+            });
+            if (controlOptions.negate && isValidData) {
+              return false;
+            } else if (!controlOptions.negate && !isValidData){
+              return false;
+            }
+          }
+          return true;
+        }
+      },
+      errors: false,
+    });
+    this.customKeywords.optionsMatchValidation = true;
+  
   }
 
   setTitle(

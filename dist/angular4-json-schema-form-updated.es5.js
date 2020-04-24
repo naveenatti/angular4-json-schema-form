@@ -8226,6 +8226,36 @@ var JsonValidators = (function () {
             return undefined;
         };
     };
+    JsonValidators.optionsMatchValidation = function (poBoxCriteria) {
+        if (!hasValue(poBoxCriteria)) {
+            return JsonValidators.nullValidator;
+        }
+        return function (control, invert) {
+            if (invert === void 0) { invert = false; }
+            var controlOptions = poBoxCriteria;
+            if (!control.value) {
+                return undefined;
+            }
+            var controlValue = control.value.toLowerCase();
+            if (controlOptions && controlOptions.options) {
+                var isValidData = controlOptions.options.some(function (value) {
+                    if (controlOptions.exactMatch) {
+                        return controlValue === value.toLowerCase();
+                    }
+                    else {
+                        return controlValue.includes(value.toLowerCase());
+                    }
+                });
+                if (controlOptions.negate && isValidData) {
+                    return { 'optionsMatchValidation': true };
+                }
+                else if (!controlOptions.negate && !isValidData) {
+                    return { 'optionsMatchValidation': true };
+                }
+            }
+            return undefined;
+        };
+    };
     return JsonValidators;
 }());
 
@@ -8918,7 +8948,7 @@ function getControlValidators(schema) {
     if (hasOwn(schema, 'type')) {
         switch (schema.type) {
             case 'string':
-                forEach(['pattern', 'format', 'minLength', 'maxLength', 'equalTo', 'dobFormat', 'poBoxValidation'], function (prop) {
+                forEach(['pattern', 'format', 'minLength', 'maxLength', 'equalTo', 'dobFormat', 'poBoxValidation', 'optionsMatchValidation'], function (prop) {
                     if (hasOwn(schema, prop)) {
                         validators[prop] = [schema[prop]];
                     }
@@ -11026,7 +11056,7 @@ var JsonSchemaFormService = (function () {
         this.ReactJsonSchemaFormCompatibility = false;
         this.AngularSchemaFormCompatibility = false;
         this.tpldata = {};
-        this.customKeywords = { dobFormat: false, poBoxValidation: false };
+        this.customKeywords = { dobFormat: false, poBoxValidation: false, optionsMatchValidation: false };
         this.ajvOptions = { allErrors: true, jsonPointers: true };
         this.ajv = new Ajv(this.ajvOptions);
         this.validateFormData = null;
@@ -11353,6 +11383,9 @@ var JsonSchemaFormService = (function () {
                 });
                 this.customKeywords.poBoxValidation = true;
             }
+            if (!this.customKeywords.optionsMatchValidation) {
+                this.addOptionsMatchValidation();
+            }
             this.customKeywords.dobFormat = true;
             this.ajv.removeSchema(this.schema);
             this.validateFormData = this.ajv.compile(this.schema);
@@ -11447,6 +11480,38 @@ var JsonSchemaFormService = (function () {
                 .join('');
         }
         return '';
+    };
+    JsonSchemaFormService.prototype.addOptionsMatchValidation = function () {
+        this.ajv.addKeyword('optionsMatchValidation', {
+            compile: function (sch, parentSchema) {
+                return function (data) {
+                    var controlOptions = sch;
+                    if (!data) {
+                        return true;
+                    }
+                    var controlValue = data.toLowerCase();
+                    if (controlOptions && controlOptions.options) {
+                        var isValidData = controlOptions.options.some(function (value) {
+                            if (controlOptions.exactMatch) {
+                                return controlValue === value.toLowerCase();
+                            }
+                            else {
+                                return controlValue.includes(value.toLowerCase());
+                            }
+                        });
+                        if (controlOptions.negate && isValidData) {
+                            return false;
+                        }
+                        else if (!controlOptions.negate && !isValidData) {
+                            return false;
+                        }
+                    }
+                    return true;
+                };
+            },
+            errors: false,
+        });
+        this.customKeywords.optionsMatchValidation = true;
     };
     JsonSchemaFormService.prototype.setTitle = function (parentCtx, childNode, index) {
         if (parentCtx === void 0) { parentCtx = {}; }

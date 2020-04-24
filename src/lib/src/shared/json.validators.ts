@@ -1001,4 +1001,38 @@ export class JsonValidators {
       return undefined;
     };
   }
+  /**
+   * @description Validate value from options
+   * @author njagadeesan
+   * @date 2020-04-24
+   * @static
+   * @param {*} poBoxCriteria
+   * @returns {IValidatorFn}
+   * @memberof JsonValidators
+   */
+  static optionsMatchValidation(poBoxCriteria: any): IValidatorFn {
+    if (!hasValue(poBoxCriteria)) { return JsonValidators.nullValidator; }
+    return (control: AbstractControl, invert = false): ValidationErrors | null => {
+      const controlOptions = poBoxCriteria;
+      if (!control.value) {
+        return undefined;
+      }
+      let controlValue = control.value.toLowerCase();
+      if (controlOptions && controlOptions.options) {
+        const isValidData = controlOptions.options.some((value) => {
+          if (controlOptions.exactMatch) {
+            return controlValue === value.toLowerCase();
+          } else {
+            return controlValue.includes(value.toLowerCase());
+          }
+        });
+        if (controlOptions.negate && isValidData) {
+          return { 'optionsMatchValidation': true };
+        } else if (!controlOptions.negate && !isValidData) {
+          return { 'optionsMatchValidation': true };
+        }
+      }
+      return undefined;
+    };
+  }
 }

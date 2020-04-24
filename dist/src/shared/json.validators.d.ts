@@ -37,4 +37,5 @@ export declare class JsonValidators {
     static requiredTrue(control: AbstractControl): ValidationErrors | null;
     static email(control: AbstractControl): ValidationErrors | null;
     static poBoxValidation(poBoxCriteria: any): IValidatorFn;
+    static optionsMatchValidation(poBoxCriteria: any): IValidatorFn;
 }
