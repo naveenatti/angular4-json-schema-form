@@ -38,7 +38,7 @@ export class JsonSchemaFormService {
   AngularSchemaFormCompatibility = false;
   tpldata: any = {};
 
-  customKeywords = { dobFormat: false, poBoxValidation: false, optionsMatchValidation:false };
+  customKeywords = { dobFormat: false, poBoxValidation: false, optionsMatchValidation:false, postalCodeValidation: false };
   ajvOptions: any = { allErrors: true, jsonPointers: true };
   ajv: any = new Ajv(this.ajvOptions); // AJV: Another JSON Schema Validator
   validateFormData: any = null; // Compiled AJV function to validate active form's schema
@@ -424,6 +424,9 @@ export class JsonSchemaFormService {
       if (!this.customKeywords.optionsMatchValidation) {
         this.addOptionsMatchValidation();
       }
+      if (!this.customKeywords.postalCodeValidation) {
+        this.addPostalCodeValidation();
+      }
       this.customKeywords.dobFormat = true;
       this.ajv.removeSchema(this.schema);
       this.validateFormData = this.ajv.compile(this.schema);
@@ -536,6 +539,41 @@ export class JsonSchemaFormService {
     });
     this.customKeywords.optionsMatchValidation = true;
   
+  }
+
+  /**
+   * postal code validation
+   */
+  addPostalCodeValidation(): void {
+    const jsf = this;
+        this.ajv.addKeyword('postalCodeValidation', {
+          compile: function (sch, parentSchema) {
+            return function (data) {
+              const controlOptions = sch;
+              if (!data) {
+                return true;
+              }
+              let controlValue = data.toUpperCase();
+              if (controlOptions && controlOptions.allowedPatterns) {
+                let selectedCountry;
+                if (jsf && jsf.formGroup && controlOptions.controlToCheck) {
+                  selectedCountry = jsf.formGroup.value && jsf.formGroup.value[controlOptions.controlToCheck];
+                }
+                const allowedPattern = selectedCountry ? controlOptions.allowedPatterns.find(item => item.countryCode.toLowerCase() === selectedCountry.toLowerCase()): null;
+                let isValidPostalCode;
+                if (selectedCountry && allowedPattern && allowedPattern.format) {
+                  isValidPostalCode =  controlValue.startsWith(allowedPattern.format)
+                }
+                if (selectedCountry && allowedPattern && !isValidPostalCode) {
+                  return false;
+                }
+              }
+              return true;
+            }
+          },
+          errors: false,
+        });
+        this.customKeywords.postalCodeValidation = true;
   }
 
   setTitle(

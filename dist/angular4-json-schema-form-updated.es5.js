@@ -8226,6 +8226,34 @@ var JsonValidators = (function () {
             return undefined;
         };
     };
+    JsonValidators.postalCodeValidation = function (postalCodeCriteria) {
+        if (!hasValue(postalCodeCriteria)) {
+            return JsonValidators.nullValidator;
+        }
+        return function (control, invert) {
+            if (invert === void 0) { invert = false; }
+            var controlOptions = postalCodeCriteria;
+            if (!control.value) {
+                return undefined;
+            }
+            var controlValue = control.value.toUpperCase();
+            if (controlOptions && controlOptions.allowedPatterns) {
+                var selectedCountry_1;
+                if (control.parent && controlOptions.controlToCheck) {
+                    selectedCountry_1 = control.parent.value && control.parent.value[controlOptions.controlToCheck];
+                }
+                var allowedPattern = selectedCountry_1 ? controlOptions.allowedPatterns.find(function (item) { return item.countryCode.toLowerCase() === selectedCountry_1.toLowerCase(); }) : null;
+                var isValidPostalCode = void 0;
+                if (selectedCountry_1 && allowedPattern && allowedPattern.format) {
+                    isValidPostalCode = controlValue.startsWith(allowedPattern.format);
+                }
+                if (selectedCountry_1 && allowedPattern && !isValidPostalCode) {
+                    return { 'postalCodeValidation': true };
+                }
+            }
+            return undefined;
+        };
+    };
     JsonValidators.optionsMatchValidation = function (poBoxCriteria) {
         if (!hasValue(poBoxCriteria)) {
             return JsonValidators.nullValidator;
@@ -8948,7 +8976,7 @@ function getControlValidators(schema) {
     if (hasOwn(schema, 'type')) {
         switch (schema.type) {
             case 'string':
-                forEach(['pattern', 'format', 'minLength', 'maxLength', 'equalTo', 'dobFormat', 'poBoxValidation', 'optionsMatchValidation'], function (prop) {
+                forEach(['pattern', 'format', 'minLength', 'maxLength', 'equalTo', 'dobFormat', 'poBoxValidation', 'optionsMatchValidation', 'postalCodeValidation'], function (prop) {
                     if (hasOwn(schema, prop)) {
                         validators[prop] = [schema[prop]];
                     }
@@ -11056,7 +11084,7 @@ var JsonSchemaFormService = (function () {
         this.ReactJsonSchemaFormCompatibility = false;
         this.AngularSchemaFormCompatibility = false;
         this.tpldata = {};
-        this.customKeywords = { dobFormat: false, poBoxValidation: false, optionsMatchValidation: false };
+        this.customKeywords = { dobFormat: false, poBoxValidation: false, optionsMatchValidation: false, postalCodeValidation: false };
         this.ajvOptions = { allErrors: true, jsonPointers: true };
         this.ajv = new Ajv(this.ajvOptions);
         this.validateFormData = null;
@@ -11386,6 +11414,9 @@ var JsonSchemaFormService = (function () {
             if (!this.customKeywords.optionsMatchValidation) {
                 this.addOptionsMatchValidation();
             }
+            if (!this.customKeywords.postalCodeValidation) {
+                this.addPostalCodeValidation();
+            }
             this.customKeywords.dobFormat = true;
             this.ajv.removeSchema(this.schema);
             this.validateFormData = this.ajv.compile(this.schema);
@@ -11512,6 +11543,37 @@ var JsonSchemaFormService = (function () {
             errors: false,
         });
         this.customKeywords.optionsMatchValidation = true;
+    };
+    JsonSchemaFormService.prototype.addPostalCodeValidation = function () {
+        var jsf = this;
+        this.ajv.addKeyword('postalCodeValidation', {
+            compile: function (sch, parentSchema) {
+                return function (data) {
+                    var controlOptions = sch;
+                    if (!data) {
+                        return true;
+                    }
+                    var controlValue = data.toUpperCase();
+                    if (controlOptions && controlOptions.allowedPatterns) {
+                        var selectedCountry_1;
+                        if (jsf && jsf.formGroup && controlOptions.controlToCheck) {
+                            selectedCountry_1 = jsf.formGroup.value && jsf.formGroup.value[controlOptions.controlToCheck];
+                        }
+                        var allowedPattern = selectedCountry_1 ? controlOptions.allowedPatterns.find(function (item) { return item.countryCode.toLowerCase() === selectedCountry_1.toLowerCase(); }) : null;
+                        var isValidPostalCode = void 0;
+                        if (selectedCountry_1 && allowedPattern && allowedPattern.format) {
+                            isValidPostalCode = controlValue.startsWith(allowedPattern.format);
+                        }
+                        if (selectedCountry_1 && allowedPattern && !isValidPostalCode) {
+                            return false;
+                        }
+                    }
+                    return true;
+                };
+            },
+            errors: false,
+        });
+        this.customKeywords.postalCodeValidation = true;
     };
     JsonSchemaFormService.prototype.setTitle = function (parentCtx, childNode, index) {
         if (parentCtx === void 0) { parentCtx = {}; }

@@ -13,6 +13,43 @@
         }
       },
       "last_name": { "type": "string" },
+      "zip": {
+        "notitle": true,
+        "fieldHtmlClass": "error-red",
+        "placeholder": "Zip Code*",
+        "type": "string",
+        "validationMessages": {
+            "required": "Required",
+            "pattern": "Please enter valid zip code.",
+            "maxLength": "Maximum length should be 10 characters.",
+            "postalCodeValidation": "Post Code and Country Combination as mismatch"
+        },
+        "postalCodeValidation":{
+          "allowedPatterns":[
+            {"countryCode": "JEY", "format": "JE"},
+            {"countryCode": "GGY", "format": "GY"},
+            {"countryCode": "IMN", "format": "IM"}],
+          "controlToCheck":"country"
+        },
+        "feedbackOnRender": true,
+        "customErrorMessage": ""
+    },
+    "country": {
+      "type": "string",
+      "widget":"custom-select-widget",
+      "enum": ["JEY", "GBR", "GGY", "IMN" ],
+        "hasFloat": true,
+        "validationMessages": {
+          "required": "Required",
+          "optionsMatchValidation":"Please enter valid City",
+          "postalCodeValidation": "Post Code and Country Combination as mismatch",
+          "minLength": "Minimum length should be 3 characters.",
+          "maxLength": "Maximum length should be 50 characters."
+      },
+      "feedbackOnRender": true,
+      "postRenderValidation":false,
+      "customErrorMessage": ""
+    },
       "addressline1": { 
         "type": "string",
         "placeholder": "Address Line 1*",
@@ -103,6 +140,7 @@
   "layout": [
     { "type": "flex", "flex-flow": "row wrap", "items": [ "first_name", "last_name" ] },
     { "type": "flex", "flex-flow": "row wrap", "items": [ "addressline1","city","state" ] },
+    { "type": "flex", "flex-flow": "row wrap", "items": [ "zip","country"] },
     { "key": "address.street_1", "title": "Address", "placeholder": "Street" },
     { "key": "address.street_2", "notitle": true },
     { "type": "div",
@@ -151,6 +189,8 @@
     "addressline1":"POBOx",
     "city":"Dubai",
     "state":"AL",
+    "country": "GBR",
+    "zip": "W1D1NN",
     "address": {
       "street_1": "123 Main St.",
       "city": "Las Vegas",

@@ -1001,6 +1001,39 @@ export class JsonValidators {
       return undefined;
     };
   }
+
+  /**
+   * Postal Code Validation
+   * @static
+   * @returns {IValidatorFn}
+   * @memberof JsonValidators
+   */
+  static postalCodeValidation(postalCodeCriteria: any): IValidatorFn {
+    if (!hasValue(postalCodeCriteria)) { return JsonValidators.nullValidator; }
+    return (control: AbstractControl, invert = false): ValidationErrors | null => {
+      const controlOptions = postalCodeCriteria;
+      if (!control.value) {
+        return undefined;
+      }
+      let controlValue = control.value.toUpperCase();
+      if (controlOptions && controlOptions.allowedPatterns) {
+        let selectedCountry;
+        if (control.parent && controlOptions.controlToCheck) {
+          selectedCountry = control.parent.value && control.parent.value[controlOptions.controlToCheck];
+        }
+        const allowedPattern = selectedCountry ? controlOptions.allowedPatterns.find(item => item.countryCode.toLowerCase() === selectedCountry.toLowerCase()): null;
+        let isValidPostalCode;
+        if (selectedCountry && allowedPattern && allowedPattern.format) {
+          isValidPostalCode =  controlValue.startsWith(allowedPattern.format)
+        }
+        if (selectedCountry && allowedPattern && !isValidPostalCode) {
+          return { 'postalCodeValidation': true };
+        }
+      }
+      return undefined;
+    };
+  }
+
   /**
    * @description Validate value from options
    * @author njagadeesan

@@ -8078,6 +8078,33 @@ class JsonValidators {
             return undefined;
         };
     }
+    static postalCodeValidation(postalCodeCriteria) {
+        if (!hasValue(postalCodeCriteria)) {
+            return JsonValidators.nullValidator;
+        }
+        return (control, invert = false) => {
+            const controlOptions = postalCodeCriteria;
+            if (!control.value) {
+                return undefined;
+            }
+            let controlValue = control.value.toUpperCase();
+            if (controlOptions && controlOptions.allowedPatterns) {
+                let selectedCountry;
+                if (control.parent && controlOptions.controlToCheck) {
+                    selectedCountry = control.parent.value && control.parent.value[controlOptions.controlToCheck];
+                }
+                const allowedPattern = selectedCountry ? controlOptions.allowedPatterns.find(item => item.countryCode.toLowerCase() === selectedCountry.toLowerCase()) : null;
+                let isValidPostalCode;
+                if (selectedCountry && allowedPattern && allowedPattern.format) {
+                    isValidPostalCode = controlValue.startsWith(allowedPattern.format);
+                }
+                if (selectedCountry && allowedPattern && !isValidPostalCode) {
+                    return { 'postalCodeValidation': true };
+                }
+            }
+            return undefined;
+        };
+    }
     static optionsMatchValidation(poBoxCriteria) {
         if (!hasValue(poBoxCriteria)) {
             return JsonValidators.nullValidator;
@@ -8748,7 +8775,7 @@ function getControlValidators(schema) {
     if (hasOwn(schema, 'type')) {
         switch (schema.type) {
             case 'string':
-                forEach(['pattern', 'format', 'minLength', 'maxLength', 'equalTo', 'dobFormat', 'poBoxValidation', 'optionsMatchValidation'], (prop) => {
+                forEach(['pattern', 'format', 'minLength', 'maxLength', 'equalTo', 'dobFormat', 'poBoxValidation', 'optionsMatchValidation', 'postalCodeValidation'], (prop) => {
                     if (hasOwn(schema, prop)) {
                         validators[prop] = [schema[prop]];
                     }
@@ -10739,7 +10766,7 @@ class JsonSchemaFormService {
         this.ReactJsonSchemaFormCompatibility = false;
         this.AngularSchemaFormCompatibility = false;
         this.tpldata = {};
-        this.customKeywords = { dobFormat: false, poBoxValidation: false, optionsMatchValidation: false };
+        this.customKeywords = { dobFormat: false, poBoxValidation: false, optionsMatchValidation: false, postalCodeValidation: false };
         this.ajvOptions = { allErrors: true, jsonPointers: true };
         this.ajv = new Ajv(this.ajvOptions);
         this.validateFormData = null;
@@ -11063,6 +11090,9 @@ class JsonSchemaFormService {
             if (!this.customKeywords.optionsMatchValidation) {
                 this.addOptionsMatchValidation();
             }
+            if (!this.customKeywords.postalCodeValidation) {
+                this.addPostalCodeValidation();
+            }
             this.customKeywords.dobFormat = true;
             this.ajv.removeSchema(this.schema);
             this.validateFormData = this.ajv.compile(this.schema);
@@ -11166,6 +11196,37 @@ class JsonSchemaFormService {
             errors: false,
         });
         this.customKeywords.optionsMatchValidation = true;
+    }
+    addPostalCodeValidation() {
+        const jsf = this;
+        this.ajv.addKeyword('postalCodeValidation', {
+            compile: function (sch, parentSchema) {
+                return function (data) {
+                    const controlOptions = sch;
+                    if (!data) {
+                        return true;
+                    }
+                    let controlValue = data.toUpperCase();
+                    if (controlOptions && controlOptions.allowedPatterns) {
+                        let selectedCountry;
+                        if (jsf && jsf.formGroup && controlOptions.controlToCheck) {
+                            selectedCountry = jsf.formGroup.value && jsf.formGroup.value[controlOptions.controlToCheck];
+                        }
+                        const allowedPattern = selectedCountry ? controlOptions.allowedPatterns.find(item => item.countryCode.toLowerCase() === selectedCountry.toLowerCase()) : null;
+                        let isValidPostalCode;
+                        if (selectedCountry && allowedPattern && allowedPattern.format) {
+                            isValidPostalCode = controlValue.startsWith(allowedPattern.format);
+                        }
+                        if (selectedCountry && allowedPattern && !isValidPostalCode) {
+                            return false;
+                        }
+                    }
+                    return true;
+                };
+            },
+            errors: false,
+        });
+        this.customKeywords.postalCodeValidation = true;
     }
     setTitle(parentCtx = {}, childNode = null, index = null) {
         const parentNode = parentCtx.layoutNode;

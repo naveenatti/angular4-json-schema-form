@@ -23,6 +23,7 @@ export declare class JsonSchemaFormService {
         dobFormat: boolean;
         poBoxValidation: boolean;
         optionsMatchValidation: boolean;
+        postalCodeValidation: boolean;
     };
     ajvOptions: any;
     ajv: any;
@@ -74,6 +75,7 @@ export declare class JsonSchemaFormService {
     parseText(text?: string, value?: any, values?: any, key?: number | string): string;
     parseExpression(expression?: string, value?: any, values?: any, key?: number | string, tpldata?: any): any;
     addOptionsMatchValidation(): void;
+    addPostalCodeValidation(): void;
     setTitle(parentCtx?: any, childNode?: any, index?: number): string;
     initializeControl(ctx: any, bind?: boolean): boolean;
     formatErrors(errors: any, validationMessages?: any): string;
