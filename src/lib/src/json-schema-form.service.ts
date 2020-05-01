@@ -560,7 +560,7 @@ export class JsonSchemaFormService {
                   selectedCountry = jsf.formGroup.value && jsf.formGroup.value[controlOptions.controlToCheck];
                 }
                 const allowedPattern = selectedCountry ? controlOptions.allowedPatterns.find(item =>
-                   item.countryCode.toLowerCase() === selectedCountry.toLowerCase()) : null;
+                   item.countryID === Number(selectedCountry)) : null;
                 let isValidPostalCode;
                 if (selectedCountry && allowedPattern && allowedPattern.format) {
                   isValidPostalCode =  controlValue.startsWith(allowedPattern.format)

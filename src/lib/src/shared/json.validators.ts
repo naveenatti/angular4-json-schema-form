@@ -1022,10 +1022,10 @@ export class JsonValidators {
           selectedCountry = control.parent.value && control.parent.value[controlOptions.controlToCheck];
         }
         const allowedPattern = selectedCountry ? controlOptions.allowedPatterns.find(item =>
-           item.countryCode.toLowerCase() === selectedCountry.toLowerCase()) : null;
+          item.countryID === Number(selectedCountry)) : null;
         let isValidPostalCode;
         if (selectedCountry && allowedPattern && allowedPattern.format) {
-          isValidPostalCode =  controlValue.startsWith(allowedPattern.format)
+          isValidPostalCode = controlValue.startsWith(allowedPattern.format)
         } else if (selectedCountry && !allowedPattern) {
           isValidPostalCode = !controlOptions.allowedPatterns.find(item => controlValue.startsWith(item.format))
         }

@@ -8243,7 +8243,7 @@ var JsonValidators = (function () {
                     selectedCountry_1 = control.parent.value && control.parent.value[controlOptions.controlToCheck];
                 }
                 var allowedPattern = selectedCountry_1 ? controlOptions.allowedPatterns.find(function (item) {
-                    return item.countryCode.toLowerCase() === selectedCountry_1.toLowerCase();
+                    return item.countryID === Number(selectedCountry_1);
                 }) : null;
                 var isValidPostalCode = void 0;
                 if (selectedCountry_1 && allowedPattern && allowedPattern.format) {
@@ -11565,7 +11565,7 @@ var JsonSchemaFormService = (function () {
                             selectedCountry_1 = jsf.formGroup.value && jsf.formGroup.value[controlOptions.controlToCheck];
                         }
                         var allowedPattern = selectedCountry_1 ? controlOptions.allowedPatterns.find(function (item) {
-                            return item.countryCode.toLowerCase() === selectedCountry_1.toLowerCase();
+                            return item.countryID === Number(selectedCountry_1);
                         }) : null;
                         var isValidPostalCode = void 0;
                         if (selectedCountry_1 && allowedPattern && allowedPattern.format) {
