@@ -559,12 +559,15 @@ export class JsonSchemaFormService {
                 if (jsf && jsf.formGroup && controlOptions.controlToCheck) {
                   selectedCountry = jsf.formGroup.value && jsf.formGroup.value[controlOptions.controlToCheck];
                 }
-                const allowedPattern = selectedCountry ? controlOptions.allowedPatterns.find(item => item.countryCode.toLowerCase() === selectedCountry.toLowerCase()): null;
+                const allowedPattern = selectedCountry ? controlOptions.allowedPatterns.find(item =>
+                   item.countryCode.toLowerCase() === selectedCountry.toLowerCase()) : null;
                 let isValidPostalCode;
                 if (selectedCountry && allowedPattern && allowedPattern.format) {
                   isValidPostalCode =  controlValue.startsWith(allowedPattern.format)
+                } else if (selectedCountry && !allowedPattern) {
+                  isValidPostalCode = !controlOptions.allowedPatterns.find(item => controlValue.startsWith(item.format))
                 }
-                if (selectedCountry && allowedPattern && !isValidPostalCode) {
+                if (selectedCountry && !isValidPostalCode) {
                   return false;
                 }
               }

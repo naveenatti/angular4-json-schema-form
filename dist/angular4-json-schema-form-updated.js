@@ -8098,7 +8098,10 @@ class JsonValidators {
                 if (selectedCountry && allowedPattern && allowedPattern.format) {
                     isValidPostalCode = controlValue.startsWith(allowedPattern.format);
                 }
-                if (selectedCountry && allowedPattern && !isValidPostalCode) {
+                else if (selectedCountry && !allowedPattern) {
+                    isValidPostalCode = !controlOptions.allowedPatterns.find(item => controlValue.startsWith(item.format));
+                }
+                if (selectedCountry && !isValidPostalCode) {
                     return { 'postalCodeValidation': true };
                 }
             }
@@ -11217,7 +11220,10 @@ class JsonSchemaFormService {
                         if (selectedCountry && allowedPattern && allowedPattern.format) {
                             isValidPostalCode = controlValue.startsWith(allowedPattern.format);
                         }
-                        if (selectedCountry && allowedPattern && !isValidPostalCode) {
+                        else if (selectedCountry && !allowedPattern) {
+                            isValidPostalCode = !controlOptions.allowedPatterns.find(item => controlValue.startsWith(item.format));
+                        }
+                        if (selectedCountry && !isValidPostalCode) {
                             return false;
                         }
                     }

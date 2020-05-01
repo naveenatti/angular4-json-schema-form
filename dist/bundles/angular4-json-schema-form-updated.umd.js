@@ -8238,12 +8238,17 @@ var JsonValidators = (function () {
                 if (control.parent && controlOptions.controlToCheck) {
                     selectedCountry_1 = control.parent.value && control.parent.value[controlOptions.controlToCheck];
                 }
-                var allowedPattern = selectedCountry_1 ? controlOptions.allowedPatterns.find(function (item) { return item.countryCode.toLowerCase() === selectedCountry_1.toLowerCase(); }) : null;
+                var allowedPattern = selectedCountry_1 ? controlOptions.allowedPatterns.find(function (item) {
+                    return item.countryCode.toLowerCase() === selectedCountry_1.toLowerCase();
+                }) : null;
                 var isValidPostalCode = void 0;
                 if (selectedCountry_1 && allowedPattern && allowedPattern.format) {
                     isValidPostalCode = controlValue.startsWith(allowedPattern.format);
                 }
-                if (selectedCountry_1 && allowedPattern && !isValidPostalCode) {
+                else if (selectedCountry_1 && !allowedPattern) {
+                    isValidPostalCode = !controlOptions.allowedPatterns.find(function (item) { return controlValue.startsWith(item.format); });
+                }
+                if (selectedCountry_1 && !isValidPostalCode) {
                     return { 'postalCodeValidation': true };
                 }
             }
@@ -11555,12 +11560,17 @@ var JsonSchemaFormService = (function () {
                         if (jsf && jsf.formGroup && controlOptions.controlToCheck) {
                             selectedCountry_1 = jsf.formGroup.value && jsf.formGroup.value[controlOptions.controlToCheck];
                         }
-                        var allowedPattern = selectedCountry_1 ? controlOptions.allowedPatterns.find(function (item) { return item.countryCode.toLowerCase() === selectedCountry_1.toLowerCase(); }) : null;
+                        var allowedPattern = selectedCountry_1 ? controlOptions.allowedPatterns.find(function (item) {
+                            return item.countryCode.toLowerCase() === selectedCountry_1.toLowerCase();
+                        }) : null;
                         var isValidPostalCode = void 0;
                         if (selectedCountry_1 && allowedPattern && allowedPattern.format) {
                             isValidPostalCode = controlValue.startsWith(allowedPattern.format);
                         }
-                        if (selectedCountry_1 && allowedPattern && !isValidPostalCode) {
+                        else if (selectedCountry_1 && !allowedPattern) {
+                            isValidPostalCode = !controlOptions.allowedPatterns.find(function (item) { return controlValue.startsWith(item.format); });
+                        }
+                        if (selectedCountry_1 && !isValidPostalCode) {
                             return false;
                         }
                     }

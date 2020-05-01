@@ -1021,12 +1021,15 @@ export class JsonValidators {
         if (control.parent && controlOptions.controlToCheck) {
           selectedCountry = control.parent.value && control.parent.value[controlOptions.controlToCheck];
         }
-        const allowedPattern = selectedCountry ? controlOptions.allowedPatterns.find(item => item.countryCode.toLowerCase() === selectedCountry.toLowerCase()): null;
+        const allowedPattern = selectedCountry ? controlOptions.allowedPatterns.find(item =>
+           item.countryCode.toLowerCase() === selectedCountry.toLowerCase()) : null;
         let isValidPostalCode;
         if (selectedCountry && allowedPattern && allowedPattern.format) {
           isValidPostalCode =  controlValue.startsWith(allowedPattern.format)
+        } else if (selectedCountry && !allowedPattern) {
+          isValidPostalCode = !controlOptions.allowedPatterns.find(item => controlValue.startsWith(item.format))
         }
-        if (selectedCountry && allowedPattern && !isValidPostalCode) {
+        if (selectedCountry && !isValidPostalCode) {
           return { 'postalCodeValidation': true };
         }
       }
