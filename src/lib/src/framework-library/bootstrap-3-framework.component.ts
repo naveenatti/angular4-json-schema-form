@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, Input, OnChanges, OnInit } from '@angular/core';
 
-import * as _ from 'lodash';
+import cloneDeep from 'lodash-es/cloneDeep';
+import map from 'lodash-es/map';
 
 import { JsonSchemaFormService } from '../json-schema-form.service';
 import { addClasses, inArray, JsonPointer, toTitleCase } from '../shared';
@@ -133,9 +134,9 @@ export class Bootstrap3FrameworkComponent implements OnInit, OnChanges {
 
   initializeControl() {
     if (this.layoutNode) {
-      this.options = _.cloneDeep(this.layoutNode.options);
+      this.options = cloneDeep(this.layoutNode.options);
       this.widgetLayoutNode = Object.assign(
-        {}, this.layoutNode, { options: _.cloneDeep(this.layoutNode.options) }
+        {}, this.layoutNode, { options: cloneDeep(this.layoutNode.options) }
       );
       this.widgetOptions = this.widgetLayoutNode.options;
       this.layoutPointer = this.jsf.getLayoutPointer(this);
@@ -260,7 +261,7 @@ export class Bootstrap3FrameworkComponent implements OnInit, OnChanges {
           let vars: any[] = [];
           // vars.push(this.jsf.formGroup.value[this.options.name]);
           // vars.push(this.jsf.formGroup.controls[this.options.name]['errors']);
-          this.debugOutput = _.map(vars, thisVar => JSON.stringify(thisVar, null, 2)).join('\n');
+          this.debugOutput = map(vars, thisVar => JSON.stringify(thisVar, null, 2)).join('\n');
         }
       }
       this.controlInitialized = true;

@@ -4,7 +4,8 @@ import { filter } from 'rxjs/operators/filter';
 import { Subject } from 'rxjs/Subject';
 
 import * as Ajv from 'ajv';
-import * as _ from 'lodash';
+import cloneDeep from 'lodash-es/cloneDeep';
+import isEqual from 'lodash-es/isEqual';
 
 import {
   hasValue, isArray, isDefined, isEmpty, isObject, isString
@@ -216,7 +217,7 @@ export class JsonSchemaFormService {
     this.layoutRefLibrary = {};
     this.schemaRefLibrary = {};
     this.templateRefLibrary = {};
-    this.formOptions = _.cloneDeep(this.defaultFormOptions);
+    this.formOptions = cloneDeep(this.defaultFormOptions);
   }
 
   /**
@@ -321,7 +322,7 @@ export class JsonSchemaFormService {
 
   setOptions(newOptions: any) {
     if (isObject(newOptions)) {
-      const addOptions = _.cloneDeep(newOptions);
+      const addOptions = cloneDeep(newOptions);
       // Backward compatibility for 'defaultOptions' (renamed 'defautWidgetOptions')
       if (isObject(addOptions.defaultOptions)) {
         Object.assign(this.formOptions.defautWidgetOptions, addOptions.defaultOptions);
@@ -609,7 +610,7 @@ export class JsonSchemaFormService {
     if (!isObject(ctx)) { return false; }
     if (isEmpty(ctx.options)) {
       ctx.options = !isEmpty((ctx.layoutNode || {}).options) ?
-        ctx.layoutNode.options : _.cloneDeep(this.formOptions);
+        ctx.layoutNode.options : cloneDeep(this.formOptions);
     }
     ctx.formControl = this.getFormControl(ctx);
     ctx.boundControl = bind && !!ctx.formControl;
@@ -626,7 +627,7 @@ export class JsonSchemaFormService {
           this.formatErrors(ctx.formControl.errors, ctx.options.validationMessages)
       );
       ctx.formControl.valueChanges.subscribe(value => {
-        if (!_.isEqual(ctx.controlValue, value)) { ctx.controlValue = value }
+        if (!isEqual(ctx.controlValue, value)) { ctx.controlValue = value }
       });
     } else {
       ctx.controlName = ctx.layoutNode.name;

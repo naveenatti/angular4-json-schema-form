@@ -120,7 +120,7 @@ return Promise.resolve()
       output: Object.assign({}, rollupBaseConfig.output, {
         file: path.join(distFolder, `${libName}.es5.js`),
         format: 'es',
-        intro: `import * as Ajv from 'ajv';\nimport * as _ from 'lodash';`
+        intro: `import * as Ajv from 'ajv';`
       })
     });
 
