@@ -38,7 +38,7 @@ export class JsonSchemaFormService {
   AngularSchemaFormCompatibility = false;
   tpldata: any = {};
 
-  customKeywords = { dobFormat: false, poBoxValidation: false, optionsMatchValidation:false, postalCodeValidation: false };
+  customKeywords = { dobFormat: false, poBoxValidation: false, optionsMatchValidation:false, postalCodeValidation: false, prefixPostalCodeRestriction: false };
   ajvOptions: any = { allErrors: true, jsonPointers: true };
   ajv: any = new Ajv(this.ajvOptions); // AJV: Another JSON Schema Validator
   validateFormData: any = null; // Compiled AJV function to validate active form's schema
@@ -427,6 +427,9 @@ export class JsonSchemaFormService {
       if (!this.customKeywords.postalCodeValidation) {
         this.addPostalCodeValidation();
       }
+      if (!this.customKeywords.prefixPostalCodeRestriction) {
+        this.prefixPostalCodeRestriction();
+      }
       this.customKeywords.dobFormat = true;
       this.ajv.removeSchema(this.schema);
       this.validateFormData = this.ajv.compile(this.schema);
@@ -577,6 +580,35 @@ export class JsonSchemaFormService {
           errors: false,
         });
         this.customKeywords.postalCodeValidation = true;
+  }
+
+  /**
+   * prefix Postal Code Restriction
+   */
+  prefixPostalCodeRestriction(): void {
+    const jsf = this;
+        this.ajv.addKeyword('prefixPostalCodeRestriction', {
+          compile: function (sch, parentSchema) {
+            return function (data) {
+              const controlOptions = sch;
+              if (!data) {
+                return true;
+              }
+              let controlValue = data.toUpperCase();
+              if (controlOptions && controlOptions.restrictedPrefix) {
+                const allowedPattern: string = controlOptions.restrictedPrefix;
+                let restrictedPostalCode;
+                if (allowedPattern) {
+                  restrictedPostalCode =  controlValue.startsWith(allowedPattern)
+                }
+                return !restrictedPostalCode;
+              }
+              return true;
+            }
+          },
+          errors: false,
+        });
+        this.customKeywords.prefixPostalCodeRestriction = true;
   }
 
   setTitle(

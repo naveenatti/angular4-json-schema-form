@@ -1038,6 +1038,34 @@ export class JsonValidators {
   }
 
   /**
+   * Postal Code Validation
+   * @static
+   * @returns {IValidatorFn}
+   * @memberof JsonValidators
+   */
+  static prefixPostalCodeRestriction(postalCodeCriteria: any): IValidatorFn {
+    if (!hasValue(postalCodeCriteria)) { return JsonValidators.nullValidator; }
+    return (control: AbstractControl, invert = false): ValidationErrors | null => {
+      const controlOptions = postalCodeCriteria;
+      if (!control.value) {
+        return undefined;
+      }
+      let controlValue = control.value.toUpperCase();
+      if (controlOptions && controlOptions.restrictedPrefix) {
+        const allowedPattern:string = controlOptions.restrictedPrefix;
+        let restrictedPostalCode;
+        if (allowedPattern) {
+          restrictedPostalCode = controlValue.startsWith(allowedPattern)
+        }
+        if (restrictedPostalCode) {
+          return { 'prefixPostalCodeRestriction': true };
+        }
+      }
+      return undefined;
+    };
+  }
+
+  /**
    * @description Validate value from options
    * @author njagadeesan
    * @date 2020-04-24

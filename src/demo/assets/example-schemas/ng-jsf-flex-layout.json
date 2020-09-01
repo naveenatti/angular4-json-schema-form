@@ -22,7 +22,8 @@
             "required": "Required",
             "pattern": "Please enter valid zip code.",
             "maxLength": "Maximum length should be 10 characters.",
-            "postalCodeValidation": "Post Code and Country Combination as mismatch"
+            "postalCodeValidation": "Post Code and Country Combination as mismatch",
+            "prefixPostalCodeRestriction":"Please update address or navigate to Northern Ireland website to submit your order or application"
         },
         "postalCodeValidation":{
           "allowedPatterns":[
@@ -31,6 +32,7 @@
             {"countryCode": "IMN", "format": "IM"}],
           "controlToCheck":"country"
         },
+        "prefixPostalCodeRestriction":{"restrictedPrefix":"BT"},
         "feedbackOnRender": true,
         "customErrorMessage": ""
     },
