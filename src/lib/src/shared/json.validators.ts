@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Observable';
 import { forkJoin } from 'rxjs/observable/forkJoin';
 import { map } from 'rxjs/operator/map';
 
-import * as _ from 'lodash';
+import isEqual from 'lodash-es/isEqual';
 
 import {
   _executeValidators, _executeAsyncValidators, _mergeObjects, _mergeErrors,
@@ -187,18 +187,18 @@ export class JsonValidators {
     return (control: AbstractControl, invert = false): ValidationErrors | null => {
       if (isEmpty(control.value)) { return null; }
       const currentValue: any = control.value;
-      const isEqual = (enumValue, inputValue) =>
+      const IsEqual = (enumValue, inputValue) =>
         enumValue === inputValue ||
         (isNumber(enumValue) && +inputValue === +enumValue) ||
         (isBoolean(enumValue, 'strict') &&
           toJavaScriptType(inputValue, 'boolean') === enumValue) ||
         (enumValue === null && !hasValue(inputValue)) ||
-        _.isEqual(enumValue, inputValue);
+        isEqual(enumValue, inputValue);
       const isValid = isArray(currentValue) ?
         currentValue.every(inputValue => allowedValues.some(enumValue =>
-          isEqual(enumValue, inputValue)
+          IsEqual(enumValue, inputValue)
         )) :
-        allowedValues.some(enumValue => isEqual(enumValue, currentValue));
+        allowedValues.some(enumValue => IsEqual(enumValue, currentValue));
       return xor(isValid, invert) ?
         null : { 'enum': { allowedValues, currentValue } };
     };

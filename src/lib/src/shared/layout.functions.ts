@@ -1,6 +1,7 @@
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import * as _ from 'lodash';
+import uniqueId from 'lodash-es/uniqueId';
+import cloneDeep from 'lodash-es/cloneDeep';
 
 import { TitleMapItem } from '../json-schema-form.service';
 import {
@@ -40,7 +41,7 @@ export function buildLayout(jsf, widgetLibrary) {
   let formLayout = mapLayout(jsf.layout, (layoutItem, index, layoutPointer) => {
     let currentIndex = index;
     let newNode: any = {
-      _id: _.uniqueId(),
+      _id: uniqueId(),
       options: {},
     };
     if (isObject(layoutItem)) {
@@ -305,7 +306,7 @@ export function buildLayout(jsf, widgetLibrary) {
           }
           if (arrayItemGroup.length) {
             newNode.items.push({
-              _id: _.uniqueId(),
+              _id: uniqueId(),
               arrayItem: true,
               arrayItemType: newNode.options.tupleItems > newNode.items.length ?
                 'tuple' : 'list',
@@ -345,7 +346,7 @@ export function buildLayout(jsf, widgetLibrary) {
 
         if (!hasOwn(jsf.layoutRefLibrary, itemRefPointer)) {
           jsf.layoutRefLibrary[itemRefPointer] =
-            _.cloneDeep(newNode.items[newNode.items.length - 1]);
+            cloneDeep(newNode.items[newNode.items.length - 1]);
           if (recursive) {
             jsf.layoutRefLibrary[itemRefPointer].recursiveReference = true;
           }
@@ -405,7 +406,7 @@ export function buildLayout(jsf, widgetLibrary) {
             }
           }
           newNode.items.push({
-            _id: _.uniqueId(),
+            _id: uniqueId(),
             arrayItem: true,
             arrayItemType: 'list',
             dataPointer: newNode.dataPointer + '/-',
@@ -447,7 +448,7 @@ export function buildLayout(jsf, widgetLibrary) {
     return newNode;
   });
   if (jsf.hasRootReference) {
-    const fullLayout = _.cloneDeep(formLayout);
+    const fullLayout = cloneDeep(formLayout);
     if (fullLayout[fullLayout.length - 1].type === 'submit') { fullLayout.pop(); }
     jsf.layoutRefLibrary[''] = {
       _id: null,
@@ -455,7 +456,7 @@ export function buildLayout(jsf, widgetLibrary) {
       dataType: 'object',
       items: fullLayout,
       name: '',
-      options: _.cloneDeep(jsf.formOptions.defautWidgetOptions),
+      options: cloneDeep(jsf.formOptions.defautWidgetOptions),
       recursiveReference: true,
       required: false,
       type: 'section',
@@ -464,7 +465,7 @@ export function buildLayout(jsf, widgetLibrary) {
   }
   if (!hasSubmitButton) {
     formLayout.push({
-      _id: _.uniqueId(),
+      _id: uniqueId(),
       options: { title: 'Submit' },
       type: 'submit',
       widget: widgetLibrary.getWidget('submit'),
@@ -505,7 +506,7 @@ export function buildLayoutFromSchema(
     nodeValue = JsonPointer.get(jsf.schema, schemaPointer + '/default');
   }
   let newNode: any = {
-    _id: forRefLibrary ? null : _.uniqueId(),
+    _id: forRefLibrary ? null : uniqueId(),
     arrayItem: arrayItem,
     dataPointer: JsonPointer.toGenericPointer(dataPointer, jsf.arrayMap),
     dataType: schema.type || (hasOwn(schema, '$ref') ? '$ref' : null),
@@ -733,7 +734,7 @@ export function buildLayoutFromSchema(
         }
         if (!/^add\b/i.test(buttonText)) { buttonText = prefix + buttonText; }
         newNode.items.push({
-          _id: _.uniqueId(),
+          _id: uniqueId(),
           arrayItem: true,
           arrayItemType: 'list',
           dataPointer: newNode.dataPointer + '/-',
@@ -882,7 +883,7 @@ export function getLayoutNode(
 
   // If recursive reference and building initial layout, return Add button
   if (refNode.recursiveReference && widgetLibrary) {
-    const newLayoutNode = _.cloneDeep(refNode);
+    const newLayoutNode = cloneDeep(refNode);
     if (!newLayoutNode.options) { newLayoutNode.options = {}; }
     Object.assign(newLayoutNode, {
       recursiveReference: true,
@@ -907,11 +908,11 @@ export function getLayoutNode(
       );
     } else {
       // If value not defined, copy node from layoutRefLibrary
-      newLayoutNode = _.cloneDeep(newLayoutNode);
+      newLayoutNode = cloneDeep(newLayoutNode);
       JsonPointer.forEachDeep(newLayoutNode, (subNode, pointer) => {
 
         // Reset all _id's in newLayoutNode to unique values
-        if (hasOwn(subNode, '_id')) { subNode._id = _.uniqueId(); }
+        if (hasOwn(subNode, '_id')) { subNode._id = uniqueId(); }
 
         // If adding a recursive item, prefix current dataPointer
         // to all dataPointers in new layoutNode
