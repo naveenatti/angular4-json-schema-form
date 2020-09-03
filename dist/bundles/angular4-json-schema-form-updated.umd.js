@@ -10270,6 +10270,34 @@ var JsonValidators = (function () {
             return undefined;
         };
     };
+    JsonValidators.prefixPostalCodeRestriction = function (postalCodeCriteria) {
+        if (!hasValue(postalCodeCriteria)) {
+            return JsonValidators.nullValidator;
+        }
+        return function (control, invert) {
+            if (invert === void 0) { invert = false; }
+            var controlOptions = postalCodeCriteria;
+            if (!control.value) {
+                return undefined;
+            }
+            var controlValue = control.value.toUpperCase();
+            if (controlOptions && controlOptions.restrictedPrefix) {
+                var allowedPatterns = controlOptions.restrictedPrefix.split(',');
+                var restrictedPostalCode_1;
+                if (allowedPatterns && allowedPatterns.length > 0) {
+                    allowedPatterns.filter(function (x) {
+                        if (controlValue.startsWith(x)) {
+                            restrictedPostalCode_1 = true;
+                        }
+                    });
+                }
+                if (restrictedPostalCode_1) {
+                    return { 'prefixPostalCodeRestriction': true };
+                }
+            }
+            return undefined;
+        };
+    };
     JsonValidators.optionsMatchValidation = function (poBoxCriteria) {
         if (!hasValue(poBoxCriteria)) {
             return JsonValidators.nullValidator;
@@ -11757,7 +11785,7 @@ function getControlValidators(schema) {
     if (hasOwn(schema, 'type')) {
         switch (schema.type) {
             case 'string':
-                forEach(['pattern', 'format', 'minLength', 'maxLength', 'equalTo', 'dobFormat', 'poBoxValidation', 'optionsMatchValidation', 'postalCodeValidation'], function (prop) {
+                forEach(['pattern', 'format', 'minLength', 'maxLength', 'equalTo', 'dobFormat', 'poBoxValidation', 'optionsMatchValidation', 'postalCodeValidation', 'prefixPostalCodeRestriction'], function (prop) {
                     if (hasOwn(schema, prop)) {
                         validators[prop] = [schema[prop]];
                     }
@@ -14748,7 +14776,7 @@ var JsonSchemaFormService = (function () {
         this.ReactJsonSchemaFormCompatibility = false;
         this.AngularSchemaFormCompatibility = false;
         this.tpldata = {};
-        this.customKeywords = { dobFormat: false, poBoxValidation: false, optionsMatchValidation: false, postalCodeValidation: false };
+        this.customKeywords = { dobFormat: false, poBoxValidation: false, optionsMatchValidation: false, postalCodeValidation: false, prefixPostalCodeRestriction: false };
         this.ajvOptions = { allErrors: true, jsonPointers: true };
         this.ajv = new Ajv(this.ajvOptions);
         this.validateFormData = null;
@@ -15081,6 +15109,9 @@ var JsonSchemaFormService = (function () {
             if (!this.customKeywords.postalCodeValidation) {
                 this.addPostalCodeValidation();
             }
+            if (!this.customKeywords.prefixPostalCodeRestriction) {
+                this.prefixPostalCodeRestriction();
+            }
             this.customKeywords.dobFormat = true;
             this.ajv.removeSchema(this.schema);
             this.validateFormData = this.ajv.compile(this.schema);
@@ -15243,6 +15274,34 @@ var JsonSchemaFormService = (function () {
             errors: false,
         });
         this.customKeywords.postalCodeValidation = true;
+    };
+    JsonSchemaFormService.prototype.prefixPostalCodeRestriction = function () {
+        this.ajv.addKeyword('prefixPostalCodeRestriction', {
+            compile: function (sch, parentSchema) {
+                return function (data) {
+                    var controlOptions = sch;
+                    if (!data) {
+                        return true;
+                    }
+                    var controlValue = data.toUpperCase();
+                    if (controlOptions && controlOptions.restrictedPrefix) {
+                        var allowedPatterns = controlOptions.restrictedPrefix.split(',');
+                        var restrictedPostalCode_1;
+                        if (allowedPatterns && allowedPatterns.length > 0) {
+                            allowedPatterns.filter(function (x) {
+                                if (controlValue.startsWith(x)) {
+                                    restrictedPostalCode_1 = true;
+                                }
+                            });
+                        }
+                        return !restrictedPostalCode_1;
+                    }
+                    return true;
+                };
+            },
+            errors: false,
+        });
+        this.customKeywords.prefixPostalCodeRestriction = true;
     };
     JsonSchemaFormService.prototype.setTitle = function (parentCtx, childNode, index) {
         if (parentCtx === void 0) { parentCtx = {}; }

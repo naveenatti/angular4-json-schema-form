@@ -10122,6 +10122,33 @@ class JsonValidators {
             return undefined;
         };
     }
+    static prefixPostalCodeRestriction(postalCodeCriteria) {
+        if (!hasValue(postalCodeCriteria)) {
+            return JsonValidators.nullValidator;
+        }
+        return (control, invert = false) => {
+            const controlOptions = postalCodeCriteria;
+            if (!control.value) {
+                return undefined;
+            }
+            let controlValue = control.value.toUpperCase();
+            if (controlOptions && controlOptions.restrictedPrefix) {
+                const allowedPatterns = controlOptions.restrictedPrefix.split(',');
+                let restrictedPostalCode;
+                if (allowedPatterns && allowedPatterns.length > 0) {
+                    allowedPatterns.filter(x => {
+                        if (controlValue.startsWith(x)) {
+                            restrictedPostalCode = true;
+                        }
+                    });
+                }
+                if (restrictedPostalCode) {
+                    return { 'prefixPostalCodeRestriction': true };
+                }
+            }
+            return undefined;
+        };
+    }
     static optionsMatchValidation(poBoxCriteria) {
         if (!hasValue(poBoxCriteria)) {
             return JsonValidators.nullValidator;
@@ -11557,7 +11584,7 @@ function getControlValidators(schema) {
     if (hasOwn(schema, 'type')) {
         switch (schema.type) {
             case 'string':
-                forEach(['pattern', 'format', 'minLength', 'maxLength', 'equalTo', 'dobFormat', 'poBoxValidation', 'optionsMatchValidation', 'postalCodeValidation'], (prop) => {
+                forEach(['pattern', 'format', 'minLength', 'maxLength', 'equalTo', 'dobFormat', 'poBoxValidation', 'optionsMatchValidation', 'postalCodeValidation', 'prefixPostalCodeRestriction'], (prop) => {
                     if (hasOwn(schema, prop)) {
                         validators[prop] = [schema[prop]];
                     }
@@ -14431,7 +14458,7 @@ class JsonSchemaFormService {
         this.ReactJsonSchemaFormCompatibility = false;
         this.AngularSchemaFormCompatibility = false;
         this.tpldata = {};
-        this.customKeywords = { dobFormat: false, poBoxValidation: false, optionsMatchValidation: false, postalCodeValidation: false };
+        this.customKeywords = { dobFormat: false, poBoxValidation: false, optionsMatchValidation: false, postalCodeValidation: false, prefixPostalCodeRestriction: false };
         this.ajvOptions = { allErrors: true, jsonPointers: true };
         this.ajv = new Ajv(this.ajvOptions);
         this.validateFormData = null;
@@ -14758,6 +14785,9 @@ class JsonSchemaFormService {
             if (!this.customKeywords.postalCodeValidation) {
                 this.addPostalCodeValidation();
             }
+            if (!this.customKeywords.prefixPostalCodeRestriction) {
+                this.prefixPostalCodeRestriction();
+            }
             this.customKeywords.dobFormat = true;
             this.ajv.removeSchema(this.schema);
             this.validateFormData = this.ajv.compile(this.schema);
@@ -14895,6 +14925,34 @@ class JsonSchemaFormService {
             errors: false,
         });
         this.customKeywords.postalCodeValidation = true;
+    }
+    prefixPostalCodeRestriction() {
+        this.ajv.addKeyword('prefixPostalCodeRestriction', {
+            compile: function (sch, parentSchema) {
+                return function (data) {
+                    const controlOptions = sch;
+                    if (!data) {
+                        return true;
+                    }
+                    let controlValue = data.toUpperCase();
+                    if (controlOptions && controlOptions.restrictedPrefix) {
+                        const allowedPatterns = controlOptions.restrictedPrefix.split(',');
+                        let restrictedPostalCode;
+                        if (allowedPatterns && allowedPatterns.length > 0) {
+                            allowedPatterns.filter(x => {
+                                if (controlValue.startsWith(x)) {
+                                    restrictedPostalCode = true;
+                                }
+                            });
+                        }
+                        return !restrictedPostalCode;
+                    }
+                    return true;
+                };
+            },
+            errors: false,
+        });
+        this.customKeywords.prefixPostalCodeRestriction = true;
     }
     setTitle(parentCtx = {}, childNode = null, index = null) {
         const parentNode = parentCtx.layoutNode;

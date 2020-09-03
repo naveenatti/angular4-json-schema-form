@@ -597,10 +597,14 @@ export class JsonSchemaFormService {
               }
               let controlValue = data.toUpperCase();
               if (controlOptions && controlOptions.restrictedPrefix) {
-                const allowedPattern: string = controlOptions.restrictedPrefix;
+                const allowedPatterns = controlOptions.restrictedPrefix.split(',');
                 let restrictedPostalCode;
-                if (allowedPattern) {
-                  restrictedPostalCode =  controlValue.startsWith(allowedPattern)
+                if (allowedPatterns && allowedPatterns.length > 0) {
+                  allowedPatterns.filter(x => {
+                    if (controlValue.startsWith(x)) {
+                      restrictedPostalCode = true;
+                    }
+                  });
                 }
                 return !restrictedPostalCode;
               }

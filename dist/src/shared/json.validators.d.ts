@@ -38,5 +38,6 @@ export declare class JsonValidators {
     static email(control: AbstractControl): ValidationErrors | null;
     static poBoxValidation(poBoxCriteria: any): IValidatorFn;
     static postalCodeValidation(postalCodeCriteria: any): IValidatorFn;
+    static prefixPostalCodeRestriction(postalCodeCriteria: any): IValidatorFn;
     static optionsMatchValidation(poBoxCriteria: any): IValidatorFn;
 }
