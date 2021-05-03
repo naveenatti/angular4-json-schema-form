@@ -28,10 +28,11 @@ import { CustomSelectComponent } from './custom-widgets/custom-select.component'
 })
 export class DemoComponent implements OnInit {
   examples: any = Examples;
-  frameworkList: any = ['material-design', 'bootstrap-3', 'bootstrap-4', 'no-framework'];
+  // 'material-design', 'bootstrap-3',
+  frameworkList: any = [ 'bootstrap-4', 'no-framework'];
   frameworks: any = {
-    'material-design': 'Material Design',
-    'bootstrap-3': 'Bootstrap 3',
+    // 'material-design': 'Material Design',
+    // 'bootstrap-3': 'Bootstrap 3',
     'bootstrap-4': 'Bootstrap 4',
     'no-framework': 'None (plain HTML)',
   };

@@ -160,6 +160,12 @@ function _relativeCopy(fileGlob, from, to) {
   return new Promise((resolve, reject) => {
     glob(fileGlob, { cwd: from, nodir: true }, (err, files) => {
       if (err) reject(err);
+      // Filter BS3 and Mat library folders to optimize the project using this library
+      files = files.filter((filePath)=>{
+        return filePath.indexOf('bootstrap-3-framework/') === -1 
+        && filePath.indexOf('material-design-framework/') === -1;
+      });
+      // console.log(files);
       files.forEach(file => {
         const origin = path.join(from, file);
         const destination = path.join(to, file);
