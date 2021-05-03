@@ -279,7 +279,7 @@ export class JsonValidators {
   static dobFormat(dobFormat: string, wholeString = false): IValidatorFn {
     if (!hasValue(dobFormat)) { return JsonValidators.nullValidator; }
     return (control: AbstractControl, invert = false): ValidationErrors | null => {
-      if (control.value === undefined || control.value === null || control.value instanceof Array) {
+      if (control.value === undefined || control.value === ''|| control.value === null || control.value instanceof Array) {
         return undefined;
       }
       let value = control.value;
@@ -318,10 +318,15 @@ export class JsonValidators {
             dateOfBirth = value;
           }
           const dateParts = dateOfBirth.split('-');
-          if (dateParts[2] && dateParts[2].length === 4) {
+          if (dateParts[2] && dateParts[2].length === 4 && dobFormat != 'noEighteenYearsValidation') {
             const eighteenYearsBeforeNow = new Date(+dateParts[2] + 18, +dateParts[1] - 1, +dateParts[0]) <= new Date();
             if (!eighteenYearsBeforeNow) {
               return { 'eighteenYearsValidation': true };
+            }
+          } else if (dateParts[2] && dateParts[2].length === 4) {
+            const dateOfBirthBeforeNow = new Date(+dateParts[2], +dateParts[1] - 1, +dateParts[0]) <= new Date();
+            if (!dateOfBirthBeforeNow) {
+              return { 'dateOfBirthExceedsVaidation': true };
             }
           } else {
             return { 'dateValidation': true };

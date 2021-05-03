@@ -370,7 +370,11 @@ export class JsonSchemaFormService {
                 }
                 dateParts = data.split('-');
                 const eighteenYearsBeforeNow = new Date(+dateParts[2] + 18, +dateParts[1] - 1, +dateParts[0]) <= new Date();
-                if (!eighteenYearsBeforeNow) {
+                if (!eighteenYearsBeforeNow && sch != 'noEighteenYearsValidation') {
+                  return false;
+                }
+                const dateOfBirthBeforeNow = new Date(+dateParts[2], +dateParts[1] - 1, +dateParts[0]) <= new Date();
+                if (!dateOfBirthBeforeNow) {
                   return false;
                 }
                 return true;
