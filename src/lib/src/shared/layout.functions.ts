@@ -1,4 +1,3 @@
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import uniqueId from 'lodash-es/uniqueId';
 import cloneDeep from 'lodash-es/cloneDeep';

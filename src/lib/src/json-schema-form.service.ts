@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AbstractControl, FormArray, FormGroup } from '@angular/forms';
-import { filter } from 'rxjs/operators/filter';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 
 import * as Ajv from 'ajv';
 import cloneDeep from 'lodash-es/cloneDeep';
@@ -22,7 +21,7 @@ import {
   buildFormGroup, buildFormGroupTemplate, formatFormData, getControl
 } from './shared/form-group.functions';
 import { buildLayout, getLayoutNode } from './shared/layout.functions';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import moment from 'moment';
 
 export interface TitleMapItem {

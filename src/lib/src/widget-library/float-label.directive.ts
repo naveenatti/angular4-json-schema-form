@@ -1,6 +1,6 @@
-import { Directive, ElementRef, Input, AfterViewChecked, HostListener } from "@angular/core";
-import { Renderer, AfterViewInit } from "@angular/core";
-// import { NgControl } from "@angular/forms";
+import { DOCUMENT } from "@angular/common";
+import { Directive, ElementRef, Input, AfterViewChecked, HostListener, Inject } from "@angular/core";
+import {AfterViewInit } from "@angular/core";
 
 @Directive({
     selector: '[float-label]',
@@ -14,10 +14,9 @@ export class FloatLabelDirective implements AfterViewInit, AfterViewChecked {
     @Input() hasFloat: boolean = false;
     @Input() addLabel: boolean = true;
     @Input() labelClass: string = '';
-    // @Input() trimOnBlur: boolean = false;
 
     constructor(private elementRef: ElementRef,
-        private renderer: Renderer) {
+        @Inject(DOCUMENT) private document: any) {
     }
     /**
      * Initializing a FloatLabelDirective
@@ -46,10 +45,10 @@ export class FloatLabelDirective implements AfterViewInit, AfterViewChecked {
      * @param  {any} element
      * @returns void
      */
-    appendLabel(element: any, count?: number): void {
+    appendLabel(element: HTMLInputElement, count?: number): void {
         count = count || 0;
         setTimeout(() => {
-            let label = this.renderer.createElement(element, 'label');
+            let label = this.document.createElement('label');
             let elementId = '';
             label.innerText = element.placeholder || element.getAttribute('data-placeholder') || '';
             if (label.innerText.trim().length === 0 && count < 3) {
@@ -61,10 +60,10 @@ export class FloatLabelDirective implements AfterViewInit, AfterViewChecked {
                 elementId = 'id_' + Date.now();
                 element.id = elementId;
             }
-            this.renderer.setElementAttribute(label, 'for', !element.id ? elementId : element.id);
-            this.renderer.setElementAttribute(label, 'id', 'label-class');
-            this.renderer.setElementAttribute(label, 'class', this.labelClass);
-            this.renderer.attachViewAfter(element, [label]);
+            label.setAttribute('for', !element.id ? elementId : element.id);
+            label.setAttribute('id', 'label-class');
+            label.setAttribute('class', this.labelClass);
+            element.parentNode.insertBefore(label, element.nextSibling);
         }, 100);
     }
     /**
@@ -91,24 +90,7 @@ export class FloatLabelDirective implements AfterViewInit, AfterViewChecked {
         this.toggleClass(false, event.currentTarget);
         // this.trimAndSetValue();
     }
-    /**
-     * @description Trim and set the value
-     * @author njagadeesan
-     * @date 2019-12-19
-     * @memberof FloatLabelDirective
-     */
-    // trimAndSetValue(): void {
-    //     if (this.trimOnBlur && this.ngControl) {
-    //         let controlValue = this.ngControl.control.value;
-    //         if (controlValue && this.isString(controlValue)) {
-    //             this.ngControl.control.setValue(controlValue.trim(), {
-    //                 emitEvent: false,
-    //                 onlySelf: true,
-    //                 emitViewToModelChange: false
-    //             });
-    //         }
-    //     }
-    // }
+   
     /**
      * Add a 'has-float' class if the element has an value
      * @param  {boolean} isFocused
